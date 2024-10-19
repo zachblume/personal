@@ -3,6 +3,7 @@ import { CustomMDX } from "app/components/mdx";
 import { formatDate, getBlogPosts } from "app/blog/utils";
 import { baseUrl } from "app/sitemap";
 import Outline from "app/components/outline";
+import Link from "next/link";
 
 export async function generateStaticParams() {
     const posts = getBlogPosts();
@@ -95,6 +96,9 @@ export default function Blog({ params }) {
                         }),
                     }}
                 />
+                <Link href="/" className="my-6 block">
+                    ⏴ Home
+                </Link>
                 <h1 className="title font-semibold text-2xl tracking-tighter">
                     {post.metadata.title}
                 </h1>
