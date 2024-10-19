@@ -21,14 +21,28 @@ export default function Page() {
                             <Text as="div" size="5" weight="bold">
                                 Zach Blume
                             </Text>
-                            <Text as="div" size="3" color="gray">
-                                This is where my writing lives. Bio at{" "}
-                                <Link
-                                    href="https://github.com/zachblume/"
-                                    className="underline-link"
+                            <Text as="div" size="3">
+                                My writing lives here. Software engineer at the{" "}
+                                <a
+                                    href="https://demexchange.com/"
+                                    className="underline text-neutral-600 decoration-neutral-300"
+                                >
+                                    Democratic Data Exchange (DDx)
+                                </a>
+                                , and founder of{" "}
+                                <a
+                                    href="https://www.raisemore.app/"
+                                    className="underline text-neutral-600 decoration-neutral-300"
+                                >
+                                    Raise More
+                                </a>
+                                . Bio at{" "}
+                                <a
+                                    href="https://github.com/zachblume"
+                                    className="underline text-neutral-600 decoration-neutral-300"
                                 >
                                     GitHub
-                                </Link>
+                                </a>
                                 .
                             </Text>
                         </Box>
