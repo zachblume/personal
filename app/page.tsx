@@ -54,7 +54,7 @@ export default function Page() {
 
             <SidewayScroll />
 
-            <div className="mb-8">
+            <div className="mb-8 mt-6">
                 <BlogPosts />
             </div>
         </section>
@@ -63,21 +63,21 @@ export default function Page() {
 
 function SidewayScroll() {
     return (
-        <div className="overflow-x-auto w-full">
-            <div className="flex space-x-10 py-6">
+        <div className="overflow-x-auto w-full hover:overflow-x-scroll scrollbar-hide hover:scrollbar-default scrollbar-always-visible py-2 mt-3">
+            <div className="flex space-x-6 py-0">
                 <div className="block !w-[350px] h-[150px] grayscale hover:grayscale-0 transition duration-300">
                     <div className="bg-white !w-[350px] py-4 px-5 rounded-lg m-0 border border-neutral-200">
                         I work at the{" "}
                         <a
                             href="https://demexchange.com/"
-                            className="underline text-pink-600 decoration-pink-300"
+                            className="underline text-pink-500 decoration-pink-200"
                         >
                             Democratic Data Exchange (DDx)
                         </a>{" "}
                         as team lead for core infrastructure. I founded{" "}
                         <a
                             href="https://www.raisemore.app/"
-                            className="underline text-pink-600 decoration-pink-300"
+                            className="underline text-pink-500 decoration-pink-200"
                         >
                             Raise More
                         </a>
@@ -85,7 +85,7 @@ function SidewayScroll() {
                         on{" "}
                         <a
                             href="https://github.com/zachblume"
-                            className="underline text-pink-600 decoration-pink-300"
+                            className="underline text-pink-500 decoration-pink-200"
                         >
                             GitHub
                         </a>
@@ -99,7 +99,7 @@ function SidewayScroll() {
                         src="/waldo.jpeg"
                         width={225}
                         height={150}
-                        className="!h-[150px]"
+                        className="!h-[150px] rounded-lg"
                     />
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition duration-300">
                         <span className="text-pink-100 font-bold text-lg mt-auto ml-auto mr-3">
@@ -114,7 +114,7 @@ function SidewayScroll() {
                         src="/millie.jpeg"
                         width={225}
                         height={150}
-                        className="!h-[150px]"
+                        className="!h-[150px] rounded-lg"
                     />
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition duration-300">
                         <span className="text-pink-100 font-bold text-lg mt-auto ml-auto mr-3">
@@ -129,7 +129,7 @@ function SidewayScroll() {
                         src="/luna.jpeg"
                         width={225}
                         height={150}
-                        className="!h-[150px]"
+                        className="!h-[150px] rounded-lg"
                     />
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition duration-300">
                         <span className="text-pink-100 font-bold text-lg mt-auto ml-auto mr-3">
