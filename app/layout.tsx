@@ -54,7 +54,7 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <Theme accentColor="blue" panelBackground="solid">
+                    <Theme accentColor="ruby" panelBackground="solid">
                         <main className="wrapper flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
                             {/* <Navbar /> */}
                             {children}
