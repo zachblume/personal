@@ -6,6 +6,9 @@ export function HeaderNavLink({ header, children }) {
     // use window dom to get the current header ie the first header that is in view
     const [isCurrentHeader, setIsCurrentHeader] = useState<boolean>(false);
     useEffect(() => {
+        if (typeof window === "undefined") {
+            return;
+        }
         const headers = Array.from(
             document.querySelectorAll(
                 "article > h1, article > h2, article > h3, article > h4, article > h5, article > h6",
