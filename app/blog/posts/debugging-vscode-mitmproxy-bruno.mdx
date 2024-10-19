@@ -30,7 +30,7 @@ the frontend and one for the backend. You can then run both at the same time
 and have the debugger stop at breakpoints in either. Unfortunately you have to
 manually press the play button on both configurations.
 
-## 2. [mitmproxy](https://mitmproxy.org/)
+## 2. mitmproxy - local network observability
 
 It took me a while to learn the above debugger native to vscode partially
 because chrome ships with such good devtools -- they are better than the built
@@ -49,7 +49,9 @@ mitmproxy is that, but in a TUI instead of a graphical interface. It's a proxy
 that you run on your machine and then set your computer's wifi/networking to
 route through, so you can inspect, replay, and modify network requests.
 
-## 3. [bruno](https://www.usebruno.com/)
+If you don't have it, you should go get it: [mitmproxy](https://mitmproxy.org/)
+
+## 3. Bruno - API client
 
 Normally, life goes a bit like this:
 
@@ -64,6 +66,6 @@ only half the time, etc etc, something more robust is nice.
 Postman was that, and now is trash, and wants me to login with google for some
 reason. No.
 
-Bruno is a nice free open source alternative that has the ability to stage and
+[bruno](https://www.usebruno.com/) is a nice free open source alternative that has the ability to stage and
 run curls and collections of curls, and to boot its logo is a dog so you know,
 got me there.
