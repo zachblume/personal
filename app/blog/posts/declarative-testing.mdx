@@ -1,0 +1,24 @@
+---
+title: "Declarative state assertions, as tests?"
+publishedAt: "2024-10-18"
+summary: "A pattern for testing stateful applications"
+---
+
+## Declarative state assertions, as tests?
+
+Testing stateful applications can be tricky. You need to set up the initial state, perform some actions, and then assert that the state is as expected. This can be cumbersome and error-prone.
+
+One pattern that I've found useful is to use declarative state assertions as tests. Instead of writing a test that sets up the initial state, performs actions, and then asserts the final state, you write a test that describes the final state you want to achieve.
+
+Here's an example:
+
+```javascript
+test("should increment counter", () => {
+    const initialState = { counter: 0 };
+    const finalState = { counter: 1 };
+
+    const nextState = reducer(initialState, { type: "INCREMENT" });
+
+    expect(nextState).toEqual(finalState);
+});
+```

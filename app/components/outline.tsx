@@ -1,5 +1,5 @@
 import React from "react";
-import { CustomMDX } from "./mdx";
+import { CustomMDX, slugify } from "./mdx";
 
 const Outline = ({ headers }) => {
     return (
@@ -8,10 +8,7 @@ const Outline = ({ headers }) => {
                 {headers?.map((header, index) => (
                     <li key={index} className={`ml-${header.level - 1}`}>
                         <a
-                            href={`#${header.text
-                                .toLowerCase()
-                                .replaceAll(/[^a-z0-9 ]/g, "")
-                                .replaceAll(" ", "-")}`}
+                            href={`#${slugify(header.text)}`}
                             className="underline-link text-neutral-400 !decoration-neutral-200"
                         >
                             <CustomMDX
