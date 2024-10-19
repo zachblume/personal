@@ -67,7 +67,7 @@ function SidewayScroll() {
             <div className="flex space-x-6 py-0">
                 <div className="block !w-[350px] h-[150px] grayscale hover:grayscale-0 transition duration-300">
                     <div className="bg-white !w-[350px] py-4 px-5 rounded-lg m-0 border border-neutral-200">
-                        I work at the{" "}
+                        I live in NYC and work at the{" "}
                         <a
                             href="https://demexchange.com/"
                             className="underline text-pink-500 decoration-pink-200"
