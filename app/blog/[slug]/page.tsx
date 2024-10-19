@@ -96,7 +96,7 @@ export default function Blog({ params }) {
                         }),
                     }}
                 />
-                <Link href="/" className="my-6 block">
+                <Link href="/" className="mb-3 block text-neutral-500 text-sm">
                     ⏴ Home
                 </Link>
                 <h1 className="title font-semibold text-2xl tracking-tighter">
