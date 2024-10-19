@@ -1,8 +1,8 @@
 "use client";
+import { slugify } from "app/lib/slugify";
 import { useEffect, useState } from "react";
-import { slugify } from "./mdx";
 
-export function HeaderNavLink({ header, children }) {
+export function OutlineNavLink({ header, children }) {
     // use window dom to get the current header ie the first header that is in view
     const [isCurrentHeader, setIsCurrentHeader] = useState<boolean>(false);
     useEffect(() => {
@@ -32,9 +32,9 @@ export function HeaderNavLink({ header, children }) {
         return () => window.removeEventListener("scroll", onScroll);
     }, [header.text]);
     return (
-        <li className={`ml-${header.level - 1}`}>
+        <li className={`ml-${header?.level - 1 || 0}`}>
             <a
-                href={`#${slugify(header.text)}`}
+                href={`#${slugify(header?.text || "")}`}
                 className={
                     "text-neutral-400 !decoration-neutral-200 text-sm " +
                     (isCurrentHeader ? "text-neutral-800 font-medium" : "")

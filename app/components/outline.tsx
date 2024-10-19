@@ -1,5 +1,5 @@
 import { CustomMDX } from "./mdx";
-import { HeaderNavLink } from "./HeaderNavLink";
+import { OutlineNavLink } from "./OutlineNavLink";
 
 const Outline = ({
     // title,
@@ -13,7 +13,7 @@ const Outline = ({
             <h3 className="text-xs mb-1 text-neutral-400">Outline</h3>
             <ul className="list-none">
                 {headers.map((header) => (
-                    <HeaderNavLink key={header.text} header={header}>
+                    <OutlineNavLink key={header.text} header={header}>
                         <CustomMDX
                             source={
                                 header.text.replaceAll(
@@ -31,7 +31,7 @@ const Outline = ({
                                     : header.text
                             }
                         />
-                    </HeaderNavLink>
+                    </OutlineNavLink>
                 ))}
             </ul>
         </nav>
