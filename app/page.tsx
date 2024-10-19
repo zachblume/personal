@@ -22,7 +22,15 @@ export default function Page() {
                                 Zach Blume
                             </Text>
                             <Text as="div" size="3">
-                                My writing lives here. Software engineer at the{" "}
+                                My writing lives here.{" "}
+                                <a
+                                    href="https://github.com/zachblume"
+                                    className="underline text-neutral-600 decoration-neutral-300"
+                                >
+                                    More about me
+                                </a>
+                                .
+                                {/* Software engineer at the{" "}
                                 <a
                                     href="https://demexchange.com/"
                                     className="underline text-neutral-600 decoration-neutral-300"
@@ -43,7 +51,7 @@ export default function Page() {
                                 >
                                     GitHub
                                 </a>
-                                .
+                                . */}
                             </Text>
                         </Box>
                     </Flex>
