@@ -8,7 +8,7 @@ export default function Page() {
                 Zach Blume
             </h1>
             <p className="mb-4">
-                Where my writing lives. More about me at{" "}
+                Where my writing lives. Bio at{" "}
                 <Link
                     href="https://github.com/zachblume/"
                     className="underline-link"
