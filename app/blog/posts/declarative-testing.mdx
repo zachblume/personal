@@ -1,25 +1,43 @@
 ---
-title: "Declarative state assertions, as tests?"
-publishedAt: "2024-10-18"
+title: "Declarative testing with state assertions?"
+publishedAt: "2024-10-19"
 summary: "A pattern for testing stateful applications"
-draft: true
 ---
 
-## Declarative state assertions, as tests?
+Tests are written "imperatively", i.e. with step by step instructions, like this:
 
-Testing stateful applications can be tricky. You need to set up the initial state, perform some actions, and then assert that the state is as expected. This can be cumbersome and error-prone.
-
-One pattern that I've found useful is to use declarative state assertions as tests. Instead of writing a test that sets up the initial state, performs actions, and then asserts the final state, you write a test that describes the final state you want to achieve.
-
-Here's an example:
-
-```javascript
-test("should increment counter", () => {
-    const initialState = { counter: 0 };
-    const finalState = { counter: 1 };
-
-    const nextState = reducer(initialState, { type: "INCREMENT" });
-
-    expect(nextState).toEqual(finalState);
+```js
+test("increment steps by one", () => {
+    // Config
+    const counter = new Counter(0);
+    // Followed by n instructions
+    counter.increment();
+    // Followed by n expectations
+    expect(counter.value).toBe(1);
 });
 ```
+
+Config, instructions, expectations. We're telling the test runner exactly what to do and what to check. This is fine for simple tests, but as the number of tests grows, it becomes harder to read, and (hopefully!) comes with a lot of human-readable comments about why suddenly we expect value to be 1 -- or whatever.
+
+Here's the thought: I guess you could imagine a more declarative way of writing tests:
+
+```js
+when(counter.increment)
+    .isCalled()
+    .expect(counter.value)
+    .toChange((prevState) => prevState + 1);
+
+test("scenario", () => {
+    // A bunch of weird instructions...
+});
+
+// ...More tests...
+```
+
+As I write this out, I'm not even sure exactly what I'd describe this as.
+
+This is circling around "property-based testing" (see [js/fast-check](https://github.com/dubzzz/fast-check)), but I'm not sure that's quite right. I think of property-based testing as a configurable way to generate inputs as a unit test.
+
+What I'm describing is a little bit more like a assertion that is true throughout the lifecycle of the test regardless of when the state transition happens.
+
+I think this is a really interesting pattern, and I'd like to explore it more in the future, even thought right now it's just a thought experiment since I don't really know the other formal tools for state machine type coding.
