@@ -64,9 +64,10 @@ function slugify(str) {
         .replace(/\-\-+/g, "-"); // Replace multiple - with single -
 }
 
-function createHeading(level) {
+function createHeading(level, headers) {
     const Heading = ({ children }) => {
         const slug = slugify(children);
+        headers.push({ level, text: children });
         return React.createElement(
             `h${level}`,
             { id: slug },
@@ -86,24 +87,25 @@ function createHeading(level) {
     return Heading;
 }
 
-const components = {
-    h1: createHeading(1),
-    h2: createHeading(2),
-    h3: createHeading(3),
-    h4: createHeading(4),
-    h5: createHeading(5),
-    h6: createHeading(6),
+const components = (headers) => ({
+    h1: createHeading(1, headers),
+    h2: createHeading(2, headers),
+    h3: createHeading(3, headers),
+    h4: createHeading(4, headers),
+    h5: createHeading(5, headers),
+    h6: createHeading(6, headers),
     Image: RoundedImage,
     a: CustomLink,
     code: Code,
     Table,
-};
+});
 
 export function CustomMDX(props) {
+    const headers = [];
     return (
         <MDXRemote
             {...props}
-            components={{ ...components, ...(props.components || {}) }}
+            components={{ ...components(headers), ...(props.components || {}) }}
         />
     );
 }
