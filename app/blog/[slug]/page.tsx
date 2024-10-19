@@ -59,15 +59,18 @@ export default function Blog({ params }) {
         notFound();
     }
 
-    const headers = post.content.match(/<h[1-6].*?>(.*?)<\/h[1-6]>/g)?.map(header => {
-        const level = parseInt(header.match(/<h([1-6])/)?.[1] || "0");
-        const text = header.replace(/<.*?>/g, "");
-        return { level, text };
-    }) || [];
+    const headers = post.content
+        .split("\n")
+        .filter((line) => line?.startsWith("#"))
+        .map((line: string) => {
+            const level = line.match(/^#+/)?.[0].length;
+            const text = line.replace(/^#+\s*/, "");
+            return { level, text };
+        });
 
     return (
-        <section className="flex">
-            <div className="w-auto">
+        <section className="relative">
+            <div className="w-full">
                 <script
                     type="application/ld+json"
                     suppressHydrationWarning
@@ -82,8 +85,8 @@ export default function Blog({ params }) {
                             image: post.metadata.image
                                 ? `${baseUrl}${post.metadata.image}`
                                 : `/og?title=${encodeURIComponent(
-                                    post.metadata.title,
-                                )}`,
+                                      post.metadata.title,
+                                  )}`,
                             url: `${baseUrl}/blog/${post.slug}`,
                             author: {
                                 "@type": "Person",
@@ -104,7 +107,7 @@ export default function Blog({ params }) {
                     <CustomMDX source={post.content} />
                 </article>
             </div>
-            <div className="w-32 pl-8">
+            <div className="hidden md:block fixed pl-[650px] top-44">
                 <Outline headers={headers} />
             </div>
         </section>
