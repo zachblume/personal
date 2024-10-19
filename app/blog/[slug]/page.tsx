@@ -112,7 +112,10 @@ export default function Blog({ params }) {
                 </article>
             </div>
             <div className="hidden md:block fixed pl-[650px] top-44">
-                <Outline headers={headers} />
+                <Outline
+                    headers={headers}
+                    // title={post.metadata.title}
+                />
             </div>
         </section>
     );
