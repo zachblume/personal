@@ -1,0 +1,69 @@
+---
+title: "Full-stack debugging tools: vscode, mitmproxy, and bruno"
+publishedAt: "2024-10-19"
+summary: "Quick personal notes on debugging tools"
+---
+
+I've always been a print debugging kind of person and appreciate
+console.log({...})'s ability to keep the variable name and value together.
+
+The value of that is you can execute it regardless of the environment and
+generally find the log without much knowlege as to the specifics of the
+execution config.
+
+The other trick I have picked up when even more unsure of the execution
+environment (e.g. code hosted _inside_ auth0's login posthooks) is to throw an
+error with the variable I want to inspect. Since they stop execution, or at
+least make it up a layer or more, you're more likely to find them in a
+confusing situation.
+
+But honestly -- we have better tools!
+
+1. VSCode:
+
+The main issue here for me when debugging a real-world application is that I
+want to be able to add breakpoints and inspect both the frontend and backend at
+the same time.
+
+The solution is having a launch.json that has multiple configurations, one for
+the frontend and one for the backend. You can then run both at the same time
+and have the debugger stop at breakpoints in either. Unfortunately you have to
+manually press the play button on both configurations.
+
+2. mitmproxy:
+
+It took me a while to learn the above debugger native to vscode partially
+because chrome ships with such good devtools -- they are better than the built
+in vscode debugger!
+
+You can attach the devtools to a node process, but you end up with something
+more like vscode than the native devtools.
+
+The biggest difference that makes a difference for me is the lack of a network
+tab.
+
+I want to see the network requests and responses in a way that is easy to read
+and filter. I want to see the headers, the payloads, timing, all that.
+
+mitmproxy is that, but in a TUI instead of a graphical interface. It's a proxy
+that you run on your machine and then set your computer's wifi/networking to
+route through, so you can inspect, replay, and modify network requests.
+
+3. bruno:
+
+Normally, life goes a bit like this:
+
+```
+chrome devtools -> network -> right click -> copy as curl -> paste to vscode and edit -> paste to terminal
+```
+
+It goes a long way, but once you have 1k character auth tokens in there and
+then you find some Apis like Twilio still use form encoding instead of JSON but
+only half the time, etc etc, something more robust is nice.
+
+Postman was that, and now is trash, and wants me to login with google for some
+reason. No.
+
+Bruno is a nice free open source alternative that has the ability to stage and
+run curls and collections of curls, and to boot its logo is a dog so you know,
+got me there.
