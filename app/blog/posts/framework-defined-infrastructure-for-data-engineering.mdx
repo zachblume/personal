@@ -1,0 +1,63 @@
+---
+title: "Framework-defined infrastructure for data engineering"
+publishedAt: "2024-10-08"
+summary: "80% of data eng infrastructure is solving shared problems"
+---
+
+The pattern in web frameworks has been from imperative to declarative, so
+jQuery gave way to React. Instead of pushing around DOM nodes you just write
+your end-state and let the magic happen.
+
+Beyond the rendering framework, that's also applied to the package manager for
+including dependencies and the file-based router system. I think it's enjoyable
+to write things the way you want them. You can see this trend towards
+declarative tools across many kinds of development.
+
+There's also been a trend towards zero-config. But the predecessor to
+zero-config is actually config. Before you can replace Webpack configs with
+Nextjs magic, you first need a declarative bundler management.
+
+So the trend past declarative towards zero config is actually one spectrum, and
+you see the same thing with infra: ftp becomes bash scripts becomes
+Terraform/docker becomes [framework-defined
+infrastructure](https://vercel.com/blog/framework-defined-infrastructure).
+
+I see the same as possible in data engineering:
+
+-   logic and testing: spreadsheets/eyeballs -> SQL-run-in-consoles ->
+    SQL-run-in-py-templates -> dbt
+-   orchestration: cron scripts -> Airflow
+-   infrastructure: we're still in the terraform era here!
+-   dashboards: okay, this is also still a place where we're in a horrible
+    purgatory of no-code or weird YAML solutions (looking at you LookML)
+
+I think you can see a next step here of framework-defined infrastructure for
+data engineering.
+
+We already have the declarative tools for logic and orchestration, but we're
+still wiring custom infra scripts or declarations for each chunk of the data
+eng toolset. Part of the story here is just maturity: front-end web dev went
+through incredible churn before stabilizing and standardizing on React. Data
+eng is still in the churn phase where closed source and open source are
+competing, and then we have a bunch of open-core with managed solutions without
+a full stack one (you end up like "let's wire together dbt cloud with google
+composer with ...").
+
+We also (unfortunately) are still in an era of churn with data warehouses,
+where the adoption of snowflake/bigquery/redshift is still dominant and no
+open-source/locally runnable solution has taken over the web saw with Postgres
+and MySQL.
+
+I think you could put these two sort of seperate thoughts together and say,
+look how Nextjs rolled up React with the minimum viable supporting toolset, and
+then became sort of a platform for additional plugins and tools ("to get
+started with nextjs..."), can't we do the same by rolling up dbt/airflow/airbyte/etc
+and an open source columnar database?
+
+Maybe the analogy doesn't make sense. The web is a much bigger platform than
+internal data management. But I think declarative, zero-config, opinionated
+infra meta-framework would be a preferred workflow for me, and I think we're in
+an interesting place where the existing open-core solutions like dbt maybe
+already have a path towards that as a single managed platform, but don't
+necessarily seem like they're going there, and maybe that's a opening for
+something new.
