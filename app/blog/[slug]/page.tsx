@@ -60,7 +60,7 @@ export default function Blog({ params }) {
     }
 
     const headers = post.content.match(/<h[1-6].*?>(.*?)<\/h[1-6]>/g)?.map(header => {
-        const level = parseInt(header.match(/<h([1-6])/)[1]);
+        const level = parseInt(header.match(/<h([1-6])/)?.[1] || "0");
         const text = header.replace(/<.*?>/g, "");
         return { level, text };
     }) || [];
