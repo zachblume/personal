@@ -2,11 +2,11 @@ import React from "react";
 
 const Outline = ({ headers }) => {
     return (
-        <nav>
-            <ul>
+        <nav className="w-full pl-4">
+            <ul className="list-none">
                 {headers.map((header, index) => (
-                    <li key={index} style={{ marginLeft: `${header.level - 1}em` }}>
-                        <a href={`#${header.text.toLowerCase().replace(/\s+/g, '-')}`}>
+                    <li key={index} className={`ml-${header.level - 1}`}>
+                        <a href={`#${header.text.toLowerCase().replace(/\s+/g, '-')}`} className="text-blue-500 hover:underline">
                             {header.text}
                         </a>
                     </li>
