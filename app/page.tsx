@@ -53,10 +53,8 @@ export default function Page() {
             </Box>
 
             <SidewayScroll />
-            {/* A placeholder element equal in size to the above: */}
-            <div className="h-[170px]"> </div>
 
-            <div className="my-8">
+            <div className="mb-8">
                 <BlogPosts />
             </div>
         </section>
@@ -65,10 +63,10 @@ export default function Page() {
 
 function SidewayScroll() {
     return (
-        <div className="overflow-x-auto fixed">
-            <div className="flex space-x-10 py-6 justify-center">
-                <div className="flex w-[350px] h-[150px] grayscale hover:grayscale-0 transition duration-300 !aspect-video">
-                    <div className="bg-white py-4 px-5 rounded-lg m-0 border border-neutral-200">
+        <div className="overflow-x-auto w-full">
+            <div className="flex space-x-10 py-6">
+                <div className="block !w-[350px] h-[150px] grayscale hover:grayscale-0 transition duration-300">
+                    <div className="bg-white !w-[350px] py-4 px-5 rounded-lg m-0 border border-neutral-200">
                         I work at the{" "}
                         <a
                             href="https://demexchange.com/"
@@ -110,7 +108,7 @@ function SidewayScroll() {
                     </div>
                 </div>
 
-                <div className="w-[225px] h-[150px] grayscale hover:grayscale-0 transition duration-300">
+                <div className="w-[225px] h-[150px] grayscale hover:grayscale-0 transition duration-300 relative !aspect-video">
                     <Image
                         alt=""
                         src="/millie.jpeg"
