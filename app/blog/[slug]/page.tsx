@@ -67,7 +67,7 @@ export default function Blog({ params }) {
 
     return (
         <section className="flex">
-            <div className="flex-1">
+            <div className="w-auto">
                 <script
                     type="application/ld+json"
                     suppressHydrationWarning
@@ -104,7 +104,7 @@ export default function Blog({ params }) {
                     <CustomMDX source={post.content} />
                 </article>
             </div>
-            <div className="w-1/4 pl-8">
+            <div className="w-32 pl-8">
                 <Outline headers={headers} />
             </div>
         </section>
