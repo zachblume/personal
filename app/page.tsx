@@ -66,7 +66,7 @@ function SidewayScroll() {
         <div className="overflow-x-auto w-full hover:overflow-x-scroll scrollbar-hide hover:scrollbar-default scrollbar-always-visible py-2 mt-3">
             <div className="flex space-x-6 py-0">
                 <div className="block !w-[350px] h-[150px] grayscale hover:grayscale-0 transition duration-300">
-                    <div className="!w-[350px] py-4 px-5 rounded-lg m-0 border border-neutral-200">
+                    <div className="!w-[350px] py-4 px-5 rounded-lg m-0 border border-neutral-200 dark:border-neutral-700">
                         I live in NYC and work at the{" "}
                         <a
                             href="https://demexchange.com/"
@@ -81,8 +81,8 @@ function SidewayScroll() {
                         >
                             Raise More
                         </a>
-                        , a refreshing CRM for politics. My open source work is
-                        on{" "}
+                        , a modern CRM for political fundraising. My open source
+                        work is on{" "}
                         <a
                             href="https://github.com/zachblume"
                             className="underline text-pink-500 decoration-pink-200"
