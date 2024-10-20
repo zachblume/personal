@@ -70,14 +70,14 @@ function SidewayScroll() {
                         I live in NYC and work at the{" "}
                         <a
                             href="https://demexchange.com/"
-                            className="underline text-pink-500 decoration-pink-200"
+                            className="underline text-pink-500 decoration-pink-200 dark:decoration-pink-500"
                         >
                             Democratic Data Exchange (DDx)
                         </a>{" "}
                         as team lead for core infrastructure. I founded{" "}
                         <a
                             href="https://www.raisemore.app/"
-                            className="underline text-pink-500 decoration-pink-200"
+                            className="underline text-pink-500 decoration-pink-200 dark:decoration-pink-500"
                         >
                             Raise More
                         </a>
@@ -85,7 +85,7 @@ function SidewayScroll() {
                         work is on{" "}
                         <a
                             href="https://github.com/zachblume"
-                            className="underline text-pink-500 decoration-pink-200"
+                            className="underline text-pink-500 decoration-pink-200 dark:decoration-pink-500"
                         >
                             GitHub
                         </a>
