@@ -1,0 +1,93 @@
+---
+title: "Docker compose inside docker -- autoscaling multiple containers to zero on Fly.io machines"
+publishedAt: "2024-10-21"
+summary: "Deploy multi-container applications to production that can scale to zero"
+---
+
+Docker Compose has been my trusty sidekick for orchestrating multi-container
+applications during development. Its simplicity and effectiveness made me
+wonder: could I carry that convenience straight into production? Spoiler
+alert—it wasn’t as straightforward as I’d hoped. But the journey led me to some
+interesting places, and I think it’s worth sharing for anyone facing similar
+hurdles.
+
+## The Initial Plan: EC2 or VPS
+
+My first thought was to deploy the application using an EC2 instance or a
+virtual private server. This approach would allow me to run Docker Compose just
+as I did locally. However, I was also interested in leveraging features like
+horizontal autoscaling and scaling to zero when the application wasn’t in use.
+Managing ec2 like this via api or manually is a lot of undifferentiated work.
+
+### Exploring Managed Platforms: ECS Fargate, Cloud Run, Railway
+
+I then turned to managed platforms like AWS ECS Fargate, Google Cloud Run, and
+Railway. These services offer automatic scaling. However, they really only
+accept only individual Docker containers, not Docker Compose configurations.
+This meant I couldn’t directly deploy my docker-compose.yml file to these
+platforms.
+
+This is leading towards some very complex kubernetes with stacked control plane
+land, not exactly my level of expertise, right?
+
+## Attempting Docker-in-Docker
+
+An idea that came to mind was using Docker-in-Docker (DinD) to run Docker
+Compose inside a Docker container. In theory, this could allow me to execute
+docker-compose up within a container on these platforms, and allow the outer
+docker itself to be managed to zero itself by the platform.
+
+So I learned that Docker-in-Docker requires sharing the host’s Docker socket
+with the container, which poses straightforward security risks about file
+access. You get that by running containers in privileged mode—a practice that
+managed platforms generally prohibit to maintain a secure environment. This
+approach wasn’t viable given those security implications and platform
+restrictions.
+
+### Discovering Fly.io: A New Possibility
+
+While searching for alternatives, I came across Fly.io. Fly.io runs
+applications using Open Container Initiative (OCI) images, similar to Docker
+images, but instead of using Docker, it employs Firecracker microVMs to run
+containers as lightweight virtual machines. This setup intrigued me because it
+seemed to offer the scalability and efficiency I was seeking without the need
+for Docker-in-Docker, since you'd be runner docker-on-vm/firecracker.
+
+### Implementing Docker Compose on Fly.io
+
+I decided to experiment with running Docker Compose within a Fly.io machine.
+Here’s the approach I took:
+
+    1.	Creating a Custom Image: I built a Docker image that included both Docker and Docker Compose installed. This image would serve as the environment to run my docker-compose.yml file.
+    2.	Deploying to Fly.io: Using Fly.io’s command-line tool, flyctl, I initialized a new application with flyctl launch and deployed it using flyctl deploy.
+    3.	Running Docker Compose: Once deployed, the Fly.io machine started, and I was able to run docker-compose up inside it, orchestrating the services as defined in my Compose file.
+
+### Steps to Run
+
+```
+flyctl launch
+```
+
+After deploying, Fly.io provided a URL to access the running application,
+allowing me to see my multi-container setup live in a production environment.
+
+## Outcomes
+
+This method might not be the standard way to deploy applications to production,
+and it’s important to consider the potential drawbacks, such as complexity and
+possible performance overhead. However, this experiment provided a practical
+solution that met my requirements for autoscaling and efficient resource
+utilization.
+
+More importantly, the process taught me valuable lessons about
+containerization, deployment strategies, and adapting to platform constraints.
+It reinforced the idea that sometimes unconventional approaches can bridge the
+gap between development convenience and production requirements.
+
+## Thoughts
+
+This solution is not really production-ready for real by itself and isn't
+really suitable yet for many scenarios, and there might be more efficient ways
+to achieve similar goals. It's left me thinking more about best practices for
+deploying multi-container applications to arbitrary N (customer) targets and
+how what the production scale of this would look like.
