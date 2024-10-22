@@ -58,10 +58,11 @@ for Docker-in-Docker, since you'd be runner docker-on-vm/firecracker.
 
 ### Implementing Docker Compose on Fly.io
 
-I decided to experiment with running Docker Compose within a Fly.io machine.
+Let's do it.
+
 Here’s the approach I took:
 
-    1.	Creating a Custom Image: I built a Docker image that included both Docker and Docker Compose installed. This image would serve as the environment to run my docker-compose.yml file.
+    1.	Creating a Custom Image: I built a Docker image that included both Docker and Docker Compose installed. This image would serve as the environment to run my docker-compose.yml file. I had to use a builder with a custom buildx configuration to run it as priveleged.
     2.	Deploying to Fly.io: Using Fly.io’s command-line tool, flyctl, I initialized a new application with flyctl launch and deployed it using flyctl deploy.
     3.	Running Docker Compose: Once deployed, the Fly.io machine started, and I was able to run docker-compose up inside it, orchestrating the services as defined in my Compose file.
 
@@ -71,21 +72,18 @@ Here’s the approach I took:
 flyctl launch
 ```
 
-After deploying, Fly.io provided a URL to access the running application,
-allowing me to see my multi-container setup live in a production environment.
+Boom, it works.
 
-## Outcomes
+## Drawbacks
 
-This method might not be the standard way to deploy applications to production,
-and it’s important to consider the potential drawbacks, such as complexity and
-possible performance overhead. However, this experiment provided a practical
-solution that met my requirements for autoscaling and efficient resource
-utilization.
+Is this the textbook way to deploy applications to production? Nope. There are
+trade-offs to consider—like added complexity and potential performance
+overhead. That's why people doing this for real maybe end up with kubernetes
+and bespoke control planes.
 
-More importantly, the process taught me valuable lessons about
-containerization, deployment strategies, and adapting to platform constraints.
-It reinforced the idea that sometimes unconventional approaches can bridge the
-gap between development convenience and production requirements.
+But for my needs, it worked immedaitely. It's a practical solution that
+delivered on autoscaling and efficient resource use without requiring a major
+overhaul of my existing setup.
 
 ## Thoughts
 
