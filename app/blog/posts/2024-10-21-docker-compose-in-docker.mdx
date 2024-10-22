@@ -66,7 +66,7 @@ Let's do it.
 
 Here’s the approach I took:
 
-    1.	Creating a Custom Image: I built a Docker image that included both Docker and Docker Compose installed. This image would serve as the environment to run my docker-compose.yml file. I had to use a builder with a custom buildx configuration to run it as priveleged.
+    1.	Creating a Custom Image: I built a Docker image that included both Docker and Docker Compose installed. This image would serve as the environment to run my docker-compose.yml file.
     2.	Deploying to Fly.io: Using Fly.io’s command-line tool, flyctl, I initialized a new application with flyctl launch and deployed it using flyctl deploy.
     3.	Running Docker Compose: Once deployed, the Fly.io machine started, and I was able to run docker-compose up inside it, orchestrating the services as defined in my Compose file.
 
