@@ -111,7 +111,7 @@ export default function Blog({ params }) {
                     <CustomMDX source={post.content} />
                 </article>
             </div>
-            <div className="hidden md:block fixed pl-[650px] top-44">
+            <div className="hidden md:block fixed ml-[650px] top-44">
                 <Outline
                     headers={headers}
                     // title={post.metadata.title}
