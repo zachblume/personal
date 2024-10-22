@@ -4,20 +4,23 @@ publishedAt: "2024-10-21"
 summary: "Deploy multi-container applications to production that can scale to zero"
 ---
 
-Docker Compose has been my trusty sidekick for orchestrating multi-container
-applications during development. Its simplicity and effectiveness made me
-wonder: could I carry that convenience straight into production? Spoiler
-alert—it wasn’t as straightforward as I’d hoped. But the journey led me to some
-interesting places, and I think it’s worth sharing for anyone facing similar
-hurdles.
+I want to go to prod with `docker compose` and I want the multi-container stack
+to autoscale to zero.
 
-## The Initial Plan: EC2 or VPS
+I want to do this as ephemeral preview deployment per branch of a
+multi-container application.
 
-My first thought was to deploy the application using an EC2 instance or a
-virtual private server. This approach would allow me to run Docker Compose just
-as I did locally. However, I was also interested in leveraging features like
-horizontal autoscaling and scaling to zero when the application wasn’t in use.
-Managing ec2 like this via api or manually is a lot of undifferentiated work.
+Spoiler alert: it wasn’t as straightforward as I’d hoped. But the journey led me
+to some interesting places, and I think it’s worth sharing for anyone facing
+similar hurdles.
+
+## The Initial Plan: EC2
+
+My first thought was to deploy the application using an EC2 instance. This
+approach would allow me to run Docker Compose just as I did locally. However, I
+wanted to get features like horizontal autoscaling and scaling to zero when the
+application wasn’t in use and managing ec2 like this via api or manually is a
+lot of undifferentiated work.
 
 ### Exploring Managed Platforms: ECS Fargate, Cloud Run, Railway
 
