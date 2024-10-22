@@ -124,7 +124,7 @@ table {
 
 .wrapper {
     opacity: 0; /* Start invisible */
-    animation: fadeIn 2s ease-in forwards; /* 2s fade-in animation */
+    animation: fadeIn 1s ease-in forwards; /* 2s fade-in animation */
 }
 
 @keyframes fadeIn {
