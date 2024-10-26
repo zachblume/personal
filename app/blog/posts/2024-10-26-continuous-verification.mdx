@@ -128,7 +128,8 @@ production.
 To enable this, you'd need to stream the DOM in a reconstructable fashion --
 rrweb solves the diff and reconstruction problem for human eyes (you can watch
 replays of user interactions), but this would need to be fit for machine
-consumption, i.e. inside the test runner.
+consumption, i.e. inside the test runner. It probably already solved that too,
+I just haven't used it enough to know.
 
 Then, you could send off these replay files to the test runner, which would
 consume them in a stream, test the file for the when() triggers, and replay the
