@@ -93,7 +93,6 @@ We could do something more like:
 
 ```
 // Imagine this runs on streaming production replay traffic
-
 verify("the shopping cart should never display as negative", async () => {
     await when(page.getByTestId("cart-total").exists)
         .expect(page.getByTestId("cart-total").text())
