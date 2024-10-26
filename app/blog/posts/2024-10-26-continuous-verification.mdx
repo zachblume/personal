@@ -1,0 +1,141 @@
+---
+title: "Shipping tests to production"
+publishedAt: "2024-10-26"
+summary: "Tests without any mocking"
+---
+
+## Modern tests are tightly coupled expectations and synthetic input
+
+Tests observe the behavior of a system under a specific set of conditions, but
+the input or environment is always mocked or synthetic in some way:
+
+-   Unit tests mock the dependencies of the code under test.
+-   Integration tests mock the environment in which the code under test runs.
+-   End-to-end tests mock the user interactions with the code under test.
+
+The synthetic nature of tests means that they never cover all the possible
+scenarios that a system will encounter in the real world.
+
+Interestingly, there's two completely seperate things going on in a test, that
+I want to tease apart:
+
+-   The mocking of something in order to observe things about it
+-   The expectation(s)
+
+Typically these are tightly coupled, like:
+
+```
+const increment = (num) => num + 1;
+test("41 plus one should return 42", () => {
+    expect(increment(41)).toBe(42);
+});
+```
+
+We mocked the input to the function, and an environment around it's execution
+(namely, an artificially pure enviroment that would never interfere). We then
+observed the output of the function with this mock input and checked that it
+was specifically 42.
+
+The approach of "property-based testing" goes a long way towards separating
+these two concerns:
+
+```
+import fastcheck from "fast-check";
+const increment = (num) => num + 1;
+test("anything plus one should return (anything + 1)", () => {
+    fastcheck.assert(
+        fastcheck.property(fastcheck.integer(), (num) => {
+            expect(increment(num)).toBe(num + 1);
+        }),
+    );
+});
+```
+
+The test fuzzes through a range of integer inputs, and the expectation is
+described much more abstractly -- without reference to a specific integer
+input.
+
+"Increment" or whatever function under observation might be significantly more
+complicated (maybe it does something completely differen when provided a
+string!), but this was we know something about its behavior under a whole range
+of conditions, and thus satisfy ourselves that now the venn diagram overlaps
+with the real world's possible variaton much more.
+
+However, this approach doesn't extend up the stack in a straightforward way.
+How can you fuzz through a range of user interactions? (Interestingly, fuzzing
+began in a related way with "monkey" keyboard input at Apple, but the number of
+real world pathways are too great to simulate artifically.)
+
+## Seperating e2e test expectations from journeys
+
+But if we seperate inputs from expectations, we can imagine a system that
+continuously verifies a list of expected behaviors against the actual running
+system. You could still write a bunch of explicit end-to-end tests, but all the
+expectations would evaluated continuously, and thus you could also apply it to
+production traffic and alert when the real world turned out to be more
+complicated than your synthetic tests.
+
+So, instead of:
+
+```
+// This is the normal way we do things
+import {test,expect} from "playwright";
+test("adding something to the cart should increase the total", () => {
+    await page.goto("/product123")
+    await page.getByRole("button", {name: "Add to cart"}).click();
+    await expect(
+        page.getByTestId("cart-total").text()
+    ).toBeGreaterThanOrEqual(0);
+});
+```
+
+We could do something more like:
+
+```
+// Imagine this runs on streaming production replay traffic
+
+verify("the shopping cart should never display as negative", async () => {
+    await when(page.getByTestId("cart-total").exists)
+        .expect(page.getByTestId("cart-total").text())
+        .toBeLessThan(0);
+});
+
+verify("cart should read 1+ within 5s 'add to cart' is clicked", async () => {
+    await when(page.getByRole("button", { name: "Add to cart" }).click)
+        .expect(page.getByTestId("cart-total").text())
+        .toBeGreaterThanOrEqual(0);
+});
+
+// These are traditional tests
+test("journey: add item to cart", async () => {
+    await page.goto("/product123");
+    await page.getByRole("button", { name: "Add to cart" }).click();
+});
+
+test("journey: remove items from cart", async () => {
+    await page.goto("/product123");
+    await page.getByRole("button", { name: "Remove from cart" }).click();
+});
+```
+
+Imagine, the above style would let us run this test locally and in CI, but also
+deploy the expectations as a continuous check in prod. In that way, you'd be
+able to write invariant expectations that were continuously verified in
+production.
+
+## Considerations from running expectations over clickstream data in prod
+
+To enable this, you'd need to stream the DOM in a reconstructable fashion --
+rrweb solves the diff and reconstruction problem for human eyes (you can watch
+replays of user interactions), but this would need to be fit for machine
+consumption, i.e. inside the test runner.
+
+Then, you could send off these replay files to the test runner, which would
+consume them in a stream, test the file for the when() triggers, and replay the
+DOM while testing the expectations.
+
+There's a big question about how much compute this would take, but you could
+solve this several ways, like sampling and thinking through ways of optimizing
+the trigger listeners and replay.
+
+I wonder if anyone else has already put this together!
