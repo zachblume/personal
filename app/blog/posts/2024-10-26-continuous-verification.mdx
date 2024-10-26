@@ -16,7 +16,7 @@ the input or environment is always mocked or synthetic in some way:
 The synthetic nature of tests means that they never cover all the possible
 scenarios that a system will encounter in the real world.
 
-Interestingly, there's two completely seperate things going on in a test, that
+Interestingly, there's two completely separate things going on in a test, that
 I want to tease apart:
 
 -   The mocking of something in order to observe things about it
@@ -32,7 +32,7 @@ test("41 plus one should return 42", () => {
 ```
 
 We mocked the input to the function, and an environment around it's execution
-(namely, an artificially pure enviroment that would never interfere). We then
+(namely, an artificially pure environment that would never interfere). We then
 observed the output of the function with this mock input and checked that it
 was specifically 42.
 
@@ -58,17 +58,17 @@ input.
 "Increment" or whatever function under observation might be significantly more
 complicated (maybe it does something completely differen when provided a
 string!), but this was we know something about its behavior under a whole range
-of conditions, and thus satisfy ourselves that now the venn diagram overlaps
-with the real world's possible variaton much more.
+of conditions, and thus satisfy ourselves that now the Venn diagram overlaps
+with the real world's possible variation much more.
 
 However, this approach doesn't extend up the stack in a straightforward way.
 How can you fuzz through a range of user interactions? (Interestingly, fuzzing
 began in a related way with "monkey" keyboard input at Apple, but the number of
 real world pathways are too great to simulate artifically.)
 
-## Seperating e2e test expectations from journeys
+## Separating e2e test expectations from journeys
 
-But if we seperate inputs from expectations, we can imagine a system that
+But if we separate inputs from expectations, we can imagine a system that
 continuously verifies a list of expected behaviors against the actual running
 system. You could still write a bunch of explicit end-to-end tests, but all the
 expectations would evaluated continuously, and thus you could also apply it to
@@ -137,5 +137,12 @@ DOM while testing the expectations.
 There's a big question about how much compute this would take, but you could
 solve this several ways, like sampling and thinking through ways of optimizing
 the trigger listeners and replay.
+
+The biggest concerns are flakiness and ease of writing tests. Synthetic e2e
+tests are easier to write than this, and property-based testing is a great
+example of how better testing approaches that are harder to write struggle
+with adoption. Finally, traditional e2e tests provide much more flexibility in
+checking state across pages, whereas clickstream data might create real
+barriers to the timing and isolation assumptions that underly that.
 
 I wonder if anyone else has already put this together!
