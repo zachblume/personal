@@ -96,7 +96,7 @@ We could do something more like:
 verify("the shopping cart should never display as negative", async () => {
     await when(page.getByTestId("cart-total").exists)
         .expect(page.getByTestId("cart-total").text())
-        .toBeLessThan(0);
+        .never.toBeLessThan(0);
 });
 
 verify("cart should read 1+ within 5s 'add to cart' is clicked", async () => {
