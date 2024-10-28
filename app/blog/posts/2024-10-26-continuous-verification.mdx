@@ -85,7 +85,7 @@ test("adding something to the cart should increase the total", () => {
     await page.getByRole("button", {name: "Add to cart"}).click();
     await expect(
         page.getByTestId("cart-total").text()
-    ).toBeGreaterThanOrEqual(0);
+    ).toBeGreaterThanOrEqual(1);
 });
 ```
 
@@ -102,7 +102,7 @@ verify("the shopping cart should never display as negative", async () => {
 verify("cart should read 1+ within 5s 'add to cart' is clicked", async () => {
     await when(page.getByRole("button", { name: "Add to cart" }).click)
         .expect(page.getByTestId("cart-total").text())
-        .toBeGreaterThanOrEqual(0);
+        .toBeGreaterThanOrEqual(1);
 });
 
 // These are traditional tests
