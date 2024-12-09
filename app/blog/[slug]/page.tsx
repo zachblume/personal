@@ -4,6 +4,7 @@ import { formatDate, getBlogPosts } from "app/blog/utils";
 import { baseUrl } from "app/sitemap";
 import Outline from "app/components/outline";
 import Link from "next/link";
+import { BlogPosts } from "app/components/posts";
 
 export async function generateStaticParams() {
     const posts = getBlogPosts();
@@ -96,7 +97,10 @@ export default function Blog({ params }) {
                         }),
                     }}
                 />
-                <Link href="/" className="mb-3 block text-neutral-500 text-sm">
+                <Link
+                    href="/"
+                    className="mb-2 block text-neutral-600 dark:text-neutral-400 text-sm font-light"
+                >
                     ⏴ Home
                 </Link>
                 <h1 className="title font-semibold text-2xl tracking-tighter">
@@ -110,6 +114,16 @@ export default function Blog({ params }) {
                 <article className="prose">
                     <CustomMDX source={post.content} />
                 </article>
+                <div>
+                    <h2 className="mt-16 mb-5 font-semibold">Past Writing</h2>
+                    <BlogPosts />
+                </div>
+                <Link
+                    href="/"
+                    className="mt-10 mb-2 block text-neutral-600 dark:text-neutral-400 text-sm font-light"
+                >
+                    ⏴ Home
+                </Link>
             </div>
             <div className="hidden md:block fixed ml-[650px] top-44">
                 <Outline
