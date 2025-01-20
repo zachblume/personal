@@ -93,13 +93,13 @@ function SidewayScroll() {
                     </div>
                 </div>
 
-                <div className="w-[225px] h-[150px] grayscale hover:grayscale-0 transition duration-300 relative !aspect-video">
+                <div className="w-[210px] h-[140px] grayscale hover:grayscale-0 transition duration-300 relative !aspect-video">
                     <Image
                         alt=""
                         src="/waldo.jpeg"
-                        width={225}
-                        height={150}
-                        className="!h-[150px] rounded-lg"
+                        width={210}
+                        height={140}
+                        className="!h-[140px] rounded-lg"
                     />
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition duration-300">
                         <span className="text-pink-100 font-bold text-lg mt-auto ml-auto mr-3">
@@ -108,13 +108,13 @@ function SidewayScroll() {
                     </div>
                 </div>
 
-                <div className="w-[225px] h-[150px] grayscale hover:grayscale-0 transition duration-300 relative !aspect-video">
+                <div className="w-[210px] h-[140px] grayscale hover:grayscale-0 transition duration-300 relative !aspect-video">
                     <Image
                         alt=""
                         src="/millie.jpeg"
-                        width={225}
-                        height={150}
-                        className="!h-[150px] rounded-lg"
+                        width={210}
+                        height={140}
+                        className="!h-[140px] rounded-lg"
                     />
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition duration-300">
                         <span className="text-pink-100 font-bold text-lg mt-auto ml-auto mr-3">
@@ -123,13 +123,13 @@ function SidewayScroll() {
                     </div>
                 </div>
 
-                <div className="w-[225px] h-[150px] grayscale hover:grayscale-0 transition duration-300 relative !aspect-video">
+                <div className="w-[210px] h-[140px] grayscale hover:grayscale-0 transition duration-300 relative !aspect-video">
                     <Image
                         alt=""
                         src="/luna.jpeg"
-                        width={225}
-                        height={150}
-                        className="!h-[150px] rounded-lg"
+                        width={210}
+                        height={140}
+                        className="!h-[140px] rounded-lg"
                     />
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition duration-300">
                         <span className="text-pink-100 font-bold text-lg mt-auto ml-auto mr-3">
