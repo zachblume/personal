@@ -1,0 +1,51 @@
+---
+title: "Waterfall, agile, kanban -- as I know them"
+publishedAt: "2025-01-20"
+summary: ""
+draft: true
+---
+
+1. Agile
+
+Before working at Stripe, my experience of software development was the
+agile variety: sprints, retrospectives, and standups.
+
+It's so ubiquitous I won't bother writing further about it.
+
+2. Waterfall
+
+Stripe operates differently: "projects" are the focus, and project management
+is the primary working style: weekly team meetings, project updates, and
+deadlines.
+
+You could call this waterfall (which I believe takes its name from Gantt-style
+charts). It's heavyweight planning, a good deal of doc writing, and more or
+less the rest of big tech apparently follows similar conventions: see [How Big
+Tech Runs Tech Projects and the Curious Absence of
+Scrum](https://blog.pragmaticengineer.com/project-management-at-big-tech/) from
+Gergely Orosz.
+
+There's a couple of really good reason for it:
+
+When you have independent teams with overlapping decisions, products, and
+development platforms, there needs to be horizontal accountability. So you need
+a form of review because any decision one engineer makes is going to be
+affecting a giant number of engineers and future projects, and there's far too
+many people involved (and simtulaneously being hired and leaving) to assume
+anyone can be on the same page without it.
+
+At the same time, engineers are shipping very quickly, i.e. daily, in part
+because their changes could be highly conflicted if they don't get into trunk.
+
+These facts combine to mean that it's difficult to redirect something after it
+begins building momentum to ship, including as pieces of it start accumulating
+in the trunk branch, as they were reviewed in isolation. Which means it's
+useful to do heavier planning up-front.
+
+One key difference to modern waterfall is that at Stripe automated testing is
+strong and the primary method of testing. People don't really ship changes
+without accompanying passing automated tests.
+
+3. Kanban
+
+I need to finish writing this :)

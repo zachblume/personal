@@ -67,14 +67,14 @@ function SidewayScroll() {
             <div className="flex space-x-6 py-0">
                 <div className="block !w-[350px] h-[150px] grayscale hover:grayscale-0 transition duration-300">
                     <div className="!w-[350px] py-4 px-5 rounded-lg m-0 border border-neutral-200 dark:border-neutral-700">
-                        I live in NYC and work at the{" "}
+                        I live in NYC and work at{" "}
                         <a
-                            href="https://demexchange.com/"
+                            href="https://www.stripe.com"
                             className="underline text-pink-500 decoration-pink-200 dark:decoration-pink-700"
                         >
-                            Democratic Data Exchange (DDx)
+                            Stripe
                         </a>{" "}
-                        as team lead for core infrastructure. I founded{" "}
+                        as a software engineer. I founded{" "}
                         <a
                             href="https://www.raisemore.app/"
                             className="underline text-pink-500 decoration-pink-200 dark:decoration-pink-700"
