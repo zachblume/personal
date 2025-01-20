@@ -1,18 +1,18 @@
 ---
-title: "Waterfall, agile, kanban -- as I know them"
+title: "Waterfall, scrum, kanban - as I know them"
 publishedAt: "2025-01-20"
-summary: ""
-draft: true
+summary: "My views on the three most common software development methodologies"
 ---
 
-1. Agile
+## Scrum
 
 Before working at Stripe, my experience of software development was the
-agile variety: sprints, retrospectives, and standups.
+scrum variety: sprints, retrospectives, and standups.
 
-It's so ubiquitous I won't bother writing further about it.
+It's so ubiquitous I won't bother writing further about it. People just assume
+its the same thing as agile.
 
-2. Waterfall
+## Waterfall
 
 Stripe operates differently: "projects" are the focus, and project management
 is the primary working style: weekly team meetings, project updates, and
@@ -25,27 +25,54 @@ Tech Runs Tech Projects and the Curious Absence of
 Scrum](https://blog.pragmaticengineer.com/project-management-at-big-tech/) from
 Gergely Orosz.
 
-There's a couple of really good reason for it:
+There are some compelling reasons for this approach:
 
-When you have independent teams with overlapping decisions, products, and
-development platforms, there needs to be horizontal accountability. So you need
-a form of review because any decision one engineer makes is going to be
-affecting a giant number of engineers and future projects, and there's far too
-many people involved (and simtulaneously being hired and leaving) to assume
-anyone can be on the same page without it.
+-   With independent teams making overlapping decisions across shared products
+    and platforms, there’s a need for structured reviews. Any one engineer’s
+    choices could ripple through an enormous codebase, affecting hundreds of
+    engineers and future projects. And given the scale of hiring and attrition,
+    it’s unrealistic to assume everyone is always on the same page.
 
-At the same time, engineers are shipping very quickly, i.e. daily, in part
-because their changes could be highly conflicted if they don't get into trunk.
+-   Engineers ship changes daily to avoid conflicts, as delays increase the
+    risk of highly conflicted merges. This fast pace makes it hard to change
+    course once something gains momentum. Pieces of a project start
+    accumulating in the trunk branch, each reviewed in isolation, making
+    upfront planning even more essential.
 
-These facts combine to mean that it's difficult to redirect something after it
-begins building momentum to ship, including as pieces of it start accumulating
-in the trunk branch, as they were reviewed in isolation. Which means it's
-useful to do heavier planning up-front.
+One modern twist on this “waterfall” approach at Stripe is the strong reliance
+on automated testing. Changes almost always ship with passing automated tests,
+which minimizes the risk of regressions and reduces the need for heavy manual
+QA.
 
-One key difference to modern waterfall is that at Stripe automated testing is
-strong and the primary method of testing. People don't really ship changes
-without accompanying passing automated tests.
+## Kanban
 
-3. Kanban
+Kanban to me was: engineers working tickets without the ceremonies of
+scrum. One thing at a time, and less deadlines.
 
-I need to finish writing this :)
+Before now I never had to work with Jira. We were always working with Linear,
+which is a beautiful tool.
+
+Kanban also emphasized the practice of taking a big ticket and systematically
+breaking it into smaller ones. This approach blends implementation with
+fact-finding. Instead of writing a heavyweight design doc upfront, you dive
+into the work, encounter dead ends, and learn as you go. It sacrifices some
+up-front clarity but avoids the days or weeks of unproductive debates that can
+come with heavier multi-party planning.
+
+## Wrapping up
+
+Each of these approaches has its merits.
+
+For me, scrum is performance management more than project management, and
+you're probably better off hiring better engineers and creating a
+well-motivated environment.
+
+I think the waterfall/project management approach is somewhat inevitable to
+optimize for large systems. It's definitely "slower" but you could say that's a
+purposeful philosophical choice along the lines of planned=slower=less
+mistakes=faster.
+
+Kanban has a lot to offer to everyone, in my view. I think making planning a
+ticket-writing activity forces you to actually think about the units of
+implementation, and the flow of working on a single thing at any time is hard
+to match without pre-determining those units.
