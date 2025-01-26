@@ -1,11 +1,13 @@
-import "./global.css";
 import "@radix-ui/themes/styles.css";
 import type { Metadata } from "next";
-// import { Navbar } from "./components/nav";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Footer from "./components/footer";
 import { baseUrl } from "./sitemap";
+import { ViewTransitions } from "next-view-transitions";
+import { Theme } from "@radix-ui/themes";
+import { ThemeProvider } from "next-themes";
+import "./global.css";
 
 export const metadata: Metadata = {
     metadataBase: new URL(baseUrl),
@@ -13,10 +15,10 @@ export const metadata: Metadata = {
         default: "Zach Blume",
         template: "%s | Zach Blume",
     },
-    description: "This is my portfolio.",
+    description: "My engineering blog and portfolio",
     openGraph: {
         title: "Zach Blume",
-        description: "This is my portfolio.",
+        description: "My engineering blog and portfolio",
         url: baseUrl,
         siteName: "Zach Blume",
         locale: "en_US",
@@ -35,36 +37,38 @@ export const metadata: Metadata = {
     },
 };
 
-const cx = (...classes) => classes.filter(Boolean).join(" ");
-
-import { Theme } from "@radix-ui/themes";
-import { ThemeProvider } from "next-themes";
-
 export default function RootLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en">
-            <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto">
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    <Theme accentColor="ruby" panelBackground="solid">
-                        <main className="wrapper flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
-                            {/* <Navbar /> */}
-                            {children}
-                            <Footer />
-                            <Analytics />
-                            <SpeedInsights />
-                        </main>
-                    </Theme>
-                </ThemeProvider>
-            </body>
-        </html>
+        <ViewTransitions>
+            <html lang="en">
+                <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto">
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange
+                        enableColorScheme
+                    >
+                        <Theme
+                            accentColor="ruby"
+                            panelBackground="translucent"
+                            hasBackground={false}
+                        >
+                            <main className="wrapper flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
+                                {/* <Navbar /> */}
+                                {children}
+                                <Footer />
+                                <Analytics />
+                                <SpeedInsights />
+                            </main>
+                        </Theme>
+                    </ThemeProvider>
+                </body>
+            </html>
+        </ViewTransitions>
     );
 }

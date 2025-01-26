@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { formatDate, getBlogPosts } from "app/blog/utils";
 
 export function BlogPosts() {
@@ -23,7 +23,7 @@ export function BlogPosts() {
                         href={`/blog/${post.slug}`}
                     >
                         <div className="w-full flex flex-col md:flex-row space-x-0 md:space-x-2">
-                            <p className="text-neutral-600 dark:text-neutral-400 w-[115px]">
+                            <p className="text-neutral-400 dark:text-neutral-400 w-[115px]">
                                 {formatDate(post.metadata.publishedAt, false)}
                             </p>
                             <p className="underline-link text-neutral-900 dark:text-neutral-100 tracking-tight">

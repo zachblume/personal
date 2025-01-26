@@ -1,14 +1,10 @@
 import { Avatar, Box, Button, Card, Flex, Text } from "@radix-ui/themes";
 import { BlogPosts } from "app/components/posts";
 import Image from "next/image";
-import Link from "next/link";
 
 export default function Page() {
     return (
         <section>
-            {/* <h1 className="mb-8 text-2xl font-semibold tracking-tight">
-                Zach Blume
-            </h1> */}
             <Box>
                 <Card variant="ghost">
                     <Flex gap="5" align="center">

@@ -16,7 +16,7 @@
 
 .prose a,
 .underline-link {
-    @apply underline decoration-neutral-400 dark:decoration-neutral-600 underline-offset-2 decoration-[0.1em] hover:text-pink-500 hover:decoration-pink-300;
+    @apply underline decoration-neutral-100 dark:decoration-neutral-600 underline-offset-2 decoration-[0.1em] hover:text-pink-500 hover:decoration-pink-300;
     @apply transition-all;
 }
 
