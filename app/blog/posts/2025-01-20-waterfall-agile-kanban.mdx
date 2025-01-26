@@ -26,17 +26,17 @@ Gergely Orosz.
 
 There are some compelling reasons for this approach:
 
--   With independent teams making overlapping decisions across shared products
-    and platforms, there’s a need for structured reviews. Any one engineer’s
-    choices could ripple through an enormous codebase, affecting hundreds of
-    engineers and future projects. And given the scale of hiring and attrition,
-    it’s unrealistic to assume everyone is always on the same page.
+- With independent teams making overlapping decisions across shared products
+  and platforms, there’s a need for structured reviews. Any one engineer’s
+  choices could ripple through an enormous codebase, affecting hundreds of
+  engineers and future projects. And given the scale of hiring and attrition,
+  it’s unrealistic to assume everyone is always on the same page.
 
--   Engineers ship changes daily to avoid conflicts, as delays increase the
-    risk of highly conflicted merges. This fast pace makes it hard to change
-    course once something gains momentum. Pieces of a project start
-    accumulating in the trunk branch, each reviewed in isolation, making
-    upfront planning even more essential.
+- Engineers ship changes daily to avoid conflicts, as delays increase the
+  risk of highly conflicted merges. This fast pace makes it hard to change
+  course once something gains momentum. Pieces of a project start
+  accumulating in the trunk branch, each reviewed in isolation, making
+  upfront planning even more essential.
 
 One modern twist on this “waterfall” approach at Stripe is the strong reliance
 on automated testing. Changes almost always ship with passing automated tests,

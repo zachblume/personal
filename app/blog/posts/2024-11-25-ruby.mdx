@@ -6,38 +6,38 @@ summary: ""
 
 A couple things I like about Ruby:
 
--   Implicit return can produce really elegant code
--   Ruby is more consistent than javascript about "everything is an object" and
-    providing all the object information as accessors like
-    `variablename.class`, you sort of can just keep typing dots to process
-    things.
--   Thinking through the above point is interesting because documentation
-    insists this is the object orientation of Ruby but provides for a very nice
-    "functional" style to things where instead of imperative writing you're
-    writing a lot of chained dots.
--   I like the maniacal allowance for dropping paranthesis in calls and
-    argument enumeration. That's a truly cursed idea and I sort of like it.
+- Implicit return can produce really elegant code
+- Ruby is more consistent than javascript about "everything is an object" and
+  providing all the object information as accessors like
+  `variablename.class`, you sort of can just keep typing dots to process
+  things.
+- Thinking through the above point is interesting because documentation
+  insists this is the object orientation of Ruby but provides for a very nice
+  "functional" style to things where instead of imperative writing you're
+  writing a lot of chained dots.
+- I like the maniacal allowance for dropping paranthesis in calls and
+  argument enumeration. That's a truly cursed idea and I sort of like it.
 
 Things I dislike
 
--   The peculiar behavior of passing lambdas to methods as a special syntax
-    strikes me as quite odd and out of pattern
--   The "principle of least surprise" is sort of hilarious lie, because at
-    the same time that array.length array.count and array.size mean the same
-    thing, `do something; end` and `{|| whatever}` have different operator
-    binding precedence, and so does `&&` and `and`. Not only that, but there's
-    all these random magic symbols that no other language uses like `@` instead
-    of `self.` and then randomly you can use `self.` but it means something
-    else. Oh and error handling is not done using `throw catch` but THERE IS a
-    `throw catch` that does something entirely different! Rubyists describe
-    this as being handed sharp knives but I feel like it's more like being
-    handed a knife pointy-end first.
--   To the above point, the elimination of english keywords like `return` do
-    seem very out of pattern for the `it should read like english` purpose of
-    Ruby. `do 1; end` returns `1`? How was I supposed to know that?
--   Async ruby reads crazy
--   Just random terrifying defaults like `"    ".split` returning `[]` empty
-    array. Help, I'm trapped inside a weird computer.
+- The peculiar behavior of passing lambdas to methods as a special syntax
+  strikes me as quite odd and out of pattern
+- The "principle of least surprise" is sort of hilarious lie, because at
+  the same time that array.length array.count and array.size mean the same
+  thing, `do something; end` and `{|| whatever}` have different operator
+  binding precedence, and so does `&&` and `and`. Not only that, but there's
+  all these random magic symbols that no other language uses like `@` instead
+  of `self.` and then randomly you can use `self.` but it means something
+  else. Oh and error handling is not done using `throw catch` but THERE IS a
+  `throw catch` that does something entirely different! Rubyists describe
+  this as being handed sharp knives but I feel like it's more like being
+  handed a knife pointy-end first.
+- To the above point, the elimination of english keywords like `return` do
+  seem very out of pattern for the `it should read like english` purpose of
+  Ruby. `do 1; end` returns `1`? How was I supposed to know that?
+- Async ruby reads crazy
+- Just random terrifying defaults like `"    ".split` returning `[]` empty
+  array. Help, I'm trapped inside a weird computer.
 
 Anyways -- I like Ruby. It's a fun language -- in the same way being tipsy is
 fun.

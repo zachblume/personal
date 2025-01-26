@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Card, Flex, Text } from "@radix-ui/themes";
+import { Avatar, Box, Card, Flex, Text } from "@radix-ui/themes";
 import { BlogPosts } from "app/components/posts";
 import Image from "next/image";
 

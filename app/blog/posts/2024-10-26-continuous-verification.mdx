@@ -9,9 +9,9 @@ summary: "Tests without any mocking"
 Tests observe the behavior of a system under a specific set of conditions, but
 the input or environment is always mocked or synthetic in some way:
 
--   Unit tests mock the dependencies of the code under test.
--   Integration tests mock the environment in which the code under test runs.
--   End-to-end tests mock the user interactions with the code under test.
+- Unit tests mock the dependencies of the code under test.
+- Integration tests mock the environment in which the code under test runs.
+- End-to-end tests mock the user interactions with the code under test.
 
 The synthetic nature of tests means that they never cover all the possible
 scenarios that a system will encounter in the real world.
@@ -19,8 +19,8 @@ scenarios that a system will encounter in the real world.
 Interestingly, there's two completely separate things going on in a test, that
 I want to tease apart:
 
--   The mocking of something in order to observe things about it
--   The expectation(s)
+- The mocking of something in order to observe things about it
+- The expectation(s)
 
 Typically these are tightly coupled, like:
 
