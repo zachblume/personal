@@ -160,7 +160,7 @@ table {
 }
 
 .visited-blog-link a:visited * {
-    color: #6b7280; /* Dim the link color */
+    color: #6b7280 !important; /* Dim the link color */
 }
 
 .visited-blog-link :visited div :last-child:after {
