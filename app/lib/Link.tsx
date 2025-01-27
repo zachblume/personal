@@ -1,6 +1,5 @@
 "use client";
-import { Link as NextLink } from "next-view-transitions";
-import { useTransitionRouter } from 'next-view-transitions';
+import { Link as NextLink, useTransitionRouter } from "next-view-transitions";
 
 function Link({ href, children, ...props }) {
     const router = useTransitionRouter()
