@@ -1,4 +1,4 @@
-import { Link } from "next-view-transitions";
+import { Link } from "app/lib/Link";
 import Image from "next/image";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { highlight } from "sugar-high";
