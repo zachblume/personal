@@ -1,9 +1,9 @@
 "use client";
 import { Link as NextLink } from "next-view-transitions";
-import { useRouter } from 'next/navigation'
+import { useTransitionRouter } from 'next-view-transitions';
 
 function Link({ href, children, ...props }) {
-    const router = useRouter();
+    const router = useTransitionRouter()
     const isBlogLink = href.includes("/blog/");
     const className = isBlogLink ? "visited-blog-link" : "";
 
