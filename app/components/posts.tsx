@@ -1,4 +1,4 @@
-import { Link } from "app/lib/Link";
+import { Link } from "app/components/Link";
 import { formatDate, getBlogPosts } from "app/blog/utils";
 
 export function BlogPosts() {

@@ -1,4 +1,4 @@
-import { Link } from "app/lib/Link";
+import { Link } from "app/components/Link";
 import Image from "next/image";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { highlight } from "sugar-high";

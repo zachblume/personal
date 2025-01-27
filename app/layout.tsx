@@ -8,7 +8,7 @@ import { ViewTransitions } from "next-view-transitions";
 import { Theme } from "@radix-ui/themes";
 import { ThemeProvider } from "next-themes";
 import "./global.css";
-import {LocalStorageLinkSyncer} from "app/components/LocalStorageLinkSyncer"
+import { LocalStorageLinkSyncer } from "app/components/LocalStorageLinkSyncer";
 
 export const metadata: Metadata = {
     metadataBase: new URL(baseUrl),
@@ -65,7 +65,7 @@ export default function RootLayout({
                                 <Footer />
                                 <Analytics />
                                 <SpeedInsights />
-                                <LocalStorageLinkSyncer/>
+                                <LocalStorageLinkSyncer />
                             </main>
                         </Theme>
                     </ThemeProvider>
