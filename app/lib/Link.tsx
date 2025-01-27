@@ -1,6 +1,6 @@
 "use client";
 import { Link as NextLink } from "next-view-transitions";
-import { useRouter } from "next/router";
+import { useRouter } from 'next/navigation'
 
 function Link({ href, children, ...props }) {
     const router = useRouter();
