@@ -1,3 +1,4 @@
+"use client";
 import { Link as NextLink } from "next-view-transitions";
 import { useRouter } from "next/router";
 
