@@ -155,10 +155,12 @@ table {
     background-color: rgba(255, 105, 180, 0.8); /* Pink color */
 }
 
-.visited-blog-link :visited {
-    @apply block;
-    color: #6b7280; /* Dim the link color */
+.visited-blog-link a:visited {
     position: relative;
+}
+
+.visited-blog-link a:visited * {
+    color: #6b7280; /* Dim the link color */
 }
 
 .visited-blog-link :visited div :last-child:after {
