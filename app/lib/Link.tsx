@@ -1,7 +1,6 @@
 import { Link as NextLink } from "next-view-transitions";
 import { useRouter } from "next/router";
 
-
 function Link({ href, children, ...props }) {
     const router = useRouter();
     const isBlogLink = href.includes("/blog/");
@@ -32,8 +31,8 @@ function Link({ href, children, ...props }) {
                 prefetch={true}
                 href={href}
                 {...props}
-                >
-                    {children}
+            >
+                {children}
             </NextLink>
         </span>
     );
