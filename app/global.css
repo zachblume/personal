@@ -161,10 +161,10 @@ table {
 
 .visited-blog-link a:visited .underline-link {
     color: #8d9492 !important; /* Dim the link color */
-    @apply no-underline !important;
+    @apply !no-underline;
 }
 .visited-blog-link a:visited {
-    @apply no-underline !important;
+    @apply !no-underline;
 }
 
 .visited-blog-link :visited div :last-child:after {

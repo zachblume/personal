@@ -2,7 +2,7 @@
 import { Link as NextLink, useTransitionRouter } from "next-view-transitions";
 
 function Link({ href, children, ...props }) {
-    const router = useTransitionRouter()
+    const router = useTransitionRouter();
     const isBlogLink = href.includes("/blog/");
     const className = isBlogLink ? "visited-blog-link" : "";
 
