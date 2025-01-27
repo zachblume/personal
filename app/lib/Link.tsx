@@ -5,9 +5,11 @@ function Link({ href, children, ...props }) {
     const className = isBlogLink ? "visited-blog-link" : "";
 
     return (
-        <NextLink href={href} className={className} {...props}>
+        <span className={className}>
+        <NextLink href={href} {...props}>
             {children}
         </NextLink>
+        </span>
     );
 }
 
