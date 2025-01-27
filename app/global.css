@@ -159,7 +159,7 @@ table {
     position: relative;
 }
 
-.visited-blog-link a:visited *.underline-link {
+.visited-blog-link a:visited .underline-link {
     color: #8d9492 !important; /* Dim the link color */
     text-decoration: none !important;
     text-decoration-line:none !important;
