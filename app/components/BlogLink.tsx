@@ -14,9 +14,10 @@ const loadIsVisited = (href) => {
 
 const useIsVisited = (href) => {
     const [isVisited, setIsVisited] = useState(false);
+    const l = typeof window !== "undefined" ? window?.location : null;
     useEffect(() => {
         setIsVisited(!!loadIsVisited(href));
-    }, [href]);
+    }, [href, l]);
     return isVisited;
 };
 
