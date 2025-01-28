@@ -58,7 +58,7 @@ const BlogLink = ({ post }) => {
                             <ReaderIcon
                                 height={13}
                                 width={13}
-                                className="my-auto !text-gray-400 mx-1"
+                                className="my-auto !text-gray-500 mx-2"
                             />
                         </ConditionalTooltip>
                     ) : null}

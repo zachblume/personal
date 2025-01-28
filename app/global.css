@@ -160,10 +160,8 @@ table {
 }
 
 .visited-blog-link a .underline-link {
-    /*
-    color: #8d9492 !important; 
-     Dim the link color */
-    @apply !no-underline;
+    /* @apply !opacity-80; */
+    /* @apply !no-underline; */
 }
 .visited-blog-link a {
     @apply !no-underline;
