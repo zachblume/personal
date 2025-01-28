@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { CheckboxIcon, BookmarkIcon, ReaderIcon } from "@radix-ui/react-icons";
 import { formatDate } from "app/blog/clientUtils";
 import { Tooltip } from "@radix-ui/themes";
+import { usePathname } from "next/navigation";
 
 const loadIsVisited = (href) => {
     if (typeof window !== "undefined" && window?.localStorage) {
@@ -14,10 +15,10 @@ const loadIsVisited = (href) => {
 
 const useIsVisited = (href) => {
     const [isVisited, setIsVisited] = useState(false);
-    const l = typeof window !== "undefined" ? window?.location : null;
+    const pathname = usePathname();
     useEffect(() => {
         setIsVisited(!!loadIsVisited(href));
-    }, [href, l]);
+    }, [href, pathname]);
     return isVisited;
 };
 
