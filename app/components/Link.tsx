@@ -14,6 +14,13 @@ function Link({ href, children, ...props }) {
                 if (e.metaKey || e.ctrlKey) return;
 
                 e.preventDefault();
+                // Put the pathname of the href in localstorage
+                try {
+                    const pathnameOfHref = new URL(href).pathname;
+                    window.localStorage.setItem(pathnameOfHref, "true");
+                } catch (e) {
+                    console.error(e);
+                }
                 router.push(href);
             }}
             onClick={(e) => {
