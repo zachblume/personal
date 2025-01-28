@@ -3,7 +3,7 @@ import { CustomMDX } from "app/components/mdx";
 import { formatDate, getBlogPosts } from "app/blog/utils";
 import { baseUrl } from "app/sitemap";
 import Outline from "app/components/outline";
-import { Link } from "next-view-transitions";
+import { Link } from "app/components/Link";
 import { BlogPosts } from "app/components/posts";
 
 export async function generateStaticParams() {

@@ -1,5 +1,5 @@
-import { Link } from "next-view-transitions";
 import { formatDate, getBlogPosts } from "app/blog/utils";
+import { BlogLink } from "./BlogLink";
 
 export function BlogPosts() {
     const allBlogs = getBlogPosts();
@@ -17,20 +17,7 @@ export function BlogPosts() {
                     return 1;
                 })
                 .map((post) => (
-                    <Link
-                        key={post.slug}
-                        className="flex flex-col space-y-1 mb-4"
-                        href={`/blog/${post.slug}`}
-                    >
-                        <div className="w-full flex flex-col md:flex-row space-x-0 md:space-x-2">
-                            <p className="text-neutral-400 dark:text-neutral-400 w-[115px]">
-                                {formatDate(post.metadata.publishedAt, false)}
-                            </p>
-                            <p className="underline-link text-neutral-900 dark:text-neutral-100 tracking-tight">
-                                {post.metadata.title}
-                            </p>
-                        </div>
-                    </Link>
+                    <BlogLink post={post} key={post.slug} />
                 ))}
         </div>
     );

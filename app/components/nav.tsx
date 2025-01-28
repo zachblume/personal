@@ -1,4 +1,4 @@
-import { Link } from "next-view-transitions";
+import { Link } from "app/components/Link";
 
 const navItems = {};
 
