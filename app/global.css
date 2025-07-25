@@ -16,7 +16,7 @@
 
 .prose a,
 .underline-link {
-    @apply underline decoration-neutral-100 dark:decoration-neutral-600 underline-offset-2 decoration-[0.1em] hover:text-pink-500 hover:decoration-pink-300;
+    @apply underline decoration-zinc-100 dark:decoration-zinc-600 underline-offset-2 decoration-[0.1em] hover:text-pink-500 hover:decoration-pink-300;
     @apply transition-all;
 }
 
@@ -25,7 +25,7 @@ a {
 }
 
 .prose .anchor:after {
-    @apply text-neutral-300 dark:text-neutral-700;
+    @apply text-zinc-300 dark:text-zinc-700;
     content: "#";
 }
 
@@ -34,7 +34,7 @@ a {
 }
 
 .prose pre {
-    @apply bg-neutral-50 dark:bg-neutral-900 rounded-lg overflow-x-auto border border-neutral-200 dark:border-neutral-900 py-2 px-3 text-sm;
+    @apply bg-zinc-50 dark:bg-zinc-900 rounded-lg overflow-x-auto border border-zinc-200 dark:border-zinc-900 py-2 px-3 text-sm;
 }
 
 .prose code {
@@ -57,7 +57,7 @@ a {
 }
 
 .prose p {
-    @apply my-4 text-neutral-800 dark:text-neutral-200;
+    @apply my-4 text-zinc-800 dark:text-zinc-200;
 }
 
 .prose h1 {
