@@ -1,5 +1,6 @@
 import "@radix-ui/themes/styles.css";
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Footer from "./components/footer";
@@ -66,6 +67,22 @@ export default function RootLayout({
                                 <Analytics />
                                 <SpeedInsights />
                                 <LocalStorageLinkSyncer />
+                                <Script
+                                    id="reb2b-tracking"
+                                    strategy="afterInteractive"
+                                    dangerouslySetInnerHTML={{
+                                        __html: `
+                                            !function(key) {
+                                                if (window.reb2b) return;
+                                                window.reb2b = {loaded: true};
+                                                var s = document.createElement("script");
+                                                s.async = true;
+                                                s.src = "https://ddwl4m2hdecbv.cloudfront.net/b/" + key + "/" + key + ".js.gz";
+                                                document.getElementsByTagName("script")[0].parentNode.insertBefore(s, document.getElementsByTagName("script")[0]);
+                                            }("9NMMZH4YYDNW");
+                                        `,
+                                    }}
+                                />
                             </main>
                         </Theme>
                     </ThemeProvider>
