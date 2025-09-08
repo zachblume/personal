@@ -16,12 +16,12 @@
 
 .prose a,
 .underline-link {
-    @apply underline decoration-neutral-100 dark:decoration-neutral-600 underline-offset-2 decoration-[0.1em] hover:text-pink-500 hover:decoration-pink-300;
-    @apply transition-all;
+    @apply underline decoration-neutral-300 dark:decoration-neutral-700 underline-offset-2 decoration-[0.1em] hover:text-neutral-900 dark:hover:text-white hover:decoration-neutral-500 dark:hover:decoration-neutral-500;
+    @apply transition-all duration-200;
 }
 
 a {
-    @apply hover:text-pink-500 hover:decoration-pink-300;
+    @apply hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 font-medium;
 }
 
 .prose .anchor:after {
@@ -34,11 +34,11 @@ a {
 }
 
 .prose pre {
-    @apply bg-neutral-50 dark:bg-neutral-900 rounded-lg overflow-x-auto border border-neutral-200 dark:border-neutral-900 py-2 px-3 text-sm;
+    @apply bg-neutral-50 dark:bg-black rounded-lg overflow-x-auto border border-neutral-200 dark:border-neutral-800/50 py-2 px-3 text-sm dark:shadow-inner dark:shadow-neutral-950;
 }
 
 .prose code {
-    @apply px-1 py-0.5 rounded-lg;
+    @apply px-1.5 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-900/50 text-neutral-800 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-800/50 text-sm;
 }
 
 .prose pre code {
@@ -57,27 +57,27 @@ a {
 }
 
 .prose p {
-    @apply my-4 text-neutral-800 dark:text-neutral-200;
+    @apply my-4 text-neutral-800 dark:text-neutral-300;
 }
 
 .prose h1 {
-    @apply text-4xl font-medium tracking-tight mt-6 mb-2;
+    @apply text-4xl font-medium tracking-tight mt-6 mb-2 text-neutral-900 dark:text-white;
 }
 
 .prose h2 {
-    @apply text-xl font-medium tracking-tight mt-6 mb-2;
+    @apply text-xl font-medium tracking-tight mt-6 mb-2 text-neutral-900 dark:text-white;
 }
 
 .prose h3 {
-    @apply text-xl font-medium tracking-tight mt-6 mb-2;
+    @apply text-xl font-medium tracking-tight mt-6 mb-2 text-neutral-900 dark:text-white;
 }
 
 .prose h4 {
-    @apply text-lg font-medium tracking-tight mt-6 mb-2;
+    @apply text-lg font-medium tracking-tight mt-6 mb-2 text-neutral-900 dark:text-white;
 }
 
 .prose strong {
-    @apply font-medium;
+    @apply font-medium text-neutral-900 dark:text-white;
 }
 
 .prose ul {
@@ -99,8 +99,10 @@ pre::-webkit-scrollbar {
 }
 
 pre {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
 }
 
 /* Remove Safari input shadow on mobile */
@@ -123,16 +125,21 @@ table {
 }
 
 .wrapper {
-    opacity: 0; /* Start invisible */
-    animation: fadeIn 1s ease-in forwards; /* 2s fade-in animation */
+    opacity: 0;
+    /* Start invisible */
+    animation: fadeIn 1s ease-in forwards;
+    /* 2s fade-in animation */
 }
 
 @keyframes fadeIn {
     from {
-        opacity: 0; /* Start fully transparent */
+        opacity: 0;
+        /* Start fully transparent */
     }
+
     to {
-        opacity: 1; /* Fade to full visibility */
+        opacity: 1;
+        /* Fade to full visibility */
     }
 }
 
@@ -141,18 +148,22 @@ table {
     height: 7px;
     width: 7px;
 }
+
 .scrollbar-always-visible::-webkit-scrollbar-thumb {
     border-radius: 6px;
     background-color: rgba(0, 0, 0, 0.3);
     -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }
+
 /* dark mode color for above */
 .dark .scrollbar-always-visible::-webkit-scrollbar-thumb {
     background-color: rgba(255, 255, 255, 0.3);
 }
+
 /* hover */
 .scrollbar-always-visible::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255, 105, 180, 0.8); /* Pink color */
+    background-color: rgba(255, 255, 255, 0.5);
+    /* White color for Vercel style */
 }
 
 .visited-blog-link a {
@@ -163,6 +174,7 @@ table {
     /* @apply !opacity-80; */
     /* @apply !no-underline; */
 }
+
 .visited-blog-link a {
     @apply !no-underline;
 }

@@ -47,7 +47,7 @@ export default function RootLayout({
     return (
         <ViewTransitions>
             <html lang="en">
-                <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto">
+                <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto bg-white dark:bg-black">
                     <ThemeProvider
                         attribute="class"
                         defaultTheme="system"
