@@ -60,76 +60,82 @@ export default function Page() {
 function SidewayScroll() {
     return (
         <div className="relative w-full py-2 mt-3 flex ">
-            <div className="flex space-x-[-180px]">
-                <div className="w-[233px] h-[155px] transform transition-all duration-300 hover:scale-105 hover:translate-y-[-20px] hover:rotate-[-3deg] hover:z-30 relative">
-                    <Image
-                        alt=""
-                        src="/waldo.jpeg"
-                        width={233}
-                        height={155}
-                        className="h-[155px] rounded-lg"
-                    />
-                    <div className="absolute inset-0 flex   transition duration-300  rounded-lg">
-                        <span className="text-white font-semibold text-lg ml-auto mr-3 mt-auto drop-shadow-md">
-                            Waldo
-                        </span>
+            <div className="flex space-x-[-190px]">
+                <div className="group relative">
+                    <div className="w-[233px] h-[155px] transform transition-all duration-300 ease-out delay-75 group-hover:scale-105 group-hover:translate-y-[-20px] group-hover:rotate-[-3deg] group-hover:z-30 relative origin-center">
+                        <Image
+                            alt=""
+                            src="/waldo.jpeg"
+                            width={233}
+                            height={155}
+                            className="h-[155px] rounded-lg"
+                        />
+                        <div className="absolute inset-0 flex   transition duration-300  rounded-lg">
+                            <span className="text-white font-semibold text-lg ml-auto mr-3 mt-auto drop-shadow-md">
+                                Waldo
+                            </span>
+                        </div>
                     </div>
                 </div>
-                <div className="w-[233px] h-[155px] transform transition-all duration-300 hover:scale-105 hover:translate-y-[-20px] hover:rotate-[-3deg] hover:z-30 relative">
-                    <Image
-                        alt=""
-                        src="/millie.jpeg"
-                        width={233}
-                        height={155}
-                        className="h-[155px] rounded-lg"
-                    />
-                    <div className="absolute inset-0 flex   transition duration-300  rounded-lg">
-                        <span className="text-white font-semibold text-lg ml-auto mr-3 mt-auto drop-shadow-md">
-                            Millie
-                        </span>
+                <div className="group relative">
+                    <div className="w-[233px] h-[155px] transform transition-all duration-300 ease-out delay-75 group-hover:scale-105 group-hover:translate-y-[-20px] group-hover:rotate-[-3deg] group-hover:z-30 relative origin-center">
+                        <Image
+                            alt=""
+                            src="/millie.jpeg"
+                            width={233}
+                            height={155}
+                            className="h-[155px] rounded-lg"
+                        />
+                        <div className="absolute inset-0 flex   transition duration-300  rounded-lg">
+                            <span className="text-white font-semibold text-lg ml-auto mr-3 mt-auto drop-shadow-md">
+                                Millie
+                            </span>
+                        </div>
                     </div>
                 </div>
-                <div className="w-[233px] h-[155px] transform transition-all duration-300 hover:scale-105 hover:translate-y-[-20px] hover:rotate-[-3deg] hover:z-30 relative">
-                    <Image
-                        alt=""
-                        src="/luna.jpeg"
-                        width={233}
-                        height={155}
-                        className="h-[155px] rounded-lg"
-                    />
-                    <div className="absolute inset-0 flex   transition duration-300  rounded-lg">
-                        <span className="text-white font-semibold text-lg ml-auto mr-3 mt-auto drop-shadow-md">
-                            Luna
-                        </span>
+                <div className="group relative">
+                    <div className="w-[233px] h-[155px] transform transition-all duration-300 ease-out delay-75 group-hover:scale-105 group-hover:translate-y-[-20px] group-hover:rotate-[-3deg] group-hover:z-30 relative origin-center">
+                        <Image
+                            alt=""
+                            src="/luna.jpeg"
+                            width={233}
+                            height={155}
+                            className="h-[155px] rounded-lg"
+                        />
+                        <div className="absolute inset-0 flex   transition duration-300  rounded-lg">
+                            <span className="text-white font-semibold text-lg ml-auto mr-3 mt-auto drop-shadow-md">
+                                Luna
+                            </span>
+                        </div>
                     </div>
                 </div>{" "}
-                <div className="block w-[350px] !h-[155px] transform transition-all duration-300 hover:scale-105 hover:translate-y-[-20px] hover:rotate-[-2deg] hover:z-30">
-                    <div className="w-[350px] !h-[155px] py-4 px-5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-gray-800 ">
-                        I live in NYC and work at{" "}
-                        <a
-                            href="https://www.stripe.com"
-                            className="underline text-pink-500 decoration-pink-200 dark:decoration-pink-700"
-                        >
-                            Stripe
-                        </a>{" "}
-                        as a software engineer. I founded{" "}
-                        <a
-                            href="https://www.raisemore.app/"
-                            className="underline text-pink-500 decoration-pink-200 dark:decoration-pink-700"
-                        >
-                            Raise More
-                        </a>
-                        , a modern CRM for political fundraising. My open source
-                        work is on{" "}
-                        <a
-                            href="https://github.com/zachblume"
-                            className="underline text-pink-500 decoration-pink-200 dark:decoration-pink-700"
-                        >
-                            GitHub
-                        </a>
-                        . Get in touch at{" "}
-                        <EmailLink />
-                        .
+                <div className="group relative block">
+                    <div className="block w-[350px] !h-[155px] transform transition-all duration-300 ease-out delay-75 group-hover:scale-105 group-hover:translate-y-[-20px] group-hover:rotate-[-2deg] group-hover:z-30 origin-center">
+                        <div className="w-[350px] !h-[155px] py-4 px-5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-gray-800 ">
+                            I live in NYC and work at{" "}
+                            <a
+                                href="https://www.stripe.com"
+                                className="underline text-pink-500 decoration-pink-200 dark:decoration-pink-700"
+                            >
+                                Stripe
+                            </a>{" "}
+                            as a software engineer. I founded{" "}
+                            <a
+                                href="https://www.raisemore.app/"
+                                className="underline text-pink-500 decoration-pink-200 dark:decoration-pink-700"
+                            >
+                                Raise More
+                            </a>
+                            , a modern CRM for political fundraising. My open source
+                            work is on{" "}
+                            <a
+                                href="https://github.com/zachblume"
+                                className="underline text-pink-500 decoration-pink-200 dark:decoration-pink-700"
+                            >
+                                GitHub
+                            </a>
+                            . Get in touch at <EmailLink />.
+                        </div>
                     </div>
                 </div>
             </div>
