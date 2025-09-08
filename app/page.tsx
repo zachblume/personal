@@ -126,8 +126,8 @@ function SidewayScroll() {
                             >
                                 Raise More
                             </a>
-                            , a modern CRM for political fundraising. My open source
-                            work is on{" "}
+                            , a modern CRM for political fundraising. My open
+                            source work is on{" "}
                             <a
                                 href="https://github.com/zachblume"
                                 className="underline text-pink-500 decoration-pink-200 dark:decoration-pink-700"
