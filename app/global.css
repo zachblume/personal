@@ -16,12 +16,12 @@
 
 .prose a,
 .underline-link {
-    @apply underline decoration-neutral-300 dark:decoration-neutral-700 underline-offset-2 decoration-[0.1em] hover:text-neutral-900 dark:hover:text-white hover:decoration-neutral-500 dark:hover:decoration-neutral-500;
-    @apply transition-all duration-200;
+    @apply underline decoration-neutral-300 dark:decoration-white/20 underline-offset-2 decoration-[0.1em] hover:text-neutral-900 dark:hover:text-white hover:decoration-neutral-500 dark:hover:decoration-white/50 dark:hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.3)];
+    @apply transition-all duration-300;
 }
 
 a {
-    @apply hover:text-neutral-900 dark:hover:text-white transition-colors duration-200 font-medium;
+    @apply hover:text-neutral-900 dark:hover:text-white transition-all duration-300 font-medium dark:hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.25)];
 }
 
 .prose .anchor:after {
@@ -34,11 +34,11 @@ a {
 }
 
 .prose pre {
-    @apply bg-neutral-50 dark:bg-black rounded-lg overflow-x-auto border border-neutral-200 dark:border-neutral-800/50 py-2 px-3 text-sm dark:shadow-inner dark:shadow-neutral-950;
+    @apply bg-neutral-50 dark:bg-black/50 dark:backdrop-blur-sm rounded-xl overflow-x-auto border border-neutral-200 dark:border-white/[0.06] py-3 px-4 text-sm dark:shadow-[inset_0_0_20px_rgba(255,255,255,0.02)];
 }
 
 .prose code {
-    @apply px-1.5 py-0.5 rounded-md bg-neutral-100 dark:bg-neutral-900/50 text-neutral-800 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-800/50 text-sm;
+    @apply px-1.5 py-0.5 rounded-md bg-neutral-100 dark:bg-white/[0.03] text-neutral-800 dark:text-neutral-100 border border-neutral-200 dark:border-white/[0.06] text-sm dark:backdrop-blur-sm;
 }
 
 .prose pre code {
@@ -57,11 +57,11 @@ a {
 }
 
 .prose p {
-    @apply my-4 text-neutral-800 dark:text-neutral-300;
+    @apply my-5 text-neutral-800 dark:text-neutral-200 leading-relaxed;
 }
 
 .prose h1 {
-    @apply text-4xl font-medium tracking-tight mt-6 mb-2 text-neutral-900 dark:text-white;
+    @apply text-4xl font-bold tracking-tight mt-8 mb-4 text-neutral-900 dark:text-white dark:drop-shadow-[0_0_30px_rgba(255,255,255,0.15)];
 }
 
 .prose h2 {
@@ -127,8 +127,8 @@ table {
 .wrapper {
     opacity: 0;
     /* Start invisible */
-    animation: fadeIn 1s ease-in forwards;
-    /* 2s fade-in animation */
+    animation: fadeIn 1.2s ease-out forwards;
+    /* Smooth fade-in animation */
 }
 
 @keyframes fadeIn {
