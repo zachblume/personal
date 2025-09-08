@@ -1,5 +1,6 @@
 import { Avatar, Box, Card, Flex, Text } from "@radix-ui/themes";
 import { BlogPosts } from "app/components/posts";
+import { EmailLink } from "app/components/EmailLink";
 import Image from "next/image";
 
 export default function Page() {
@@ -59,14 +60,14 @@ export default function Page() {
 function SidewayScroll() {
     return (
         <div className="relative w-full py-2 mt-3 flex ">
-            <div className="flex space-x-[-160px]">
-                <div className="w-[210px] h-[140px] transform transition-all duration-300 hover:scale-105 hover:translate-y-[-20px] hover:rotate-[-3deg] hover:z-30 relative">
+            <div className="flex space-x-[-180px]">
+                <div className="w-[233px] h-[155px] transform transition-all duration-300 hover:scale-105 hover:translate-y-[-20px] hover:rotate-[-3deg] hover:z-30 relative">
                     <Image
                         alt=""
                         src="/waldo.jpeg"
-                        width={210}
-                        height={140}
-                        className="h-[140px] rounded-lg"
+                        width={233}
+                        height={155}
+                        className="h-[155px] rounded-lg"
                     />
                     <div className="absolute inset-0 flex   transition duration-300  rounded-lg">
                         <span className="text-white font-semibold text-lg ml-auto mr-3 mt-auto drop-shadow-md">
@@ -74,13 +75,13 @@ function SidewayScroll() {
                         </span>
                     </div>
                 </div>
-                <div className="w-[210px] h-[140px] transform transition-all duration-300 hover:scale-105 hover:translate-y-[-20px] hover:rotate-[-3deg] hover:z-30 relative">
+                <div className="w-[233px] h-[155px] transform transition-all duration-300 hover:scale-105 hover:translate-y-[-20px] hover:rotate-[-3deg] hover:z-30 relative">
                     <Image
                         alt=""
                         src="/millie.jpeg"
-                        width={210}
-                        height={140}
-                        className="h-[140px] rounded-lg"
+                        width={233}
+                        height={155}
+                        className="h-[155px] rounded-lg"
                     />
                     <div className="absolute inset-0 flex   transition duration-300  rounded-lg">
                         <span className="text-white font-semibold text-lg ml-auto mr-3 mt-auto drop-shadow-md">
@@ -88,13 +89,13 @@ function SidewayScroll() {
                         </span>
                     </div>
                 </div>
-                <div className="w-[210px] h-[140px] transform transition-all duration-300 hover:scale-105 hover:translate-y-[-20px] hover:rotate-[-3deg] hover:z-30 relative">
+                <div className="w-[233px] h-[155px] transform transition-all duration-300 hover:scale-105 hover:translate-y-[-20px] hover:rotate-[-3deg] hover:z-30 relative">
                     <Image
                         alt=""
                         src="/luna.jpeg"
-                        width={210}
-                        height={140}
-                        className="h-[140px] rounded-lg"
+                        width={233}
+                        height={155}
+                        className="h-[155px] rounded-lg"
                     />
                     <div className="absolute inset-0 flex   transition duration-300  rounded-lg">
                         <span className="text-white font-semibold text-lg ml-auto mr-3 mt-auto drop-shadow-md">
@@ -102,8 +103,8 @@ function SidewayScroll() {
                         </span>
                     </div>
                 </div>{" "}
-                <div className="block w-[350px] !h-[140px] transform transition-all duration-300 hover:scale-105 hover:translate-y-[-20px] hover:rotate-[-2deg] hover:z-30">
-                    <div className="w-[350px] !h-[140px] py-4 px-5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-gray-800 ">
+                <div className="block w-[350px] !h-[155px] transform transition-all duration-300 hover:scale-105 hover:translate-y-[-20px] hover:rotate-[-2deg] hover:z-30">
+                    <div className="w-[350px] !h-[155px] py-4 px-5 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-gray-800 ">
                         I live in NYC and work at{" "}
                         <a
                             href="https://www.stripe.com"
@@ -126,6 +127,8 @@ function SidewayScroll() {
                         >
                             GitHub
                         </a>
+                        . Get in touch at{" "}
+                        <EmailLink />
                         .
                     </div>
                 </div>
