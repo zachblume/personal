@@ -193,7 +193,7 @@
         flex: 0 0 230px;
         border-radius: 7px;
         box-shadow: 0 1px 4px #00000018;
-        transition: transform 700ms ease-out;
+        transition: transform 200ms ease-out;
         z-index: 1;
     }
 
