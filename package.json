@@ -2,7 +2,8 @@
     "private": true,
     "scripts": {
         "dev": "next dev",
-        "build": "next build",
+        "build": "npm run check:compiler && next build",
+        "check:compiler": "node scripts/check-react-compiler.mjs",
         "start": "next start",
         "prepare": "husky",
         "format": "prettier --write .",
@@ -29,12 +30,14 @@
         "typescript": "npm:@typescript/typescript6@^6.0.2"
     },
     "devDependencies": {
+        "@babel/core": "^7.29.7",
+        "@typescript/native": "npm:typescript@7.0.2",
+        "babel-plugin-react-compiler": "^1.0.0",
         "eslint": "^9.39.5",
         "eslint-config-next": "16.4.5",
         "eslint-plugin-mdx": "^3.9.1",
         "husky": "^9.1.7",
-        "prettier": "^3.9.10",
-        "@typescript/native": "npm:typescript@7.0.2"
+        "prettier": "^3.9.10"
     },
     "engines": {
         "node": "24.x"
