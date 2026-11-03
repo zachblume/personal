@@ -18,7 +18,6 @@ export const SITE = {
     company: { label: "Raise More", href: "https://www.raisemore.app/" },
     companyBlurb: "a modern CRM for political fundraising",
     github: { label: "GitHub", href: "https://github.com/zachblume" },
-    intro: "I write about testing, reliability, and the unglamorous infrastructure that makes software actually ship.",
     pets: [
         { name: "Waldo", src: "/waldo.jpeg" },
         { name: "Millie", src: "/millie.jpeg" },

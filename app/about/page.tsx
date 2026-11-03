@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Link } from "app/components/Link";
 import { SiteHeader } from "app/components/SiteChrome";
 import { SITE } from "app/lib/site";
 import styles from "./about.module.css";
@@ -45,12 +44,6 @@ export default function About() {
                         . I also founded{" "}
                         <a href={SITE.company.href}>{SITE.company.label}</a>,{" "}
                         {SITE.companyBlurb}.
-                    </p>
-                    <p>{SITE.intro}</p>
-                    <p>
-                        Most of what I publish starts as something I had to
-                        figure out at work and couldn&rsquo;t find written down
-                        anywhere. <Link href="/">The writing lives here</Link>.
                     </p>
                 </div>
 
