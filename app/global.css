@@ -216,7 +216,7 @@ table {
     display: inline-block;
 }
 
-/* Full-bleed pages (home, about).
+/* Full-bleed pages (home, about, articles).
 
    The root layout clamps every page to a centered `max-w-xl` reading column,
    which is right for posts and wrong for the index. Rather than negative
@@ -240,13 +240,13 @@ body:has(.full-bleed) main.wrapper {
 
 /* Opt out of the global anchor styling — rows and nav own their own
    hover treatment. */
-.full-bleed a {
+.full-bleed a:not(:where(.prose a)) {
     font-weight: inherit;
     transition: none;
 }
 
-.full-bleed a:hover,
-.dark .full-bleed a:hover {
+.full-bleed a:not(:where(.prose a)):hover,
+.dark .full-bleed a:not(:where(.prose a)):hover {
     color: inherit;
     filter: none;
 }

@@ -3,8 +3,8 @@ import { CustomMDX } from "app/components/mdx";
 import { formatDate, getBlogPosts } from "app/blog/utils";
 import { baseUrl } from "app/sitemap";
 import Outline from "app/components/outline";
-import { Link } from "app/components/Link";
-import { BlogPosts } from "app/components/posts";
+import { PostList } from "app/components/PostList";
+import { PAD, SiteFooter, SiteHeader } from "app/components/SiteChrome";
 
 export async function generateStaticParams() {
     const posts = getBlogPosts();
@@ -71,8 +71,9 @@ export default function Blog({ params }) {
         });
 
     return (
-        <section className="relative">
-            <div className="w-full">
+        <div className="full-bleed min-h-screen w-full bg-white dark:bg-black">
+            <SiteHeader current="home" />
+            <section className="relative mx-6 max-w-xl py-12 md:mx-auto md:py-16">
                 <script
                     type="application/ld+json"
                     suppressHydrationWarning
@@ -97,12 +98,6 @@ export default function Blog({ params }) {
                         }),
                     }}
                 />
-                <Link
-                    href="/"
-                    className="mb-2 block text-neutral-600 dark:text-neutral-400 text-sm font-light"
-                >
-                    ⏴ Home
-                </Link>
                 <h1 className="title font-semibold text-2xl tracking-tighter">
                     {post.metadata.title}
                 </h1>
@@ -114,23 +109,22 @@ export default function Blog({ params }) {
                 <article className="prose">
                     <CustomMDX source={post.content} />
                 </article>
-                <div>
-                    <h2 className="mt-16 mb-5 font-semibold">Past Writing</h2>
-                    <BlogPosts />
-                </div>
-                <Link
-                    href="/"
-                    className="mt-10 mb-2 block text-neutral-600 dark:text-neutral-400 text-sm font-light"
+                <aside className="absolute inset-y-16 left-full ml-16 hidden w-48 xl:block">
+                    <div className="sticky top-12">
+                        <Outline headers={headers} />
+                    </div>
+                </aside>
+            </section>
+            <section aria-labelledby="past-writing-title">
+                <h2
+                    id="past-writing-title"
+                    className={`${PAD} border-y border-neutral-200 py-6 font-semibold dark:border-neutral-800`}
                 >
-                    ⏴ Home
-                </Link>
-            </div>
-            <div className="hidden md:block fixed ml-[650px] top-44">
-                <Outline
-                    headers={headers}
-                    // title={post.metadata.title}
-                />
-            </div>
-        </section>
+                    Past Writing
+                </h2>
+                <PostList />
+            </section>
+            <SiteFooter />
+        </div>
     );
 }
