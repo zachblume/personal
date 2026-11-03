@@ -7,7 +7,6 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Footer from "./components/footer";
 import { baseUrl } from "./sitemap";
-import { ViewTransitions } from "next-view-transitions";
 import { Theme } from "@radix-ui/themes";
 import { ThemeProvider } from "next-themes";
 import "./global.css";
@@ -47,36 +46,35 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <ViewTransitions>
-            <html
-                lang="en"
-                className={`${GeistSans.variable} ${GeistMono.variable}`}
-            >
-                <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto bg-white dark:bg-black dark:bg-gradient-to-b dark:from-neutral-900/20 dark:to-black min-h-screen">
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="system"
-                        enableSystem
-                        disableTransitionOnChange
-                        enableColorScheme
+        <html
+            lang="en"
+            className={`${GeistSans.variable} ${GeistMono.variable}`}
+        >
+            <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto bg-white dark:bg-black dark:bg-gradient-to-b dark:from-neutral-900/20 dark:to-black min-h-screen">
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                    enableColorScheme
+                >
+                    <Theme
+                        accentColor="ruby"
+                        panelBackground="translucent"
+                        hasBackground={false}
                     >
-                        <Theme
-                            accentColor="ruby"
-                            panelBackground="translucent"
-                            hasBackground={false}
-                        >
-                            <main className="wrapper flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
-                                {/* <Navbar /> */}
-                                {children}
-                                <Footer />
-                                <Analytics />
-                                <SpeedInsights />
-                                <LocalStorageLinkSyncer />
-                                <Script
-                                    id="reb2b-tracking"
-                                    strategy="afterInteractive"
-                                    dangerouslySetInnerHTML={{
-                                        __html: `
+                        <main className="wrapper flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
+                            {/* <Navbar /> */}
+                            {children}
+                            <Footer />
+                            <Analytics />
+                            <SpeedInsights />
+                            <LocalStorageLinkSyncer />
+                            <Script
+                                id="reb2b-tracking"
+                                strategy="afterInteractive"
+                                dangerouslySetInnerHTML={{
+                                    __html: `
                                             !function(key) {
                                                 if (window.reb2b) return;
                                                 window.reb2b = {loaded: true};
@@ -86,13 +84,12 @@ export default function RootLayout({
                                                 document.getElementsByTagName("script")[0].parentNode.insertBefore(s, document.getElementsByTagName("script")[0]);
                                             }("9NMMZH4YYDNW");
                                         `,
-                                    }}
-                                />
-                            </main>
-                        </Theme>
-                    </ThemeProvider>
-                </body>
-            </html>
-        </ViewTransitions>
+                                }}
+                            />
+                        </main>
+                    </Theme>
+                </ThemeProvider>
+            </body>
+        </html>
     );
 }

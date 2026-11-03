@@ -15,7 +15,6 @@ Deployed on Vercel.
 - **Radix Themes** (`@radix-ui/themes`) wrapping the app, `accentColor="ruby"`, plus `@radix-ui/react-icons`
 - **Geist Sans / Geist Mono** via the `geist` package (Geist is not in Next 14.2's bundled Google Fonts list)
 - **next-themes** for dark mode (`attribute="class"`, `defaultTheme="system"`)
-- **next-view-transitions** for cross-page view transitions
 - **next-mdx-remote** for rendering blog posts, **sugar-high** for syntax highlighting
 - `@vercel/analytics` + `@vercel/speed-insights`
 
@@ -31,7 +30,7 @@ Deployed on Vercel.
 
 ```
 app/
-  layout.tsx            Root layout: ViewTransitions > html > body > ThemeProvider > Theme > main
+  layout.tsx            Root layout: html > body > ThemeProvider > Theme > main
                         Body is width-constrained: `max-w-xl mx-4 lg:mx-auto`
   page.tsx              Homepage: full-bleed list of every post (PostRow + generated Art)
   about/page.tsx        About: bio, "now" list, pet photos, contact links
@@ -48,7 +47,7 @@ app/
     [slug]/page.tsx     Post page; generateStaticParams + generateMetadata from frontmatter
     posts/*.mdx         The posts themselves, named `YYYY-MM-DD-slug.mdx`
   components/
-    Link.tsx            Wrapper over next-view-transitions Link; also records visits in localStorage
+    Link.tsx            Wrapper over next/link; also records visits in localStorage
     BlogLink.tsx        A post row (date + title), shows a "previously read" icon for visited posts
     posts.tsx           BlogPosts — sorted list of BlogLink
     nav.tsx             Navbar — currently EMPTY (`navItems = {}`) and commented out of layout.tsx
@@ -149,8 +148,8 @@ creates a transformed ancestor that breaks `position: fixed` for anything inside
 - **4-space indentation**, double quotes — enforced by Prettier.
 - Imports use bare `app/...` specifiers, e.g. `import { Link } from "app/components/Link"`. This works
   via `baseUrl: "."` in `tsconfig.json` — there is no `paths` map and no `@/` alias.
-- Prefer the local `Link` component over `next/link` so view transitions and the
-  visited-link localStorage tracking keep working.
+- Prefer the local `Link` component over `next/link` so the visited-link localStorage
+  tracking keeps working.
 - Tailwind v4 **alpha** — some v3 idioms and plugins don't apply. Add theme tokens in CSS, not a JS config.
 - Dark mode styles are written inline as `dark:` variants everywhere; there are no CSS variables for color.
 - The root layout constrains width for the whole site. A page that needs to be wider
