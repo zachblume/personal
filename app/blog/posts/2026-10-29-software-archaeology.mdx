@@ -113,7 +113,7 @@ the code.
 
 This has always been best practice. If you leave latent knowledge in a
 codebase, everyone after you has to become a programmer-archaeologist to work
-on it. I've started calling this cognitive debt, which is everything you need
+on it. We might call this cognitive debt, which is everything you need
 to know to safely change the code that the code itself doesn't tell you. You
 pay for it when people leave and take what they knew with them, and when new
 people take months to get up to speed.
@@ -155,13 +155,25 @@ still the ones doing the digging, with machines helping. In real life it's a
 job we've had for a while now, and I think it's the thing that's starting to
 fade.
 
-What I don't think he saw coming is slop. His ships pile up software over
-thousands of years, slowly enough that a few skilled people can keep up with
-it. If you allow programmer-archaeologist behavior in your codebase and then
-100x your velocity with agents, you can pile up thousands of years
-of layers in a year or two. Every agent that misreads the nilable field writes new code on top of the misreading, and that new code has
-its own latent knowledge that nobody holds, and the agents can't dig fast
-enough to keep up with what they're making.
+To be fair, he did kind of see the slop coming. The whole reason his ships need
+archaeologists is that the software has piled up into something nobody can
+understand anymore. But I think a couple things are playing out differently in
+real life.
+
+One is speed. His ships pile up software over thousands of years, slowly enough
+that a few skilled people can keep up with it. If you allow
+programmer-archaeologist behavior in your codebase and then 100x your velocity
+with agents, you can pile up thousands of years of layers in a year or two.
+Every agent that misreads the nilable field writes new code on top of the
+misreading, and that new code has its own latent knowledge that nobody holds.
+No human can reconstitute it as fast as it's being made.
+
+The other is that the layers aren't human anymore. When I dig through old
+Stripe code, I'm reconstructing decisions people made. Somebody had a reason,
+it was written down somewhere or it's in someone's head, and if I'm lucky I can
+DM them. AI slop doesn't have that. There's no decision to recover and nobody
+to ask. Trying to understand it feels less like being a programmer-archaeologist and more
+like being a mathematician working through machine code.
 
 So the speedup ends up forcing the issue. If you want to keep moving that fast,
 you have to make the code self-documenting much sooner than you otherwise
@@ -173,7 +185,7 @@ compared to your peers who did the work. Someone will still have to dig
 sometimes, but I don't think every senior engineer will need to be an
 archaeologist to get work done.
 
-This is a little funny for me, because being one of those historians is a lot
+This is a little funny for me, because being one of those programmer-archaeologists is a lot
 of my job right now. The next part of the job is making that less necessary.
 
 {/* ending */}
