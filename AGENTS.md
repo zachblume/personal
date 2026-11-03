@@ -82,8 +82,9 @@ generated per-post artwork.
   rule sits directly on the first row. Rows highlight on hover.
 - **About** (`/about`) holds the bio, a "now" definition list, the avatar, the three
   pet photos (grayscale, colorizing on hover), and contact links.
-- Blog index and post pages are unchanged: they keep the narrow `max-w-xl`
-  reading column from the root layout.
+- Article pages use the shared full-width header and archive list, with a centered
+  `max-w-xl` reading column and an outline confined to the article. The blog index
+  keeps the narrow reading column from the root layout.
 - Body font is **Geist Sans**, code is **Geist Mono** (the `geist` package, which ships
   them locally via `next/font/local`). Tight negative tracking on headings, hairline
   `neutral-200` / `neutral-800` rules.
@@ -100,7 +101,7 @@ contains, which is most of what stops these reading as charts.
 It takes two inputs:
 
 - **`index`** — the post's rank in _chronological_ order (oldest = 0), computed in
-  `app/page.tsx`. It picks the composition and the hue pair, so both advance
+  `app/components/PostList.tsx`. It picks the composition and the hue pair, so both advance
   together and neighbouring rows differ in shape and color.
 - **`slug`** — hashed (FNV-1a) to seed a mulberry32 PRNG for the parameters inside
   a composition, so two posts drawing the same shape still look unalike.

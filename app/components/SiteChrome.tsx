@@ -37,12 +37,6 @@ export function SiteHeader({ current }: { current: "home" | "about" }) {
                 >
                     GitHub
                 </a>
-                <a
-                    href={`mailto:${SITE.email}`}
-                    className="hover:text-neutral-900 dark:hover:text-white"
-                >
-                    Contact
-                </a>
             </nav>
         </header>
     );
