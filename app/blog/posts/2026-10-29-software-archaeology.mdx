@@ -4,6 +4,8 @@ publishedAt: "2026-10-29"
 summary: "Most of the job in a big codebase was discovery"
 ---
 
+## The nilable field
+
 I was talking on a little break with a colleague that was fairly new to Stripe,
 she had just joined a few months ago. We had gone away from our desks and
 stepped up to the cafeteria. We often end up doing this because there's not
@@ -40,7 +42,7 @@ less scrutiny than the billions-of-dollars-per-day core payments APIs of
 Stripe. Because of that it wasn't like, my-world-turned-upside-down surprising,
 but it _was_ surprising -- that we didn't know this detail of our own system!
 
-## Vinge's programmer-archaeologists
+## Where the term comes from
 
 It reminded me of Vernor Vinge's _A Fire Upon the Deep_. I read this book
 because of how often it comes up on hackernews -- like many others, probably. The
@@ -64,7 +66,7 @@ Nobody is going to eat the galaxy over a nilable field, but: somebody made a
 decision a long time ago, it made sense to them, and the code survived but the
 reason didn't.
 
-## Digging
+## Digging through the history
 
 My side project has gotten pretty big, but I wrote all of it, so when
 something looks weird it's usually because I did it and I can sort of remember
@@ -84,7 +86,7 @@ usually sort of do.
 
 {/* you: the real nilable-field dig (or another) -- what you found, dead ends */}
 
-## Latent knowledge
+## Explaining the history
 
 The explaining part takes up more of my time than the digging. People ask me
 why something works the way it does, or whether it's safe to change, and a lot
@@ -99,7 +101,7 @@ putting it together. What gets passed around is latent knowledge, meaning
 things that are true about the system but aren't written in the code. Some of
 it is in old PR comments or Slack, but most of it is in people's heads.
 
-## Cognitive debt
+## Why this is a problem
 
 I don't think this is good. I think code should be self-documenting, and this
 part of my job is a big reason I believe that. The nilable field is a good
@@ -141,7 +143,7 @@ of, so we've never paid cognitive debt this often. It used to cost us something
 each time a new person joined, and now it costs us on every task an agent picks
 up.
 
-## The end of the programmer-archaeologist
+## Where this is going
 
 There's something kind of ironic here with Vinge. In _Deepness_ the
 programmer-archaeologist is a job of the far future, thousands of years out,
