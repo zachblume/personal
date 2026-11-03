@@ -68,122 +68,106 @@ reason didn't.
 
 {/* side project vs. stripe */}
 
-My side project is over a million lines at this point and it still mostly fits
-in my head. When something looks weird I usually remember why I did it, or at
-least the rough shape of why. Stripe is something like 50 million lines of
-Ruby. Nobody has that in their head -- nobody is even close, not even the
-people who have been here for a decade. So the job ends up splitting into two
-things: digging up why something is the way it is, and then explaining it to
-everyone else. The archaeologist and the historian, so to speak.
+My side project has gotten pretty big, but I wrote all of it, so when
+something looks weird it's usually because I did it and I can sort of remember
+why. Stripe is something like 50 million lines of Ruby, and nobody has that in
+their head, including the people who have been here for a decade. So a lot of
+the job is figuring out why something is the way it is, and then explaining it
+to other people.
 
 {/* archaeologist: the dig */}
 
-The digging part goes something like this. You `git blame` the line, and the
-first commit you hit is almost always useless -- a formatter, a rename, someone
-moving the file from one folder to another. So you keep going. `git log -S` to
-find when the thing first showed up, then the PR, then the ticket the PR links
-to, then the design doc the ticket links to, and if you're lucky an incident
-writeup or a Slack thread where someone finally says the one thing you actually
-needed to know. Sometimes you're not lucky and it was never written down at
-all, and you end up DMing someone who worked on it four years ago and hoping
-they remember (they usually sort of do).
+Figuring it out usually starts with `git blame`. The first commit you hit is
+almost always a formatter run or someone moving the file, so you keep going.
+`git log -S` will find when the thing first showed up, and from there you can
+usually follow the PR to a ticket and the ticket to a design doc. If you're
+lucky there's an incident writeup or a Slack thread at the end where someone
+says the thing you needed to know. If you're not, it was never written down,
+and you DM someone who worked on it four years ago and hope they remember. They
+usually sort of do.
 
 {/* you: the real nilable-field dig (or another) -- what you found, dead ends */}
 
 {/* historian: explaining it */}
 
-The second part, being the historian, is honestly the bigger one. Good senior
-engineers at big companies spend a surprising amount of their time just
-_explaining the history_ -- why this is like this, what it used to mean, who
-decided, whether it's safe to change. I'm like that. If I'm being honest it's a
-big part of what I'm valued for.
+The explaining part takes up more of my time than the digging. People ask me
+why something works the way it does, or whether it's safe to change, and a lot
+of the time I know because I've been around that part of the system long
+enough to have already done the dig.
 
 {/* you: the kinds of questions people bring you */}
 
-And that design review my colleague liked is basically this happening live. A
-room of historians, each holding a partial picture of the system, putting it
-together out loud. What's getting passed around in that room is latent
-knowledge: stuff that's true about the system but isn't anywhere in the code.
-It lives in old PR comments and incident docs and Slack threads, and mostly in
-people's heads.
+The design review my colleague liked is this happening live. Each
+person in the room knows some part of the history, and the discussion is them
+putting it together. What gets passed around is latent knowledge, meaning
+things that are true about the system but aren't written in the code. Some of
+it is in old PR comments or Slack, but most of it is in people's heads.
 
 {/* cognitive debt */}
 
-I don't actually think this is good! I think code _should_ be
-self-documenting, and this part of my job is a big reason why I believe that.
-The nilable field is a pretty sharp example of the problem, because the code
-_was_ documenting itself -- the type said nilable -- it was just documenting
-the wrong thing. Everyone who knew better knew it from somewhere other than the
-code.
+I don't think this is good. I think code should be self-documenting, and this
+part of my job is a big reason I believe that. The nilable field is a good
+example. The code was documenting itself, since the type said nilable, but what
+it said was wrong. The people who knew better learned it somewhere other than
+the code.
 
-This was always best practice, too. If you leave latent knowledge sitting in
-the codebase, then everyone who comes after you has to become a
-programmer-archaeologist just to work on it. I've started thinking of it as
-cognitive debt -- like tech debt, but instead of being the stuff you'd have to
-_change_ to work on the code, it's the stuff you'd have to _know_. And it has
-real costs: knowledge leaves when people leave, new people are slow, and the
-same decisions get re-litigated in design review because nobody can find where
-they were made the first time.
+This has always been best practice. If you leave latent knowledge in a
+codebase, everyone after you has to become a programmer-archaeologist to work
+on it. I've started calling this cognitive debt, which is everything you need
+to know to safely change the code that the code itself doesn't tell you. You
+pay for it when people leave and take what they knew with them, and when new
+people take months to get up to speed.
 
-But with humans the cost was at least sort of bounded. Somebody does the dig
-once, remembers what they found, and then they become the historian for that
-corner of the system. The debt gets paid down a little every time someone
-learns it, and it mostly stays paid as long as they stick around.
+With people the cost is at least bounded. Someone does the dig once, remembers
+what they found, and becomes the person you ask about that part of the system.
+As long as they stick around, it stays paid.
 
 {/* ai */}
 
-Which brings me to AI. I use agents for a lot of this digging now and they're
-genuinely great at the shovel work -- grepping across 50 million lines,
-summarizing a messy git log, chasing a PR to a ticket to a doc.
+I use agents for a lot of this digging now. They're good at grepping across 50
+million lines and summarizing a long git log, which saves me hours.
 
 {/* you: what you actually use them for at work */}
 
-And I think we all kind of know from our little agents doing RAG that the more
-is written down, and the more of it they can reach, the better they do. If you
-give it your Slack and your Google Docs it does super well. That's basically
-the whole enterprise search push happening in the industry right now: take the
-latent stuff and make it explicit enough that an agent can find it.
+Anyone who's set up an agent with RAG has seen that it does better the more it
+can read. If you give it your Slack and Google Docs it does really well, and
+that's most of why every company is pushing enterprise search right now. It's a
+way of making latent knowledge explicit enough for an agent to find.
 
 {/* you: a time an agent nailed it because it found the thread or doc */}
 
-But indexing Slack is sort of a patch. Slack threads go stale and drift just
-like code does, and an agent will read the type and believe it -- it would've
-told you with total confidence that the field is nilable. And more importantly,
-agents don't remember. Every session starts from zero. Each one pays for the
-whole dig again, and none of them can DM the person who left. We never had
-infinitely scalable collaborators before, so we never really paid cognitive
-debt at this rate. It used to be something like an onboarding tax, and now
-it's a tax on every single task. I think it was always one of the main limiting
-factors on how fast you could move in a big codebase -- we just felt it slowly,
-one new hire at a time.
+Indexing Slack only gets you partway, though. Slack threads go stale the
+same way code does, and an agent will read the type and believe it. It would
+have told me the field was nilable. Agents also don't remember anything between
+sessions, so each one does the whole dig again, and none of them can DM the
+person who left. We've never had collaborators we could run this many copies
+of, so we've never paid cognitive debt this often. It used to cost us something
+each time a new person joined, and now it costs us on every task an agent picks
+up.
 
 {/* the end of the programmer-archaeologist */}
 
-So I think the era of the programmer-archaeologist is sort of coming to a
-close. Someone will still have to dig sometimes. But I don't think it's going
-to be something every senior engineer has to be just to get stuff done,
-because the AI speedup works like a ratchet: once agents are doing a lot of the
-work, you're kind of forced to take that latent knowledge and materialize it
-into the code itself. Types that are actually true. Tests that enforce the
-thing everyone "just knows." And good boundaries, so that you (or an agent) can
-work on one piece without needing to know the history of the whole system
-around it. That's what the agents can actually use. And if you don't do it, I
-think that's close to an existential risk for your codebase's velocity versus
-your peers. The teams that do this are just going to move faster, and that
-compounds.
+So I think the era of the programmer-archaeologist is ending, or at least
+shrinking. Someone will still have to dig sometimes, but I don't think every
+senior engineer will need to be one to get work done. Once agents are doing a
+lot of the work, there.s real pressure to move latent knowledge into the
+code itself. That means code that says what it means (starting with types that
+are right) and boundaries that let you or an agent change one part without
+knowing the history of everything around it. If you don't do this, it's
+close to an existential risk for your codebase's velocity compared to your
+peers.
 
-It's a funny inversion of Vinge, actually. In _Deepness_ the
-programmer-archaeologists are the most valuable people on the ship, basically
-forever. Maybe we're the ones who get to not need them.
+In _Deepness_ the programmer-archaeologists are some of the most valuable
+people on the ship, thousands of years in. We might end up needing
+far fewer of them.
 
-The uncomfortable part, for me at least, is that being the historian is a big
-part of what I'm valued for, and I think the job now is to write myself out of
-it.
+This is a little funny for me, because being one of those historians is a lot
+of my job right now. The next part of the job is making that less
+necessary.
 
 {/* ending */}
 
-Anyways -- someday someone is going to `git blame` your code and wonder what on
-earth you meant. It might be you, or it might be an agent doing it a thousand
-times a day. The old advice was to leave them a good commit message, and I
-don't really think that cuts it anymore. Nobody should have to go digging
-through the history to find out what your code means. It should just say it.
+Anyways, someday someone is going to `git blame` your code and wonder what you
+meant, and it might be an agent doing it a thousand times a day. People used to
+say to leave a good commit message. I don't think that's enough anymore. The
+code should explain itself, so nobody has to go digging.
