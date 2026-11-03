@@ -1,10 +1,13 @@
 ---
-title: "The programmer-archaeologist and latent knowledge in the age of AI"
+title: "The life and death of the programmer-archaeologist"
 publishedAt: "2026-10-29"
-summary: "Most of the job in a big codebase was discovery"
+summary: "Most of the job in a big codebase was discovery. AI has changed demands upon latent knowlege"
 ---
 
-## Background
+Most of the job in a big codebase was discovery. AI has changed demands upon
+latent knowlege.
+
+## Wait, it's nilable?
 
 I was talking on a little break with a colleague that was fairly new to Stripe,
 she had just joined a few months ago. We had gone away from our desks and
@@ -42,7 +45,7 @@ less scrutiny than the billions-of-dollars-per-day core payments APIs of
 Stripe. Because of that it wasn't like, my-world-turned-upside-down surprising,
 but it _was_ surprising -- that we didn't know this detail of our own system!
 
-## The book
+## A Fire Upon the Deep
 
 It reminded me of Vernor Vinge's _A Fire Upon the Deep_. I read this book
 because of how often it comes up on hackernews -- like many others, probably. The
@@ -66,7 +69,7 @@ Nobody is going to eat the galaxy over a nilable field, but: somebody made a
 decision a long time ago, it made sense to them, and the code survived but the
 reason didn't.
 
-## Big codebases
+## Little and big codebases
 
 My side project has gotten pretty big, but I wrote all of it, so when
 something looks weird it's usually because I did it and I can sort of remember
@@ -84,16 +87,12 @@ says the thing you needed to know. If you're not, it was never written down,
 and you DM someone who worked on it four years ago and hope they remember. They
 usually sort of do.
 
-{/* you: the real nilable-field dig (or another) -- what you found, dead ends */}
-
 ## Latent knowledge
 
 The explaining part takes up more of my time than the digging. People ask me
 why something works the way it does, or whether it's safe to change, and a lot
 of the time I know because I've been around that part of the system long
 enough to have already done the dig.
-
-{/* you: the kinds of questions people bring you */}
 
 The design review my colleague liked is this happening live. Each
 person in the room knows some part of the history, and the discussion is them
@@ -120,19 +119,15 @@ With people the cost is at least bounded. Someone does the dig once, remembers
 what they found, and becomes the person you ask about that part of the system.
 As long as they stick around, it stays paid.
 
-## AI
+## Agentic programming-archaeology
 
 I use agents for a lot of this digging now. They're good at grepping across 50
 million lines and summarizing a long git log, which saves me hours.
-
-{/* you: what you actually use them for at work */}
 
 Anyone who's set up an agent with RAG has seen that it does better the more it
 can read. If you give it your Slack and Google Docs it does really well, and
 that's most of why every company is pushing enterprise search right now. It's a
 way of making latent knowledge explicit enough for an agent to find.
-
-{/* you: a time an agent nailed it because it found the thread or doc */}
 
 Indexing Slack only gets you partway, though. Slack threads go stale the
 same way code does, and an agent will read the type and believe it. It would
@@ -143,7 +138,7 @@ of, so we've never paid cognitive debt this often. It used to cost us something
 each time a new person joined, and now it costs us on every task an agent picks
 up.
 
-## Thoughts
+## Slop, vibe, past, future.
 
 There's something kind of ironic here with Vinge. In _Deepness_ the
 programmer-archaeologist is a job of the far future, thousands of years out,
