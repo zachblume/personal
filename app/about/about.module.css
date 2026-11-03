@@ -207,7 +207,6 @@
         align-items: center;
         min-height: 224px;
         padding: 24px 8px 16px;
-        perspective: 900px;
         isolation: isolate;
     }
 
@@ -215,13 +214,8 @@
         position: relative;
         flex: 0 0 230px;
         border-radius: 7px;
-        box-shadow:
-            0 3px 8px #00000018,
-            0 14px 24px #00000018;
-        transform: rotateY(-18deg) rotateZ(-6deg);
-        transition:
-            transform 350ms ease,
-            box-shadow 350ms ease;
+        box-shadow: 0 1px 4px #00000018;
+        transition: transform 700ms ease-out;
         z-index: 1;
     }
 
@@ -230,12 +224,10 @@
     }
 
     .pet:nth-child(2) {
-        transform: translateY(3px) rotateY(-18deg) rotateZ(-1deg);
         z-index: 2;
     }
 
     .pet:nth-child(3) {
-        transform: rotateY(-18deg) rotateZ(5deg);
         z-index: 3;
     }
 
@@ -259,20 +251,18 @@
     }
 
     :global(.dark) .pet {
-        box-shadow:
-            0 0 0 1px #ffffff20,
-            0 14px 24px #00000080;
+        box-shadow: 0 0 0 1px #ffffff20;
     }
 
     .pet:focus-visible {
-        transform: translateY(-16px) translateZ(40px) rotateY(0) rotateZ(-3deg);
+        transform: translateY(-20px) rotate(-5deg) scale(1.05);
         z-index: 4;
     }
 }
 
 @media (min-width: 768px) and (hover: hover) {
     .pet:hover {
-        transform: translateY(-16px) translateZ(40px) rotateY(0) rotateZ(-3deg);
+        transform: translateY(-20px) rotate(-5deg) scale(1.05);
         z-index: 4;
     }
 }
