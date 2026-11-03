@@ -13,14 +13,7 @@ export default function About() {
         <div className={`full-bleed ${styles.page}`}>
             <SiteHeader current="about" />
 
-            <article className={styles.content}>
-                <header className={styles.identity}>
-                    <div>
-                        <h1>{SITE.name}</h1>
-                        <p>{SITE.city}</p>
-                    </div>
-                </header>
-
+            <article className={styles.content} aria-label={`About ${SITE.name}`}>
                 <div className={styles.bio}>
                     <Image
                         src="/zach.jpeg"
