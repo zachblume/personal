@@ -16,7 +16,6 @@
 }
 
 .section h2,
-.work dt,
 .pet figcaption,
 .contact {
     font-family: var(--font-geist-mono), monospace;
@@ -74,25 +73,13 @@
 .work > div {
     display: flex;
     align-items: baseline;
-    gap: 20px;
+    justify-content: space-between;
+    gap: 16px;
     padding: 10px 0;
     border-top: 1px solid #e5e5e5;
 }
 
-.work dt {
-    width: 82px;
-    flex-shrink: 0;
-    color: #737373;
-}
-
 .work dd {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    flex: 1;
-}
-
-.work dd span {
     color: #737373;
     font-size: 13px;
 }
@@ -156,8 +143,7 @@
 }
 
 :global(.dark) .section h2,
-:global(.dark) .work dt,
-:global(.dark) .work dd span,
+:global(.dark) .work dd,
 :global(.dark) .pet figcaption,
 :global(.dark) .contact {
     color: #a3a3a3;
@@ -258,14 +244,6 @@
     }
 
     .work > div {
-        gap: 12px;
-    }
-
-    .work dt {
-        width: 72px;
-    }
-
-    .work dd {
         flex-direction: column;
         gap: 2px;
     }

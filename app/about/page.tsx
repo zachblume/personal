@@ -50,31 +50,28 @@ export default function About() {
                     <h2 id="work-title">Work</h2>
                     <dl className={styles.work}>
                         <div>
-                            <dt>now</dt>
-                            <dd>
+                            <dt>
                                 <a href={SITE.employer.href}>
                                     {SITE.employer.label}
                                 </a>
-                                <span>{SITE.employer.role}</span>
-                            </dd>
+                            </dt>
+                            <dd>{SITE.employer.role}</dd>
                         </div>
                         <div>
-                            <dt>previously</dt>
-                            <dd>
+                            <dt>
                                 <a href={SITE.previousEmployer.href}>
                                     {SITE.previousEmployer.label}
                                 </a>
-                                <span>{SITE.previousEmployer.role}</span>
-                            </dd>
+                            </dt>
+                            <dd>{SITE.previousEmployer.role}</dd>
                         </div>
                         <div>
-                            <dt>founded</dt>
-                            <dd>
+                            <dt>
                                 <a href={SITE.company.href}>
                                     {SITE.company.label}
                                 </a>
-                                <span>Founder</span>
-                            </dd>
+                            </dt>
+                            <dd>Founder</dd>
                         </div>
                     </dl>
                 </section>
