@@ -1,0 +1,197 @@
+---
+title: "The programmer-archaeologist in the age of AI"
+publishedAt: "2026-10-29"
+summary: "Most of the job in a big codebase has been figuring out why things are the way they are. AI changes that."
+---
+
+A lot of working in a big codebase is figuring out why things are the way they
+are. You dig through old PRs and design docs and Slack threads, and then you
+explain what you found to whoever's asking, and you iterate over time on a
+mental model of the history based on the artifacts you uncovered. Vernor Vinge
+has a name for this, the programmer-archaeologist, and in his books it's a job
+of the far future. I've been thinking about it a lot lately, because I think AI
+is changing this job pretty fast, and it's going a lot differently than he
+imagined. In addition to being engineers, we _used_ to be archaeologists, but
+this won't scale.
+
+## Wait, that's nilable?
+
+I was talking on a little break with a colleague who was fairly new to Stripe;
+she had just joined a few months ago. We had gone away from our desks and
+stepped up to the cafeteria. We often end up doing this because there aren't
+that many private spaces at the office other than meeting rooms, and having a
+chitchat in a meeting room is funny. The tradeoff is that you're in a weirdly
+empty giant lunch room. It's still nice though. Some of my most memorable
+conversations happened this way -- with people passing through town from
+another office, or at some kind of lifecycle stage of work life so to speak
+(just joined, about to leave, right after something stressful, etc.)
+
+We were talking about how work changes as you go from well scoped tasks to more
+ambiguous things. At Stripe we have team and organization-level weekly meetings
+carved out for engineering design reviews, which are like an academic peer
+review space for documents and plans. In fact, this academic culture -- the
+practice of peer review -- is my favorite thing about Stripe. I think it's one
+of the most important ways that technical relationships between people get
+formed, and people get a lot smarter through it -- or at least I know that I
+did.
+
+She was saying how she found the design discussions really interesting: a room
+of people who each know some corner of the system really deeply, each with only
+a partial picture, sitting there disagreeing and talking it through live.
+
+In one recent review, many of us were surprised to hear that a core type of our
+system was nullable (or "nilable" in Stripe's Ruby parlance). Bizarre! This is
+a thing we interact with every day, and it's fundamentally un-nullable on the
+object it sits on, but we've accidentally (?) been telling users it could be
+nil. Actually, most of the traffic for our subproduct (loans) goes through
+embedded React components rather than APIs, so our team's APIs are under a bit
+less scrutiny so far than the billions-of-dollars-per-day core payments APIs of
+Stripe. Because of that it wasn't like, my-world-turned-upside-down surprising,
+but it _was_ surprising -- we didn't know this detail of our own system!
+
+## A Fire Upon the Deep
+
+It reminded me of Vernor Vinge's _A Fire Upon the Deep_. I read it because of
+how often it comes up on Hacker News, like a lot of people probably did. The
+book opens with a team of human researchers at a lab out on the edge of the
+galaxy, digging through an archive that's been sitting dormant for billions of
+years. They don't really understand what's in it, but they have really good
+automation that can decode it and run it, so they do. What they've actually dug
+up is the Blight, an incredibly hostile superintelligence. (That's the first
+few pages. It gets _much_ weirder.)
+
+The prequel, _A Deepness in the Sky_, is where the job I'm talking about gets
+its name: "programmer-archaeologist." Thousands of years in the future, ships
+run on software stacked on software stacked on software, nobody writes anything
+from scratch anymore, and the most valuable people on board are the ones who
+can dig down through the layers and figure out what something actually does.
+There's this great detail where the ship's clock counts seconds from what
+everyone assumes is the first moon landing, but if you dig all the way down
+it's actually the Unix epoch, and nobody remembers what that was.
+
+Nobody is going to eat the galaxy over a nilable field, but somebody made a
+decision a long time ago, it made sense to them, and the code survived but the
+reason didn't.
+
+## Little and big codebases
+
+My side project has gotten pretty big (1m lines), but I wrote most of it and
+all of it for the first 30% of the project, so when something looks weird it's
+usually because I did it, and I can sort of remember why. Stripe is something
+like 50 million lines of Ruby, and nobody has that in their head, not even the
+people who've been here for a decade. So a lot of the job ends up being
+figuring out why something is the way it is, and then explaining that to other
+people.
+
+Figuring it out usually starts with git blame, and the first commit you hit
+is almost always a formatter run or someone moving the file to a new folder, so
+you keep going. git log will find when the thing first showed up, and from
+there you can usually follow the PR to a ticket and the ticket to a design doc.
+If you're lucky there's an incident writeup or a Slack thread at the end where
+someone finally says the thing you needed to know. If you're not lucky, it was
+never written down anywhere, and you DM someone who worked on it four years ago
+and hope they remember (they usually sort of do).
+
+## Latent knowledge
+
+In my experience the explaining part takes up more time than the digging.
+People ask why something works the way it does, or whether it's safe to change,
+and a lot of the time whoever's been around that part of the system the longest
+already knows, because they did the dig years ago.
+
+The design review my colleague liked is pretty much this happening live.
+Everyone in the room knows some part of the history, and the discussion is them
+putting it together out loud. What's getting passed around is latent knowledge,
+the stuff that's true about the system but isn't written down in the code. Some
+of it's in old PR comments or Slack, but most of it is just in people's heads.
+
+## Cognitive debt
+
+I don't think this is good! I think code should be self-documenting, and this
+part of the job is a big reason I believe that. The nilable field is a good
+example, because the code _was_ documenting itself (the type said nilable), it
+was just saying the wrong thing. Everyone who knew better learned it somewhere
+other than the code.
+
+And this has always been best practice. If you leave latent knowledge in a
+codebase, everyone after you has to become a programmer-archaeologist just to
+work on it. We might call this cognitive debt (not quite in the sense people
+have been using it lately, for offloading your thinking to ChatGPT): everything
+you need to know to safely change the code that the code itself doesn't tell
+you. You pay for it when people leave and take what they knew with them, and
+when new people take months to get up to speed.
+
+With people, at least, the cost is sort of bounded. Someone does the dig once,
+remembers what they found, and becomes the person you go ask about that part of
+the system, and as long as they stick around it stays paid.
+
+## Agentic programmer-archaeology
+
+Agents are pretty good at a lot of this digging already. They can grep across
+50 million lines and summarize a long git log way faster than I can.
+
+Anyone who's set up an agent with RAG has seen that it does better the more it
+can read. If you give it your Slack and your Google Docs it does really well,
+and that's a big part of why so many companies are pushing enterprise search
+right now. It's a way of making latent knowledge explicit enough for an agent
+to find.
+
+Indexing Slack only gets you partway, though. Slack threads go stale the same
+way code does, and an agent will read the type and believe it. It would have
+told me the field was nilable, no questions asked. Agents also don't remember
+anything between sessions, so each one does the whole dig over again, and none
+of them can DM the person who left. We've never had collaborators we could run
+this many copies of, so we've never had to pay cognitive debt this often. It
+used to cost us something every time a new person joined, and now it costs us
+something on every task an agent picks up.
+
+## The past and future of slop
+
+There's something ironic here with Vinge. In _Deepness_ the
+programmer-archaeologist is a job of the far future, thousands of years out,
+and they're some of the most valuable people on the ship. (The book is set in a
+part of the galaxy where real AI doesn't work, so people are still the ones
+doing the digging, with machines helping.) In real life it's a job we've had
+for a while now, and I think it's starting to fade.
+
+To be fair, he did kind of see the slop coming. The whole reason his ships need
+archaeologists is that the software has piled up into something nobody
+understands anymore. I just think a couple things are playing out differently
+in real life.
+
+One is speed. His ships pile up software over thousands of years, slowly enough
+that a few skilled people can keep up. If you allow programmer-archaeologist
+behavior in your codebase and then 100x your velocity with agents, you can pile
+up thousands of years of layers in a year or two. Every agent that misreads the
+nilable field writes new code on top of the misreading, and that new code has
+its own latent knowledge that nobody holds, and no human can reconstitute it as
+fast as it's being made. Which is pretty much the opening of _A Fire Upon the
+Deep_ again: really good automation running something nobody understands, one
+layer at a time.
+
+The other is that the layers aren't human anymore. When I dig through old
+Stripe code I'm reconstructing decisions people made. Somebody had a reason, it
+got written down somewhere or it's in someone's head, and if I'm lucky I can DM
+them. AI slop doesn't have that. There's no decision to recover and nobody to
+ask, so trying to understand it feels less like being a
+programmer-archaeologist and more like being a mathematician working through
+machine code.
+
+So the speedup ends up forcing the issue. If you want to keep moving that fast,
+you have to make the code self-documenting a lot sooner than you otherwise
+would: code that says what it means (starting with types that are right), and
+boundaries that let you or an agent change one part without knowing the history
+of everything around it. Someone will still have to dig sometimes, but I don't
+think every senior engineer will need to be an archaeologist just to get work
+done. And if you don't do it, the codebase turns into slop and your velocity
+goes with it, which I think is close to an existential risk compared to peer
+companies who might've gone through with doing this work properly.
+
+This is a little funny for me, because being one of those
+programmer-archaeologists is a lot of my job right now, and I think the next
+part of the job is making that less necessary.
+
+Anyways, someday someone is going to git blame your code and wonder what you
+meant, and it might be an agent doing it a thousand times a day. People used to
+say to leave a good commit message. I don't think that's enough anymore. The
+code should really just explain itself.
