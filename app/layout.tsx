@@ -1,6 +1,8 @@
 import "@radix-ui/themes/styles.css";
 import type { Metadata } from "next";
 import Script from "next/script";
+import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Footer from "./components/footer";
@@ -46,7 +48,10 @@ export default function RootLayout({
 }) {
     return (
         <ViewTransitions>
-            <html lang="en">
+            <html
+                lang="en"
+                className={`${GeistSans.variable} ${GeistMono.variable}`}
+            >
                 <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto bg-white dark:bg-black dark:bg-gradient-to-b dark:from-neutral-900/20 dark:to-black min-h-screen">
                     <ThemeProvider
                         attribute="class"

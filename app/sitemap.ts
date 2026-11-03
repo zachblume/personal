@@ -10,6 +10,7 @@ export default async function sitemap() {
 
     const routes = [
         "",
+        "/about",
         // , '/blog'
     ].map((route) => ({
         url: `${baseUrl}${route}`,
