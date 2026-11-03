@@ -6,13 +6,13 @@ summary: "Most of the job in a big codebase has been figuring out why things are
 
 A lot of working in a big codebase is figuring out why things are the way they
 are. You dig through old PRs and design docs and Slack threads, and then you
-explain what you found to whoever's asking. Over time you piece together how
-the code got that way. Vernor Vinge has a name for this, the
-programmer-archaeologist, and in his books it's a job
+explain what you found to whoever's asking, and you iterate over time on a
+mental model of the history based on the artifacts you uncovered. Vernor Vinge
+has a name for this, the programmer-archaeologist, and in his books it's a job
 of the far future. I've been thinking about it a lot lately, because I think AI
 is changing this job pretty fast, and it's going a lot differently than he
-imagined. Being an archaeologist has been part of being an engineer, but I
-don't think we can keep working this way with agents writing so much code.
+imagined. In addition to being engineers, we _used_ to be archaeologists, but
+this won't scale.
 
 ## Wait, that's nilable?
 
@@ -23,27 +23,27 @@ that many private spaces at the office other than meeting rooms, and having a
 chitchat in a meeting room is funny. The tradeoff is that you're in a weirdly
 empty giant lunch room. It's still nice though. Some of my most memorable
 conversations happened this way -- with people passing through town from
-another office, or people who'd just joined, were about to leave, or had just
-gotten through something stressful.
+another office, or at some kind of lifecycle stage of work life so to speak
+(just joined, about to leave, right after something stressful, etc.)
 
 We were talking about how work changes as you go from well scoped tasks to more
 ambiguous things. At Stripe we have team and organization-level weekly meetings
-where we review engineering designs and plans, a bit like academic peer
-review. In fact, this academic culture -- the practice of peer review -- is my
-favorite thing about Stripe. I think it's one
-of the most important ways people learn how their colleagues think about
-engineering, and people get a lot smarter through it -- or at least I know
-that I did.
+carved out for engineering design reviews, which are like an academic peer
+review space for documents and plans. In fact, this academic culture -- the
+practice of peer review -- is my favorite thing about Stripe. I think it's one
+of the most important ways that technical relationships between people get
+formed, and people get a lot smarter through it -- or at least I know that I
+did.
 
 She was saying how she found the design discussions really interesting: a room
 of people who each know some corner of the system really deeply, each with only
 a partial picture, sitting there disagreeing and talking it through live.
 
 In one recent review, many of us were surprised to hear that a core type of our
-system was nullable (or "nilable" as we call it in Stripe's Ruby). Bizarre!
-This is a thing we interact with every day, and it can never actually be nil
-on the object it sits on, but we've accidentally (?) been telling users it could be
-nil. Actually, most of the traffic for our product (loans) goes through
+system was nullable (or "nilable" in Stripe's Ruby parlance). Bizarre! This is
+a thing we interact with every day, and it's fundamentally un-nullable on the
+object it sits on, but we've accidentally (?) been telling users it could be
+nil. Actually, most of the traffic for our subproduct (loans) goes through
 embedded React components rather than APIs, so our team's APIs are under a bit
 less scrutiny so far than the billions-of-dollars-per-day core payments APIs of
 Stripe. Because of that it wasn't like, my-world-turned-upside-down surprising,
