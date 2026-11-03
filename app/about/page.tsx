@@ -105,7 +105,6 @@ export default function About() {
                 <footer className={styles.contact}>
                     <a href={`mailto:${SITE.email}`}>Email</a>
                     <a href={SITE.github.href}>GitHub</a>
-                    <a href="/rss">RSS</a>
                 </footer>
             </article>
         </div>
