@@ -14,7 +14,7 @@ is changing this job pretty fast, and it's going a lot differently than he
 imagined. In addition to being engineers, we _used_ to be archaeologists, but
 this won't scale.
 
-## Wait, it's nilable?
+## Wait, that's nilable?
 
 I was talking on a little break with a colleague who was fairly new to Stripe;
 she had just joined a few months ago. We had gone away from our desks and
@@ -75,16 +75,17 @@ reason didn't.
 
 ## Little and big codebases
 
-My side project has gotten pretty big, but I wrote all of it, so when something
-looks weird it's usually because I did it, and I can sort of remember why.
-Stripe is something like 50 million lines of Ruby, and nobody has that in their
-head, not even the people who've been here for a decade. So a lot of the job
-ends up being figuring out why something is the way it is, and then explaining
-that to other people.
+My side project has gotten pretty big (1m lines), but I wrote most of it and
+all of it for the first 30% of the project, so when something looks weird it's
+usually because I did it, and I can sort of remember why. Stripe is something
+like 50 million lines of Ruby, and nobody has that in their head, not even the
+people who've been here for a decade. So a lot of the job ends up being
+figuring out why something is the way it is, and then explaining that to other
+people.
 
-Figuring it out usually starts with `git blame`, and the first commit you hit
+Figuring it out usually starts with git blame, and the first commit you hit
 is almost always a formatter run or someone moving the file to a new folder, so
-you keep going. `git log -S` will find when the thing first showed up, and from
+you keep going. git log will find when the thing first showed up, and from
 there you can usually follow the PR to a ticket and the ticket to a design doc.
 If you're lucky there's an incident writeup or a Slack thread at the end where
 someone finally says the thing you needed to know. If you're not lucky, it was
@@ -183,14 +184,14 @@ boundaries that let you or an agent change one part without knowing the history
 of everything around it. Someone will still have to dig sometimes, but I don't
 think every senior engineer will need to be an archaeologist just to get work
 done. And if you don't do it, the codebase turns into slop and your velocity
-goes with it, which I think is close to an existential risk compared to your
-peers who did the work.
+goes with it, which I think is close to an existential risk compared to peer
+companies who might've gone through with doing this work properly.
 
 This is a little funny for me, because being one of those
 programmer-archaeologists is a lot of my job right now, and I think the next
 part of the job is making that less necessary.
 
-Anyways, someday someone is going to `git blame` your code and wonder what you
+Anyways, someday someone is going to git blame your code and wonder what you
 meant, and it might be an agent doing it a thousand times a day. People used to
 say to leave a good commit message. I don't think that's enough anymore. The
-code should just explain itself, so nobody has to go digging.
+code should really just explain itself.
