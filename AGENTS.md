@@ -13,6 +13,7 @@ Deployed on Vercel.
 - **React 18**, **TypeScript 5.6** (loose — several components are untyped `.tsx` with implicit `any` props)
 - **Tailwind CSS v4 alpha** (`4.0.0-alpha.13`) via `@tailwindcss/postcss`. There is **no `tailwind.config.js`** — config is CSS-first in `app/global.css` (`@import "tailwindcss"`).
 - **Radix Themes** (`@radix-ui/themes`) wrapping the app, `accentColor="ruby"`, plus `@radix-ui/react-icons`
+- **Geist Sans / Geist Mono** via the `geist` package (Geist is not in Next 14.2's bundled Google Fonts list)
 - **next-themes** for dark mode (`attribute="class"`, `defaultTheme="system"`)
 - **next-view-transitions** for cross-page view transitions
 - **next-mdx-remote** for rendering blog posts, **sugar-high** for syntax highlighting
@@ -83,8 +84,9 @@ Monochrome and full-bleed: white, black, and grey only, no accent color.
   pet photos (grayscale, colorizing on hover), and contact links.
 - Blog index and post pages are unchanged: they keep the narrow `max-w-xl`
   reading column from the root layout.
-- Body font is **Inter** (`next/font/google`), loaded on `<html>` in the root layout,
-  with tight negative tracking on headings. Hairline `neutral-200` / `neutral-800` rules.
+- Body font is **Geist Sans**, code is **Geist Mono** (the `geist` package, which ships
+  them locally via `next/font/local`). Tight negative tracking on headings, hairline
+  `neutral-200` / `neutral-800` rules.
 - Light and dark are both first-class; dark is near-black with inverted artwork.
 
 ### Generated artwork
@@ -123,4 +125,11 @@ creates a transformed ancestor that breaks `position: fixed` for anything inside
 - The root layout constrains width for the whole site. A page that needs to be wider
   has to break out with CSS (e.g. `w-screen relative left-1/2 -translate-x-1/2`)
   rather than by overriding the layout.
+- **Fonts must be set through Radix's tokens, not on `html`/`body`.** `<Theme>` renders a
+  `.radix-themes` wrapper that hard-sets `font-family: var(--default-font-family)`. A class
+  selector beats anything merely inherited, so a font applied to `<html>` reaches nothing
+  visible — the app silently falls back to the system stack. `global.css` overrides
+  `--default-font-family` / `--code-font-family` on `.radix-themes.radix-themes`; the class is
+  doubled on purpose, because Next emits `@radix-ui/themes/styles.css` _after_ `global.css`,
+  so a single-class rule ties on specificity and loses on source order.
 - `app/layout.tsx` injects a third-party `reb2b` visitor-tracking script.

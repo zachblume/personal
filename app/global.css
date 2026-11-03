@@ -47,6 +47,35 @@ a {
     line-height: 1.5;
 }
 
+/* Geist Mono is attached as a CSS variable on <html> in the root layout. */
+.prose pre,
+.prose code,
+.prose kbd,
+.prose samp {
+    font-family: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+/* Radix Themes renders a `.radix-themes` wrapper that hard-sets
+   `font-family: var(--default-font-family)` — a class selector, so it beats
+   anything merely inherited from <html>. Point its tokens at Geist instead,
+   otherwise the whole app silently falls back to the system font stack.
+
+   The doubled class is deliberate: Next emits @radix-ui/themes/styles.css
+   *after* this file, so a plain `.radix-themes` rule ties on specificity and
+   loses on source order. */
+.radix-themes.radix-themes {
+    --default-font-family: var(--font-geist-sans), ui-sans-serif, system-ui,
+        sans-serif;
+    --heading-font-family: var(--default-font-family);
+    --strong-font-family: var(--default-font-family);
+    --code-font-family: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+/* Anything rendered outside the Radix wrapper. */
+html {
+    font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
 .prose code span {
     @apply font-medium;
 }
