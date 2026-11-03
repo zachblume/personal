@@ -147,23 +147,34 @@ up.
 
 {/* the end of the programmer-archaeologist */}
 
-So I think the era of the programmer-archaeologist is ending, or at least
-shrinking. Someone will still have to dig sometimes, but I don't think every
-senior engineer will need to be one to get work done. Once agents are doing a
-lot of the work, there.s real pressure to move latent knowledge into the
-code itself. That means code that says what it means (starting with types that
-are right) and boundaries that let you or an agent change one part without
-knowing the history of everything around it. If you don't do this, it's
-close to an existential risk for your codebase's velocity compared to your
-peers.
+There's something kind of ironic here with Vinge. In _Deepness_ the
+programmer-archaeologist is a job of the far future, thousands of years out,
+and the archaeologists are some of the most valuable people on the ship. The
+book is set in a part of the galaxy where real AI doesn't work, so people are
+still the ones doing the digging, with machines helping. In real life it's a
+job we've had for a while now, and I think it's the thing that's starting to
+fade.
 
-In _Deepness_ the programmer-archaeologists are some of the most valuable
-people on the ship, thousands of years in. We might end up needing
-far fewer of them.
+What I don't think he saw coming is slop. His ships pile up software over
+thousands of years, slowly enough that a few skilled people can keep up with
+it. If you allow programmer-archaeologist behavior in your codebase and then
+100x your velocity with agents, you can pile up thousands of years
+of layers in a year or two. Every agent that misreads the nilable field writes new code on top of the misreading, and that new code has
+its own latent knowledge that nobody holds, and the agents can't dig fast
+enough to keep up with what they're making.
+
+So the speedup ends up forcing the issue. If you want to keep moving that fast,
+you have to make the code self-documenting much sooner than you otherwise
+would. That means code that says what it means (starting with types that are
+right) and boundaries that let you or an agent change one part without knowing
+the history of everything around it. If you don't, the codebase turns into slop
+and your velocity goes with it, and I think that's close to an existential risk
+compared to your peers who did the work. Someone will still have to dig
+sometimes, but I don't think every senior engineer will need to be an
+archaeologist to get work done.
 
 This is a little funny for me, because being one of those historians is a lot
-of my job right now. The next part of the job is making that less
-necessary.
+of my job right now. The next part of the job is making that less necessary.
 
 {/* ending */}
 
