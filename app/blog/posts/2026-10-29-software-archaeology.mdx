@@ -1,5 +1,5 @@
 ---
-title: "The programmer-archaeologist in the age of AI"
+title: "The programmer-archaeologist and latent knowledge in the age of AI"
 publishedAt: "2026-10-29"
 summary: "Most of the job in a big codebase is figuring out why things are the way they are"
 ---
@@ -68,97 +68,69 @@ reason didn't.
 
 {/* side project vs. stripe */}
 
-My side project is over a million lines at this point and it still mostly fits
-in my head. When something looks weird I usually remember why I did it, or at
-least the rough shape of why, and that's enough to get going. Stripe is
-something like 50 million lines of Ruby. Nobody has that in their head -- nobody
-is even close, not even the people who have been here for a decade. And I don't
-think that's just the same job but bigger, I think it's sort of a different job.
-At a million lines you're mostly an author. At fifty million you're mostly a
-reader, and you're reading stuff written by people you'll probably never meet,
-for reasons that were obvious to them at the time and are not at all obvious to
-you.
+- side project is 1M+ lines, still mostly fits in my head
+- stripe is ~50M lines of ruby, nobody has it in their head
+- different job, not just bigger: author vs. reader
+- reading code by people you'll never meet, for reasons obvious to them
 
 {/* meaning drift */}
 
-The weird part (to me at least) is that the code doesn't really change that
-much, but what it _means_ does. It goes something like: a field gets added with
-a name that perfectly describes what it holds. Then a second product starts
-writing to it for a slightly different reason. Then there's a migration and
-half the old rows mean one thing and half mean another. Then someone adds a
-flag that changes how it gets read. The name never changes, so the code still
-reads totally clearly -- it's just clearly saying something that stopped being
-true a couple years ago. I don't actually know the full history of our nilable
-field yet, but I'd bet money it's something like that.
-
-It's kind of like reading an old book where the words have drifted. "Nice" used
-to mean foolish, for instance. You can read every word on the page and still
-misunderstand the sentence, because you're reading it in today's language and
-it was written in an older one.
+- code doesn't change much, but what it _means_ does
+- example: field added w/ perfect name -> second product writes to it ->
+  migration splits old rows -> flag changes how it's read -> name never changes
+- code reads clearly, but says something that stopped being true
+- probably what happened to our nilable field
+- like old books where words drifted ("nice" used to mean foolish)
 
 {/* digging */}
 
-So the actual work ends up looking a lot like digging. You `git blame` a line,
-and the first commit you hit is almost always useless -- a formatter, a rename,
-someone moving a file from one folder to another. So you keep going. Maybe
-`git log -S` to find when a string first showed up. You find the PR, the PR
-links a ticket, the ticket links a design doc, the design doc mentions an
-incident, and the incident writeup finally says the one thing you needed to
-know. Each layer is someone's decision that made sense at the time, sitting on
-top of someone else's decision that made sense at the time. Sometimes the
-answer isn't written down at all and you end up DMing someone who worked on it
-four years ago and hoping they remember (they usually sort of do).
+- `git blame` -> first commit is useless (formatter, rename, file move)
+- `git log -S`, PR -> ticket -> design doc -> incident writeup
+- strata: each decision made sense at the time, on top of someone else's
+- sometimes not written down, DM someone from 4 years ago
 
 {/* mental model as cache */}
 
-Once you've done the dig, you sort of cache it. I think that's what people
-actually mean when they talk about having a "mental model" of a big system:
-it's a pile of cached excavations. You don't redo the dig every time you touch
-that code, you just remember what you found last time. A lot of what makes a
-senior engineer valuable on a big codebase isn't that they're smarter, it's
-that their cache is bigger -- or at least that's a big part of it. Which also
-means it goes stale, because other people are adding layers on top of the
-layers you dug through, and it turns out cache invalidation is just as hard
-inside your head as it is everywhere else.
+- after the dig, you cache it
+- "mental model" = pile of cached excavations
+- seniors' edge is partly a bigger cache, not being smarter
+- cache goes stale, others keep adding layers; cache invalidation joke
+
+{/* historian */}
+
+- maybe less archaeologist, more historian
+- good engineers at big companies can _explain the history_ -- why it's like
+  this, what it used to mean, who decided
+- I'm like that, it's a big part of what I'm valued for
+- basically: holding and explaining latent knowledge
+- I don't actually think this is good -- code _should_ be self-documenting
+- and this job is part of why I believe that: I feel the pain of it directly
+- but it's the current state of things (at least before AI)
 
 {/* underrated skill */}
 
-I think this is a pretty underrated skill and it's mostly not taught. School
-and bootcamps and side projects teach you to write code, almost always in
-codebases small enough that you're the author of most of it. Then you show up
-somewhere big and most of the job is reading, and nobody really told you that
-reading is a craft with its own techniques. The newer engineers I've seen get
-good fast are usually the ones who get curious about the history instead of
-annoyed by it -- which is part of why I liked hearing that my colleague found
-the design reviews interesting rather than frustrating. They tend to assume the
-previous person was smart and had constraints they can't see yet. (They're
-usually right. And sometimes the previous person was them.)
+- reading code is underrated and not taught
+- school/bootcamps/side projects: you're the author
+- big company: mostly reading
+- newer engineers who get good fast are curious about history, not annoyed
+- tie back to colleague liking design reviews
+- assume previous person was smart w/ unseen constraints (sometimes it was you)
 
 {/* ai tools */}
 
-So where does AI fit into this? It helps a lot, honestly. An agent can grep
-fifty million lines way faster than I can, and it's really good at summarizing
-a messy git log or chasing a PR to a ticket to a doc. A lot of the shovel work
-of the dig is just getting cheaper, and I think that's great.
-
-But it's sort of the situation the researchers in _A Fire Upon the Deep_ are
-in. They have amazing automation that can decode the archive and run it, layer
-by layer, and it all seems to work -- it just can't tell them what any of it
-_means_. The meaning-drift problem is exactly the thing the tools are worst at,
-because they read the code in today's language, same as a new engineer does.
-The field is called what it's called, so that's what it must hold. And a lot of
-the real context was never written down anywhere in the first place. It lived
-in a meeting, or a Slack thread, or someone's head, and that person left two
-reorgs ago.
-
-If anything I think AI makes the archaeology part of the job _more_ important,
-not less. We're about to have way more code, written way faster, by people (and
-agents) who spent way less time thinking about each line. That's a lot of new
-strata. As long as software outlives the people who wrote it, which is
-basically always, someone is going to have to be the programmer-archaeologist.
+- AI helps a lot w/ the shovel work: grep, summarize git log, chase links
+- but it's the _Fire_ researchers: automation runs the archive, can't say what
+  it means
+- tools read code in today's language, take field names at face value
+- real context often never written down (meeting, slack, person who left)
+- does AI change the historian role? could it pull latent knowledge out of
+  people's heads and write it down, or does it just make it more latent?
+- AI may make archaeology _more_ important: more code, faster, less thought
+  per line = more strata
+- software outlives its authors -> someone has to be the
+  programmer-archaeologist
 
 {/* ending */}
 
-Anyways -- someday someone is going to `git blame` your code, squint at it, and
-wonder what on earth you meant. Leave them a good commit message. It might be
-you.
+- someone will `git blame` your code someday
+- leave a good commit message, might be you
