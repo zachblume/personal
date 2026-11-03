@@ -4,8 +4,6 @@ publishedAt: "2026-10-29"
 summary: "Most of the job in a big codebase was discovery"
 ---
 
-{/* chatting started me thinking */}
-
 I was talking on a little break with a colleague that was fairly new to Stripe,
 she had just joined a few months ago. We had gone away from our desks and
 stepped up to the cafeteria. We often end up doing this because there's not
@@ -42,7 +40,7 @@ less scrutiny than the billions-of-dollars-per-day core payments APIs of
 Stripe. Because of that it wasn't like, my-world-turned-upside-down surprising,
 but it _was_ surprising -- that we didn't know this detail of our own system!
 
-{/* book */}
+## Vinge's programmer-archaeologists
 
 It reminded me of Vernor Vinge's _A Fire Upon the Deep_. I read this book
 because of how often it comes up on hackernews -- like many others, probably. The
@@ -66,7 +64,7 @@ Nobody is going to eat the galaxy over a nilable field, but: somebody made a
 decision a long time ago, it made sense to them, and the code survived but the
 reason didn't.
 
-{/* side project vs. stripe */}
+## Digging
 
 My side project has gotten pretty big, but I wrote all of it, so when
 something looks weird it's usually because I did it and I can sort of remember
@@ -74,8 +72,6 @@ why. Stripe is something like 50 million lines of Ruby, and nobody has that in
 their head, including the people who have been here for a decade. So a lot of
 the job is figuring out why something is the way it is, and then explaining it
 to other people.
-
-{/* archaeologist: the dig */}
 
 Figuring it out usually starts with `git blame`. The first commit you hit is
 almost always a formatter run or someone moving the file, so you keep going.
@@ -88,7 +84,7 @@ usually sort of do.
 
 {/* you: the real nilable-field dig (or another) -- what you found, dead ends */}
 
-{/* historian: explaining it */}
+## Latent knowledge
 
 The explaining part takes up more of my time than the digging. People ask me
 why something works the way it does, or whether it's safe to change, and a lot
@@ -103,7 +99,7 @@ putting it together. What gets passed around is latent knowledge, meaning
 things that are true about the system but aren't written in the code. Some of
 it is in old PR comments or Slack, but most of it is in people's heads.
 
-{/* cognitive debt */}
+## Cognitive debt
 
 I don't think this is good. I think code should be self-documenting, and this
 part of my job is a big reason I believe that. The nilable field is a good
@@ -122,7 +118,7 @@ With people the cost is at least bounded. Someone does the dig once, remembers
 what they found, and becomes the person you ask about that part of the system.
 As long as they stick around, it stays paid.
 
-{/* ai */}
+## Agents
 
 I use agents for a lot of this digging now. They're good at grepping across 50
 million lines and summarizing a long git log, which saves me hours.
@@ -145,7 +141,7 @@ of, so we've never paid cognitive debt this often. It used to cost us something
 each time a new person joined, and now it costs us on every task an agent picks
 up.
 
-{/* the end of the programmer-archaeologist */}
+## The end of the programmer-archaeologist
 
 There's something kind of ironic here with Vinge. In _Deepness_ the
 programmer-archaeologist is a job of the far future, thousands of years out,
@@ -187,8 +183,6 @@ archaeologist to get work done.
 
 This is a little funny for me, because being one of those programmer-archaeologists is a lot
 of my job right now. The next part of the job is making that less necessary.
-
-{/* ending */}
 
 Anyways, someday someone is going to `git blame` your code and wonder what you
 meant, and it might be an agent doing it a thousand times a day. People used to
