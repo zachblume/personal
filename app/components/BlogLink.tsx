@@ -17,17 +17,15 @@ const useIsVisited = (href) => {
     const [isVisited, setIsVisited] = useState(false);
     const pathname = usePathname();
     useEffect(() => {
+        // Read browser storage after hydration; the server renders links as unread.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsVisited(!!loadIsVisited(href));
     }, [href, pathname]);
     return isVisited;
 };
 
 const ConditionalTooltip = (props) => {
-    const [show, setShow] = useState(false);
-    useEffect(() => {
-        setShow(!!props.content);
-    }, [props.content]);
-    if (!show) {
+    if (!props.content) {
         return props.children;
     }
     return <Tooltip {...props}>{props.children}</Tooltip>;

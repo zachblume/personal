@@ -9,11 +9,11 @@ Deployed on Vercel.
 
 ## Stack
 
-- **Next.js 14** (App Router, `app/` at the repo root — note the import alias is `app/...`, not `@/...`)
-- **React 18**, **TypeScript 5.6** (loose — several components are untyped `.tsx` with implicit `any` props)
-- **Tailwind CSS v4 alpha** (`4.0.0-alpha.13`) via `@tailwindcss/postcss`. There is **no `tailwind.config.js`** — config is CSS-first in `app/global.css` (`@import "tailwindcss"`).
+- **Next.js 16** (App Router, `app/` at the repo root — note the import alias is `app/...`, not `@/...`)
+- **React 19**, **TypeScript 7** (CLI; TypeScript 6 compatibility API for build/lint tooling) (loose — several components are untyped `.tsx` with implicit `any` props)
+- **Tailwind CSS v4** via `@tailwindcss/postcss`. There is **no `tailwind.config.js`** — config is CSS-first in `app/global.css` (`@import "tailwindcss"`).
 - **Radix Themes** (`@radix-ui/themes`) wrapping the app, `accentColor="ruby"`, plus `@radix-ui/react-icons`
-- **Geist Sans / Geist Mono** via the `geist` package (Geist is not in Next 14.2's bundled Google Fonts list)
+- **Geist Sans / Geist Mono** via the `geist` package (the package ships the fonts locally)
 - **next-themes** for dark mode (`attribute="class"`, `defaultTheme="system"`)
 - **next-mdx-remote** for rendering blog posts, **sugar-high** for syntax highlighting
 - `@vercel/analytics` + `@vercel/speed-insights`
@@ -148,14 +148,17 @@ creates a transformed ancestor that breaks `position: fixed` for anything inside
 
 - **4-space indentation**, double quotes — enforced by Prettier.
 - Imports use bare `app/...` specifiers, e.g. `import { Link } from "app/components/Link"`. This works
-  via `baseUrl: "."` in `tsconfig.json` — there is no `paths` map and no `@/` alias.
+  via the `app/*` paths map in `tsconfig.json` — there is no `@/` alias.
 - Prefer the local `Link` component over `next/link` so the visited-link localStorage
   tracking keeps working.
-- Tailwind v4 **alpha** — some v3 idioms and plugins don't apply. Add theme tokens in CSS, not a JS config.
-- Dark mode styles are written inline as `dark:` variants everywhere; there are no CSS variables for color.
+- Tailwind v4 — some v3 idioms and plugins don't apply. Add theme tokens in CSS, not a JS config.
+- Dark mode uses `dark:` variants with the class-based custom variant in `global.css` to match next-themes.
 - The root layout constrains width for the whole site. A page that needs to be wider
   has to break out with CSS (e.g. `w-screen relative left-1/2 -translate-x-1/2`)
   rather than by overriding the layout.
+- ESLint uses flat config in `eslint.config.mjs`. Keep ESLint on the latest 9.x until the React/import/accessibility plugins support 10.
+- `typescript` aliases `@typescript/typescript6` for tooling APIs; `@typescript/native` aliases TypeScript 7 and supplies `npx tsc`. Both are required until tooling supports the TypeScript 7 API.
+- Dynamic route `params` are promises in Next.js 16; await them in pages and metadata functions.
 - **Fonts must be set through Radix's tokens, not on `html`/`body`.** `<Theme>` renders a
   `.radix-themes` wrapper that hard-sets `font-family: var(--default-font-family)`. A class
   selector beats anything merely inherited, so a font applied to `<html>` reaches nothing
