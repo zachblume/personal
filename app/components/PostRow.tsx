@@ -14,6 +14,8 @@ function useIsVisited(href: string) {
     const pathname = usePathname();
     useEffect(() => {
         if (typeof window === "undefined" || !window.localStorage) return;
+        // Read browser storage after hydration; the server renders links as unread.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsVisited(!!window.localStorage.getItem(href));
     }, [href, pathname]);
     return isVisited;
