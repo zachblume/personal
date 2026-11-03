@@ -1,7 +1,7 @@
 ---
 title: "The programmer-archaeologist and latent knowledge in the age of AI"
 publishedAt: "2026-10-29"
-summary: "Most of the job in a big codebase is figuring out why things are the way they are"
+summary: "Most of the job in a big codebase was discovery"
 ---
 
 {/* chatting started me thinking */}
@@ -69,68 +69,87 @@ reason didn't.
 {/* side project vs. stripe */}
 
 - side project is 1M+ lines, still mostly fits in my head
-- stripe is ~50M lines of ruby, nobody has it in their head
-- different job, not just bigger: author vs. reader
-- reading code by people you'll never meet, for reasons obvious to them
+- stripe is ~50M lines of ruby, nobody has it in their head, not even people
+  who've been here 10 years
+- so the job splits in two: digging up why something is the way it is
+  (archaeologist), and explaining it to everyone else (historian)
 
-{/* meaning drift */}
+{/* archaeologist: the dig */}
 
-- code doesn't change much, but what it _means_ does
-- example: field added w/ perfect name -> second product writes to it ->
-  migration splits old rows -> flag changes how it's read -> name never changes
-- code reads clearly, but says something that stopped being true
-- probably what happened to our nilable field
-- like old books where words drifted ("nice" used to mean foolish)
+- walk through one real dig, ideally the nilable field
+- `git blame` -> first hit is a formatter / rename / file move
+- `git log -S` -> PR -> ticket -> design doc -> incident writeup / slack thread
+- [you: what you actually found, and the dead ends -- author left, doc 404s,
+  ticket system migrated]
+- sometimes it's not written down anywhere and you DM someone who worked on it
+  4 years ago
 
-{/* digging */}
+{/* historian: explaining it */}
 
-- `git blame` -> first commit is useless (formatter, rename, file move)
-- `git log -S`, PR -> ticket -> design doc -> incident writeup
-- strata: each decision made sense at the time, on top of someone else's
-- sometimes not written down, DM someone from 4 years ago
+- the other half, and honestly the bigger one: being the person who can
+  _explain_ the history
+- good senior engineers at big companies do this constantly. I'm like that,
+  it's a big part of what I'm valued for
+- [you: the questions people bring you -- "why does X...", "is it safe to
+  change Y"]
+- that design review my colleague liked is exactly this: a room of historians,
+  each holding a partial picture, putting it together live
+- what's getting passed around is latent knowledge: stuff that's true about the
+  system but isn't in the code
+- [you: where it actually lives -- old PR comments, incident docs, slack,
+  specific people's heads]
 
-{/* mental model as cache */}
+{/* cognitive debt */}
 
-- after the dig, you cache it
-- "mental model" = pile of cached excavations
-- seniors' edge is partly a bigger cache, not being smarter
-- cache goes stale, others keep adding layers; cache invalidation joke
+- I don't think this is good! code _should_ be self-documenting, and this job
+  is a big part of why I believe that
+- nilable field is the sharp example: the code _was_ documenting itself -- the
+  type said nilable -- it just documented the wrong thing
+- this was always best practice: if you leave latent knowledge in the codebase,
+  other people have to become programmer-archaeologists to work on it
+- call it cognitive debt: like tech debt, but it's what you have to _know_ to
+  work on the code, not what you have to change
+- costs: knowledge leaves when people leave, new people are slow, decisions get
+  re-litigated in design review
+- but with humans it was bounded: someone digs once, remembers, becomes the
+  historian
 
-{/* historian */}
+{/* ai */}
 
-- maybe less archaeologist, more historian
-- good engineers at big companies can _explain the history_ -- why it's like
-  this, what it used to mean, who decided
-- I'm like that, it's a big part of what I'm valued for
-- basically: holding and explaining latent knowledge
-- I don't actually think this is good -- code _should_ be self-documenting
-- and this job is part of why I believe that: I feel the pain of it directly
-- but it's the current state of things (at least before AI)
+- [you: what you actually use AI for when digging at work]
+- great at the shovel work: grep across 50M lines, summarize a git log, chase
+  PR -> ticket -> doc
+- and we all know from our little agents doing RAG: the more is written down
+  and reachable, the better they do. give it slack + google docs and it does
+  super well -> that's the whole enterprise search push
+- [you: a time an agent nailed it because it found the thread / doc]
+- but indexing slack is a patch. threads go stale and drift just like code. an
+  agent reads the type and believes it -- it would've told you the field is
+  nilable
+- and agents don't remember. every session starts from zero, pays for the dig
+  again, can't DM the person who left
+- we never had infinitely scalable collaborators before, so we never paid this
+  debt at this rate. it goes from an onboarding tax to a per-task tax
+- it was always the limiting factor, we just felt it slowly
 
-{/* underrated skill */}
+{/* the end of the programmer-archaeologist */}
 
-- reading code is underrated and not taught
-- school/bootcamps/side projects: you're the author
-- big company: mostly reading
-- newer engineers who get good fast are curious about history, not annoyed
-- tie back to colleague liking design reviews
-- assume previous person was smart w/ unseen constraints (sometimes it was you)
-
-{/* ai tools */}
-
-- AI helps a lot w/ the shovel work: grep, summarize git log, chase links
-- but it's the _Fire_ researchers: automation runs the archive, can't say what
-  it means
-- tools read code in today's language, take field names at face value
-- real context often never written down (meeting, slack, person who left)
-- does AI change the historian role? could it pull latent knowledge out of
-  people's heads and write it down, or does it just make it more latent?
-- AI may make archaeology _more_ important: more code, faster, less thought
-  per line = more strata
-- software outlives its authors -> someone has to be the
-  programmer-archaeologist
+- so I think the era of the programmer-archaeologist is sort of coming to a
+  close
+- someone will still have to dig sometimes, but it won't be something every
+  senior eng has to be just to get stuff done
+- the AI speedup is a ratchet: it forces us to materialize latent knowledge
+  into better structures (types, tests, docs that live next to the code)
+  because that's what agents can actually use
+- if you don't, it's like an existential risk for codebase velocity vs. your
+  peers -- the ones who do it move faster, and it compounds
+- inversion w/ Vinge: in _Deepness_ the archaeologists are the most valuable
+  people on the ship, forever. maybe we get to not need them
+- uncomfortable bit for me: being the historian is what I'm valued for, and the
+  job now is to write myself out of it
 
 {/* ending */}
 
-- someone will `git blame` your code someday
-- leave a good commit message, might be you
+- someone will `git blame` your code someday -- might be you, might be an agent
+  doing it a thousand times a day
+- leave a good commit message. better yet, make the code say it
