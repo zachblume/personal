@@ -34,75 +34,102 @@ detail of our own system!
 
 {/* book */}
 
-{/* side project */}
+It reminded me of Vernor Vinge's _A Fire Upon the Deep_, which I think about
+way more than is probably normal. The book opens with a team of human
+researchers at a lab out on the edge of the galaxy, digging through an archive
+that's been sitting dormant for something billions of years. They don't really
+understand what's in it. What they've actually dug up is the Blight, an
+incredibly hostile superintelligence. (That's the first few pages. It gets
+_much_ weirder.)
+
+Vinge gives the job a name in the prequel, _A Deepness in the Sky_:
+"programmer-archaeologist." Thousands of years in the future, ships run on
+software stacked on software stacked on software, nobody writes anything from
+scratch anymore, and the most valuable people on board are the ones who can dig
+down through the layers and figure out what something actually does. There's
+this great detail where the ship's clock counts seconds from what everyone
+assumes is the first moon landing, but if you dig all the way down it's
+actually the Unix epoch, and they didn't know what that was.
+
+Nobody is going to eat the galaxy over a nilable field, but: somebody made a
+decision a long time ago, it made sense to them, and the code survived but the
+reason didn't.
+
+{/* side project vs. stripe */}
 
 My side project is over a million lines at this point and it still mostly fits
-in my head. When something looks weird, I usually remember why I did it. Even
-when I don't remember exactly, I remember the shape of the decision, and that's
-usually enough.
+in my head. When something looks weird I usually remember why I did it, or at
+least the rough shape of why, and that's enough. Stripe is something like 50
+million lines of Ruby. Nobody has that in their head, nobody is even close. And
+I don't think that's the same job just bigger -- I think it's sort of a
+different job. At a million lines you're mostly an author. At fifty million
+you're mostly a reader, and you're reading stuff written by people you'll never
+meet, for reasons that were obvious to them and aren't obvious to you.
 
-Stripe is something like 50 million lines of Ruby. Nobody has that in their
-head. Nobody is even close. And I don't think that's the same job at a bigger
-scale -- it's a different job. At a million lines you're mostly an author. At
-fifty million you're mostly a reader, and you're reading things written by
-people you'll never meet, for reasons that were obvious to them and are not
-obvious to you.
+{/* meaning drift */}
 
-Here's the part that took me a while to notice: the code doesn't change, but
-what it means does.
-
+The weird part is that the code doesn't really change, but what it means does.
 A field gets added with a name that perfectly describes what it holds. Then a
-second product starts writing to it, for a slightly different reason. Then a
+second product starts writing to it for a slightly different reason. Then a
 migration happens and half the old rows mean one thing and half mean another.
-Then someone adds a flag that changes how it's read. The name never changes,
-so the code still reads perfectly clearly. It's just clearly saying something
-that stopped being true a couple years ago.
+Then someone adds a flag that changes how it's read. The name never changes, so
+the code still reads totally clearly -- it's just clearly saying something that
+stopped being true a couple years ago. I don't actually know the full history
+of our nilable field yet, but I'd bet money it's something like that.
 
-It's a bit like reading an old book where the words have drifted. "Nice" used
-to mean foolish. You can read every word on the page and still completely
-misunderstand the sentence, because you're reading it in today's language and
-it was written in an older one. Old code is the same. You have to figure out
-what the words meant when they were written, and then trace how they got to
-what they mean now.
+It's kind of like reading an old book where the words have drifted. "Nice" used
+to mean foolish. You can read every word on the page and still misunderstand
+the sentence, because you're reading it in today's language and it was written
+in an older one.
 
-So the actual work looks like digging. You `git blame` a line, and the first
-commit you hit is almost always useless -- a formatter, a rename, someone
-moving a file. You keep going. `git log -S` to find when a string first showed
-up. You find the PR, and the PR links a ticket, and the ticket links a design
-doc, and the design doc mentions an incident, and the incident writeup finally
-says the thing you needed to know. It's strata. Each layer is someone's
-decision that made sense at the time, sitting on top of someone else's.
+{/* digging */}
 
-And then once you've done the dig, you cache it. That's what having a "mental
-model" of a big system actually is, I think: a pile of cached excavations. You
-don't redo the dig every time you touch that code, you just remember what you
-found. A lot of what makes a senior engineer valuable on a big codebase isn't
-that they're smarter, it's that their cache is bigger.
+So the actual work looks a lot like digging. You `git blame` a line, and the
+first commit you hit is almost always useless -- a formatter, a rename, someone
+moving a file. So you keep going. `git log -S` to find when a string first
+showed up. You find the PR, the PR links a ticket, the ticket links a design
+doc, the design doc mentions an incident, and the incident writeup finally says
+the thing you needed to know. Each layer is someone's decision that made sense
+at the time, sitting on top of someone else's.
 
-The problem is that it's a cache, so it goes stale. The system keeps changing
-underneath you. Other people are adding layers on top of the layers you
-excavated. Cache invalidation being one of the two hard problems in computer
-science applies to the inside of your head too.
+{/* mental model as cache */}
 
-I think this is a pretty underrated skill, and it's mostly not taught. School
-and bootcamps and side projects teach you to write code. Nearly all of them
-put you in codebases small enough that you're the author. Then you show up
-somewhere big and most of the job is reading, and nobody told you that reading
-is a craft with its own techniques. The newer engineers I've seen get good fast
-are usually the ones who get curious about the history instead of annoyed by
-it. They assume the previous person was smart and had constraints they can't
-see yet, rather than assuming the previous person was dumb. (They're usually
-right. And sometimes the previous person was them.)
+Once you've done the dig, you sort of cache it. I think that's what a "mental
+model" of a big system actually is: a pile of cached excavations. You don't redo
+the dig every time you touch that code, you just remember what you found. A lot
+of what makes a senior engineer valuable on a big codebase isn't that they're
+smarter, it's that their cache is bigger. Which also means it goes stale --
+other people are adding layers on top of the layers you dug through -- and
+cache invalidation turns out to be just as hard inside your head.
 
-AI tools help with this, to be clear. An agent can grep fifty million lines
-faster than I can, and it's great at summarizing a messy git log. But the
-meaning-drift problem is pretty much exactly the thing they're bad at. They
+{/* underrated skill */}
+
+I think this is a pretty underrated skill and it's mostly not taught. School
+and bootcamps and side projects teach you to write code, almost always in
+codebases small enough that you're the author. Then you show up somewhere big
+and most of the job is reading, and nobody told you that reading is a craft
+with its own techniques. The newer engineers I've seen get good fast are
+usually the ones who get curious about the history instead of annoyed by it,
+which is part of why I liked that my colleague found the design reviews
+interesting rather than frustrating. They assume the previous person was smart
+and had constraints they can't see yet. (They're usually right. Sometimes the
+previous person was them.)
+
+{/* ai tools */}
+
+AI tools help with this a lot. An agent can grep fifty million lines faster
+than I can, and it's great at summarizing a messy git log. But honestly that's
+sort of the Straumli researchers' situation -- their automation was amazing at
+decoding and running the archive, it just couldn't tell them what it meant. The
+meaning-drift problem is exactly the thing the tools are worst at, because they
 read the code in today's language, same as a new engineer does. And a lot of
-the real context was never written down anywhere -- it lived in a meeting, or
-a Slack thread, or someone's head, and that person left. A better shovel
-doesn't change the fact that you're digging. As long as software outlives the
-people who wrote it, which is basically always, I think this stays a permanent
-part of the job.
+the real context was never written down anywhere. It lived in a meeting, or a
+Slack thread, or someone's head, and that person left. As long as software
+outlives the people who wrote it, which is basically always, I think this is
+just part of the job.
 
-Someday someone is going to `git blame` your code, squint at it, and wonder
-what on earth you meant. Leave them a good commit message.
+{/* ending */}
+
+Anyways -- someday someone is going to `git blame` your code, squint at it, and
+wonder what on earth you meant. Leave them a good commit message. It might be
+you.
