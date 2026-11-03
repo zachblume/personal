@@ -186,3 +186,60 @@ table {
 .visited-blog-link a .after-hidden {
     display: inline-block;
 }
+
+/* Full-bleed pages (home, about).
+
+   The root layout clamps every page to a centered `max-w-xl` reading column,
+   which is right for posts and wrong for the index. Rather than negative
+   margins (the body/main margins collapse, so the arithmetic doesn't hold),
+   unclamp the ancestors directly for pages that opt in. */
+body:has(.full-bleed) {
+    margin: 0;
+    max-width: none;
+}
+
+body:has(.full-bleed) main.wrapper {
+    margin: 0;
+    padding: 0;
+}
+
+/* Footer renders a bare spacer div after the page content; these pages
+   bring their own footer. */
+.full-bleed ~ div {
+    display: none;
+}
+
+/* Opt out of the global anchor styling — rows and nav own their own
+   hover treatment. */
+.full-bleed a {
+    font-weight: inherit;
+    transition: none;
+}
+
+.full-bleed a:hover,
+.dark .full-bleed a:hover {
+    color: inherit;
+    filter: none;
+}
+
+/* Palette for the generated post artwork (app/components/Art.tsx).
+   Darkest → lightest; the dark theme inverts the ramp. */
+:root {
+    --art-bg: #f4f4f5;
+    --art-0: #09090b;
+    --art-1: #27272a;
+    --art-2: #52525b;
+    --art-3: #8b8b93;
+    --art-4: #c4c4cb;
+    --art-5: #e4e4e7;
+}
+
+.dark {
+    --art-bg: #0f0f11;
+    --art-0: #fafafa;
+    --art-1: #d4d4d8;
+    --art-2: #9b9ba3;
+    --art-3: #6b6b73;
+    --art-4: #3f3f45;
+    --art-5: #27272a;
+}

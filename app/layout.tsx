@@ -1,6 +1,7 @@
 import "@radix-ui/themes/styles.css";
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Footer from "./components/footer";
@@ -10,6 +11,8 @@ import { Theme } from "@radix-ui/themes";
 import { ThemeProvider } from "next-themes";
 import "./global.css";
 import { LocalStorageLinkSyncer } from "app/components/LocalStorageLinkSyncer";
+
+const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
     metadataBase: new URL(baseUrl),
@@ -46,7 +49,7 @@ export default function RootLayout({
 }) {
     return (
         <ViewTransitions>
-            <html lang="en">
+            <html lang="en" className={inter.className}>
                 <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto bg-white dark:bg-black dark:bg-gradient-to-b dark:from-neutral-900/20 dark:to-black min-h-screen">
                     <ThemeProvider
                         attribute="class"
