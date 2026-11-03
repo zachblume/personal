@@ -1,55 +1,66 @@
 ---
-title: "The programmer-archaeologist"
+title: "The programmer-archaeologist in the age of AI"
 publishedAt: "2026-10-29"
 summary: "Most of the job in a big codebase is figuring out why things are the way they are"
 ---
 
 {/* chatting started me thinking */}
 
-I was talking on a break with a colleague that was fairly new to Stripe, a few
-months. We had gone away from our desks and stepped up to the cafeteria. I
-often end up doing this with folks because there's not that many private spaces
-at the office. The tradeoff is that you're in a weirdly empty giant lunch room.
-It's still nice though.
+I was talking on a little break with a colleague that was fairly new to Stripe,
+she had just joined a few months ago. We had gone away from our desks and
+stepped up to the cafeteria. We often end up doing this because there's not
+that many private spaces at the office other than rooms and having a chitchat
+in a room is funny. The tradeoff is that you're in a weirdly empty giant lunch
+room. It's still nice though. Some of my most memorable conversations happened
+this way -- with people passing through town from another office, or at some
+kind of lifecycle stage of work life so to speak (just joined, about to leave,
+right after something stressful, etc.)
 
-We were talking about how the work changes as you go from well scoped tasks to
-more ambiguous things. At Stripe we have team and organization-level spaces for
-engineering design reviews, which are like an academic peer review space for
-documents and plans. In fact, this academic culture and practice of peer review
-is my favorite thing about Stripe.
+We were talking about how work changes as you go from well scoped tasks to more
+ambiguous things. At Stripe we have team and organization-level weekly meetings
+carved out for engineering design reviews, which are like an academic peer
+review space for documents and plans. In fact, this academic culture -- the
+practice of peer review -- is my favorite thing about Stripe. I think a lot of
+people will say, "the people" are their favorite thing about a company, and I
+know what they mean -- to me, this practice is probably the most important way
+that technical relationships between people are formed, or at least its one of
+the most positive and interesting ways that happens. People get a lot smarter
+through this process -- or at least I know that I did.
 
-She found the design discussions really intersting, that a room of people who
-each know some corner of the system really deeply, each with only a partial
-picture, are sitting there disagreeing and talking it through.
+She was saying how she found the design discussions really interesting, that a
+room of people who each know some corner of the system really deeply, each with
+only a partial picture, and be sitting there disagreeing and talking it through
+live.
 
-In one recent one, many of us were surprised to here that a core type of our
+In one recent review, many of us were surprised to here that a core type of our
 system was nullable (or "nilable" in Stripe's Ruby parlance). Bizarre! This is
 a thing we interact with everyday and is fundamentally un-nullable on the
 object it sits on, but we accidentally (?) have been marking it so to users.
 Actually, most of the traffic for our subproduct (loans) relies on embedded
-react components rather than APIs, so we are under a bit less scrutiny than the
-billions-of-dollars-per-day core payments APIs of Stripe, so it wasn't like,
-end-of-the-world surprising, but it was surprising -- we didn't know this
-detail of our own system!
+react components rather than APIs, so our teams APIs as of yet are under a bit
+less scrutiny than the billions-of-dollars-per-day core payments APIs of
+Stripe. Because of that it wasn't like, my-world-turned-upside-down surprising,
+but it _was_ surprising -- that we didn't know this detail of our own system!
 
 {/* book */}
 
-It reminded me of Vernor Vinge's _A Fire Upon the Deep_, which I think about
-way more than is probably normal. The book opens with a team of human
-researchers at a lab out on the edge of the galaxy, digging through an archive
-that's been sitting dormant for something billions of years. They don't really
-understand what's in it. What they've actually dug up is the Blight, an
-incredibly hostile superintelligence. (That's the first few pages. It gets
-_much_ weirder.)
+It reminded me of Vernor Vinge's _A Fire Upon the Deep_. I read this book
+because of how often it comes up on hackernews -- like many probably have. The
+book opens with a team of human researchers at a lab out on the edge of the
+galaxy, digging through an archive that's been sitting dormant for something
+billions of years. They don't really understand what's in it. What they've
+actually dug up is the Blight, an incredibly hostile superintelligence. (That's
+the first few pages. It gets _much_ weirder.) Vinge mentions the name of the
+job in that book but gives a fuller lift to the job in the prequel, _A Deepness
+in the Sky_: "a programmer-archaeologist."
 
-Vinge gives the job a name in the prequel, _A Deepness in the Sky_:
-"programmer-archaeologist." Thousands of years in the future, ships run on
-software stacked on software stacked on software, nobody writes anything from
-scratch anymore, and the most valuable people on board are the ones who can dig
-down through the layers and figure out what something actually does. There's
-this great detail where the ship's clock counts seconds from what everyone
-assumes is the first moon landing, but if you dig all the way down it's
-actually the Unix epoch, and they didn't know what that was.
+Thousands of years in the future, ships run on software stacked on software
+stacked on software, nobody writes anything from scratch anymore, and the most
+valuable people on board are the ones who can dig down through the layers and
+figure out what something actually does. There's this great detail where the
+ship's clock counts seconds from what everyone assumes is the first moon
+landing, but if you dig all the way down it's actually the Unix epoch, and they
+didn't know what that was.
 
 Nobody is going to eat the galaxy over a nilable field, but: somebody made a
 decision a long time ago, it made sense to them, and the code survived but the
