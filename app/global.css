@@ -252,23 +252,35 @@ body:has(.full-bleed) main.wrapper {
 }
 
 /* Palette for the generated post artwork (app/components/Art.tsx).
-   Darkest → lightest; the dark theme inverts the ramp. */
-:root {
-    --art-bg: #f4f4f5;
-    --art-0: #09090b;
-    --art-1: #27272a;
-    --art-2: #52525b;
-    --art-3: #8b8b93;
-    --art-4: #c4c4cb;
-    --art-5: #e4e4e7;
+
+   Art.tsx sets --art-h / --art-h2 inline per post; the ramp is fixed here, so
+   every post is a different duotone drawn from one tuned palette. oklch keeps
+   lightness and chroma perceptually even across hues — the same numbers in hsl
+   would make the yellows glare and the blues go muddy.
+
+   The ramp has to live on .art, the same element that carries the hues, not on
+   :root. A custom property containing var() is substituted at the element that
+   declares it, and only the already-resolved result inherits — so a ramp
+   declared on :root would resolve against an --art-h that doesn't exist there
+   and compute to garbage for every descendant.
+
+   Slots 0-2 take the primary hue, 3-5 the secondary. */
+.art {
+    --art-bg: oklch(0.955 0.032 var(--art-h));
+    --art-0: oklch(0.66 0.142 var(--art-h));
+    --art-1: oklch(0.73 0.128 var(--art-h));
+    --art-2: oklch(0.79 0.112 var(--art-h));
+    --art-3: oklch(0.7 0.138 var(--art-h2));
+    --art-4: oklch(0.78 0.118 var(--art-h2));
+    --art-5: oklch(0.85 0.09 var(--art-h2));
 }
 
-.dark {
-    --art-bg: #0f0f11;
-    --art-0: #fafafa;
-    --art-1: #d4d4d8;
-    --art-2: #9b9ba3;
-    --art-3: #6b6b73;
-    --art-4: #3f3f45;
-    --art-5: #27272a;
+.dark .art {
+    --art-bg: oklch(0.26 0.045 var(--art-h));
+    --art-0: oklch(0.88 0.105 var(--art-h));
+    --art-1: oklch(0.82 0.1 var(--art-h));
+    --art-2: oklch(0.76 0.095 var(--art-h));
+    --art-3: oklch(0.81 0.1 var(--art-h2));
+    --art-4: oklch(0.72 0.09 var(--art-h2));
+    --art-5: oklch(0.63 0.075 var(--art-h2));
 }

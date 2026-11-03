@@ -75,7 +75,8 @@ title, publishedAt (YYYY-MM-DD), summary, image?, draft?
 
 ## Current design
 
-Monochrome and full-bleed: white, black, and grey only, no accent color.
+Full-bleed, with a black-and-white interface. The only color on the page is the
+generated per-post artwork.
 
 - **Homepage** is the whole archive as an edge-to-edge listview: ordinal, artwork
   thumbnail, title, summary, date, hairline chevron. No hero, no CTA — the header
@@ -87,19 +88,38 @@ Monochrome and full-bleed: white, black, and grey only, no accent color.
 - Body font is **Geist Sans**, code is **Geist Mono** (the `geist` package, which ships
   them locally via `next/font/local`). Tight negative tracking on headings, hairline
   `neutral-200` / `neutral-800` rules.
-- Light and dark are both first-class; dark is near-black with inverted artwork.
+- Light and dark are both first-class; dark is near-black with its own artwork ramp.
 
 ### Generated artwork
 
-`app/components/Art.tsx` draws a unique monochrome SVG per post. An FNV-1a hash of
-the slug seeds a mulberry32 PRNG, which picks one of seven compositions (concentric
-rings, topographic contours, bar fields, ray fans, nested blocks, dot matrices,
-horizon sweeps) and all of its parameters. Deterministic, so a post keeps its image
-across builds, and there are no image assets to manage.
+`app/components/Art.tsx` draws a unique SVG per post. An FNV-1a hash of the slug
+seeds a mulberry32 PRNG, which picks one of seven compositions (concentric rings,
+topographic contours, bar fields, ray fans, nested blocks, dot matrices, horizon
+sweeps) and all of its parameters. Deterministic, so a post keeps its image across
+builds, and there are no image assets to manage.
 
-Colors come from the `--art-bg` / `--art-0`…`--art-5` custom properties in
-`global.css`; `.dark` inverts the ramp, so one SVG serves both themes. To
-hand-author art for a post instead, add `image:` to its frontmatter and branch at
+Color is a duotone per post. The seed picks two hues — stepped by the golden angle
+(137.508°) so adjacent rows never land on near-identical colors — and `Art.tsx` sets
+them inline on the `<svg>` as `--art-h` and `--art-h2`. `global.css` expands those
+into the six-step `--art-bg` / `--art-0`…`--art-5` ramp with `oklch()`; slots 0-2
+take the primary hue, 3-5 the secondary. The palette is pastel: high lightness, low
+chroma.
+
+Two things to know before touching it:
+
+- **The ramp must stay on `.art`, not `:root`.** A custom property containing
+  `var()` is substituted at the element that declares it, and only the resolved
+  result inherits. A ramp on `:root` would resolve against an `--art-h` that doesn't
+  exist there and compute to garbage for every descendant (symptom: every tile
+  renders solid black).
+- **`oklch`, not `hsl`.** Lightness and chroma stay perceptually even across hues;
+  the same numbers in hsl make the yellows glare and the blues go muddy.
+
+Several compositions draw hairlines out of the pale end of the ramp, so don't widen
+the gap between `--art-bg` and slots 4-5 — at 0.45 stroke width a near-white tint
+disappears.
+
+To hand-author art for a post instead, add `image:` to its frontmatter and branch at
 the call site — every layout uses a 16:9 slot.
 
 ### Full-bleed pages
