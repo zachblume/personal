@@ -6,7 +6,7 @@ import styles from "./about.module.css";
 
 export const metadata = {
     title: "About",
-    description: `About ${SITE.name}, a software engineer in ${SITE.city}.`,
+    description: `About ${SITE.name}, a senior software engineer at ${SITE.employer.label} in ${SITE.city}.`,
 };
 
 export default function About() {
@@ -20,22 +20,29 @@ export default function About() {
                         <h1>{SITE.name}</h1>
                         <p>{SITE.city}</p>
                     </div>
-                    <Image
-                        src="/zach.jpeg"
-                        alt="Zach Blume"
-                        width={56}
-                        height={56}
-                        sizes="56px"
-                        priority
-                        className={styles.avatar}
-                    />
                 </header>
 
                 <div className={styles.bio}>
+                    <Image
+                        src="/zach.jpeg"
+                        alt="Zach Blume"
+                        width={160}
+                        height={160}
+                        sizes="(max-width: 480px) 88px, 160px"
+                        priority
+                        className={styles.avatar}
+                    />
                     <p>
-                        I&rsquo;m a software engineer at{" "}
+                        I&rsquo;m a senior software engineer at{" "}
                         <a href={SITE.employer.href}>{SITE.employer.label}</a>.
-                        Before that, I founded{" "}
+                        I&rsquo;m based in {SITE.city}.
+                    </p>
+                    <p>
+                        Previously, I worked as an engineer and team lead at{" "}
+                        <a href={SITE.previousEmployer.href}>
+                            {SITE.previousEmployer.label}
+                        </a>
+                        . I also founded{" "}
                         <a href={SITE.company.href}>{SITE.company.label}</a>,{" "}
                         {SITE.companyBlurb}.
                     </p>
@@ -59,11 +66,20 @@ export default function About() {
                                 <a href={SITE.employer.href}>
                                     {SITE.employer.label}
                                 </a>
-                                <span>Software engineer</span>
+                                <span>{SITE.employer.role}</span>
                             </dd>
                         </div>
                         <div>
                             <dt>previously</dt>
+                            <dd>
+                                <a href={SITE.previousEmployer.href}>
+                                    {SITE.previousEmployer.label}
+                                </a>
+                                <span>{SITE.previousEmployer.role}</span>
+                            </dd>
+                        </div>
+                        <div>
+                            <dt>founded</dt>
                             <dd>
                                 <a href={SITE.company.href}>
                                     {SITE.company.label}
@@ -81,13 +97,18 @@ export default function About() {
                     <h2 id="home-title">At home</h2>
                     <div className={styles.pets}>
                         {SITE.pets.map((pet) => (
-                            <figure key={pet.name} className={styles.pet}>
+                            <figure
+                                key={pet.name}
+                                className={styles.pet}
+                                tabIndex={0}
+                                aria-label={`Photo of ${pet.name}`}
+                            >
                                 <Image
                                     src={pet.src}
                                     alt={pet.name}
                                     width={700}
                                     height={467}
-                                    sizes="(max-width: 640px) 30vw, 190px"
+                                    sizes="(min-width: 768px) 230px, (max-width: 640px) 30vw, 190px"
                                 />
                                 <figcaption>{pet.name}</figcaption>
                             </figure>
