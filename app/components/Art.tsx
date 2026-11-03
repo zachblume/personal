@@ -1,19 +1,21 @@
 /**
  * Procedural per-article artwork.
  *
- * Everything is derived deterministically from the post slug, so each article
- * gets a stable, unique composition and there are no image assets to manage.
+ * Two inputs. `index` is the post's rank in *chronological* order (oldest = 0)
+ * and drives everything that needs to be evenly spread — which composition it
+ * gets and what hues. `slug` seeds a PRNG for the parameters inside a
+ * composition, so two posts drawing the same shape still look unalike.
  *
- * Color works in two halves. The slug picks a pair of hues, set as `--art-h`
- * and `--art-h2` inline on the <svg>; global.css turns those into the six-step
- * `--art-*` ramp with oklch(), which keeps chroma and lightness consistent
- * whatever the hue and lets `.dark` restate the ramp for dark mode. So each
- * post is a different duotone, but all of them share one tuned palette.
+ * Indexing chronologically rather than by display order matters: new posts
+ * append to the end, so an existing post's artwork never changes when you
+ * publish. Deriving either one from the hash instead looks tempting and
+ * doesn't work — a hash gives no spacing guarantee, so compositions cluster
+ * and hues pile up in one corner of the wheel.
  *
- * The compositions lean on soft gradients, blur and overlapping translucent
- * shapes rather than flat fills — overlaps blend the two hues into colors
- * neither slot contains, which is most of what makes these read as artwork
- * instead of charts.
+ * Color is a duotone. The two hues are set inline on the <svg> as --art-h and
+ * --art-h2; global.css expands them into the --art-* ramp with oklch(), which
+ * keeps chroma and lightness even across hues and lets `.dark` restate the
+ * whole palette.
  *
  * To hand-author art for a post later, add `image:` to its frontmatter and
  * branch on it at the call site — the layout uses a 16:9 slot.
@@ -61,7 +63,6 @@ type Ctx = {
 
 type Draw = (ctx: Ctx) => React.ReactNode;
 
-/** Soft blurred blob — the workhorse behind most of these. */
 function Blob({
     cx,
     cy,
@@ -92,34 +93,33 @@ function Blob({
     );
 }
 
-/** Drifting fields of color, mesh-gradient style. */
+/** Pools of color around a ring. Kept apart — blobs free to pile up in the
+ *  middle average out into a flat wash, which is this one's failure mode. */
 const aurora: Draw = ({ r, id }) => {
     const blur = `url(#${id("blur")})`;
-    // Spread the pools around a ring rather than sampling positions freely —
-    // four large blobs left to overlap in the middle just average out into a
-    // flat wash, which is the whole failure mode of this composition.
     const spin = r() * Math.PI * 2;
-    const blobs = Array.from({ length: 4 }, (_, i) => {
-        const a = spin + (i * Math.PI) / 2 + (r() - 0.5) * 0.7;
-        return {
-            cx: W / 2 + Math.cos(a) * (38 + r() * 20),
-            cy: H / 2 + Math.sin(a) * (26 + r() * 14),
-            rx: 24 + r() * 14,
-            ry: 20 + r() * 12,
-            fill: C[[1, 3, 2, 0][i]],
-            opacity: 0.8 + r() * 0.15,
-        };
-    });
     return (
         <g>
-            {blobs.map((b, i) => (
-                <Blob key={i} {...b} filter={blur} />
-            ))}
+            {Array.from({ length: 4 }, (_, i) => {
+                const a = spin + (i * Math.PI) / 2 + (r() - 0.5) * 0.7;
+                return (
+                    <Blob
+                        key={i}
+                        cx={W / 2 + Math.cos(a) * (38 + r() * 20)}
+                        cy={H / 2 + Math.sin(a) * (26 + r() * 14)}
+                        rx={24 + r() * 14}
+                        ry={20 + r() * 12}
+                        fill={C[[1, 3, 2, 0][i]]}
+                        opacity={0.8 + r() * 0.15}
+                        filter={blur}
+                    />
+                );
+            })}
         </g>
     );
 };
 
-/** A low sun behind soft bands. */
+/** A low sun behind concentric rings. */
 const halo: Draw = ({ r, id }) => {
     const blur = `url(#${id("blur")})`;
     const cx = 30 + r() * 100;
@@ -154,19 +154,17 @@ const halo: Draw = ({ r, id }) => {
     );
 };
 
-/** Stacked smooth ridges, filled and overlapping. */
+/** Stacked smooth ridges. */
 const dunes: Draw = ({ r, id }) => {
     const count = 4 + Math.floor(r() * 3);
     return (
         <g>
             {Array.from({ length: count }, (_, i) => {
-                const t = i / count;
-                const base = H * (0.3 + t * 0.62);
+                const base = H * (0.3 + (i / count) * 0.62);
                 const amp = 10 + r() * 16;
-                const skew = r() * 60 - 30;
                 const d = [
                     `M -10 ${base}`,
-                    `C ${W * 0.22} ${base - amp} ${W * 0.42} ${base + amp * 0.7} ${W * 0.56} ${base - amp * 0.3 + skew * 0.1}`,
+                    `C ${W * 0.22} ${base - amp} ${W * 0.42} ${base + amp * 0.7} ${W * 0.56} ${base - amp * 0.3}`,
                     `S ${W * 0.9} ${base - amp * 0.9} ${W + 10} ${base + 4}`,
                     `L ${W + 10} ${H + 10} L -10 ${H + 10} Z`,
                 ].join(" ");
@@ -185,7 +183,7 @@ const dunes: Draw = ({ r, id }) => {
 
 /** Overlapping translucent discs; the intersections make the palette. */
 const orbs: Draw = ({ r, id }) => {
-    const blur = `url(#${id("soft")})`;
+    const soft = `url(#${id("soft")})`;
     const count = 5 + Math.floor(r() * 3);
     return (
         <g>
@@ -196,7 +194,7 @@ const orbs: Draw = ({ r, id }) => {
                 ry={55}
                 fill={C[5]}
                 opacity={0.4}
-                filter={blur}
+                filter={soft}
             />
             {Array.from({ length: count }, (_, i) => (
                 <circle
@@ -212,7 +210,7 @@ const orbs: Draw = ({ r, id }) => {
     );
 };
 
-/** Wide diagonal light, falling across the frame. */
+/** Wide diagonal light falling across the frame. */
 const beams: Draw = ({ r, id }) => {
     const blur = `url(#${id("blur")})`;
     const count = 3 + Math.floor(r() * 3);
@@ -244,9 +242,9 @@ const beams: Draw = ({ r, id }) => {
     );
 };
 
-/** Dot field blooming out of one corner. */
+/** Dot field blooming out of a point. */
 const bloom: Draw = ({ r, id }) => {
-    const blur = `url(#${id("soft")})`;
+    const soft = `url(#${id("soft")})`;
     const cols = 22;
     const rows = 14;
     const cx = r() * cols;
@@ -261,7 +259,7 @@ const bloom: Draw = ({ r, id }) => {
                 ry={50}
                 fill={C[4]}
                 opacity={0.6}
-                filter={blur}
+                filter={soft}
             />
             {Array.from({ length: cols * rows }, (_, i) => {
                 const col = i % cols;
@@ -284,7 +282,7 @@ const bloom: Draw = ({ r, id }) => {
     );
 };
 
-/** A single thick ribbon with round caps, over a soft field. */
+/** Thick flowing strokes with round caps. */
 const ribbon: Draw = ({ r, id }) => {
     const blur = `url(#${id("blur")})`;
     const y = 30 + r() * 40;
@@ -316,26 +314,238 @@ const ribbon: Draw = ({ r, id }) => {
     );
 };
 
-const DRAWINGS: Draw[] = [aurora, halo, dunes, orbs, beams, bloom, ribbon];
+/** Wedges fanning out of one corner. */
+const rays: Draw = ({ r, id }) => {
+    const soft = `url(#${id("soft")})`;
+    const corner = Math.floor(r() * 4);
+    const ox = corner % 2 ? W + 10 : -10;
+    const oy = corner < 2 ? -10 : H + 10;
+    const count = 5 + Math.floor(r() * 4);
+    const spread = Math.PI / 2;
+    const start = Math.atan2(H / 2 - oy, W / 2 - ox) - spread / 2;
+    return (
+        <g>
+            <Blob
+                cx={ox}
+                cy={oy}
+                rx={90}
+                ry={70}
+                fill={C[4]}
+                opacity={0.75}
+                filter={soft}
+            />
+            {Array.from({ length: count }, (_, i) => {
+                const a0 = start + (i / count) * spread;
+                const a1 = a0 + (spread / count) * (0.45 + r() * 0.4);
+                const L = 240;
+                return (
+                    <path
+                        key={i}
+                        d={`M ${ox} ${oy} L ${ox + Math.cos(a0) * L} ${oy + Math.sin(a0) * L} L ${ox + Math.cos(a1) * L} ${oy + Math.sin(a1) * L} Z`}
+                        fill={`url(#${id(`grad${i % 2}`)})`}
+                        opacity={0.5}
+                    />
+                );
+            })}
+        </g>
+    );
+};
+
+/** Soft rounded tiles, fading across a diagonal. */
+const mosaic: Draw = ({ r, id }) => {
+    const cols = 7 + Math.floor(r() * 4);
+    const rows = Math.max(3, Math.round(cols * 0.6));
+    const cw = W / cols;
+    const ch = H / rows;
+    const dx = r();
+    const dy = r();
+    return (
+        <g>
+            <rect
+                width={W}
+                height={H}
+                fill={`url(#${id("grad0")})`}
+                opacity={0.35}
+            />
+            {Array.from({ length: cols * rows }, (_, i) => {
+                const col = i % cols;
+                const row = Math.floor(i / cols);
+                const t =
+                    1 -
+                    (Math.abs(col / cols - dx) + Math.abs(row / rows - dy)) /
+                        1.6;
+                if (t < 0.12) return null;
+                const pad = 0.8 + (1 - t) * 2.4;
+                return (
+                    <rect
+                        key={i}
+                        x={col * cw + pad}
+                        y={row * ch + pad}
+                        width={cw - pad * 2}
+                        height={ch - pad * 2}
+                        rx={2.5}
+                        fill={C[t > 0.62 ? 1 : t > 0.38 ? 3 : 2]}
+                        opacity={0.25 + t * 0.7}
+                    />
+                );
+            })}
+        </g>
+    );
+};
+
+/** Big offset circle outlines, like overlapping lenses. */
+const lens: Draw = ({ r, id }) => {
+    const soft = `url(#${id("soft")})`;
+    const count = 3 + Math.floor(r() * 3);
+    const cx = 40 + r() * 80;
+    const cy = 20 + r() * 60;
+    const step = 14 + r() * 14;
+    return (
+        <g>
+            <Blob
+                cx={cx}
+                cy={cy}
+                rx={72}
+                ry={54}
+                fill={C[5]}
+                opacity={0.55}
+                filter={soft}
+            />
+            {Array.from({ length: count }, (_, i) => (
+                <circle
+                    key={i}
+                    cx={cx + (i - count / 2) * step}
+                    cy={cy + (i % 2 ? step * 0.4 : -step * 0.3)}
+                    r={26 + r() * 16}
+                    fill={C[[1, 3, 2][i % 3]]}
+                    opacity={0.4}
+                />
+            ))}
+        </g>
+    );
+};
+
+/** Arc segments sweeping around a point. */
+const spiral: Draw = ({ r, id }) => {
+    const soft = `url(#${id("soft")})`;
+    const cx = 40 + r() * 80;
+    const cy = 25 + r() * 50;
+    const count = 5 + Math.floor(r() * 4);
+    const turn = r() * Math.PI * 2;
+    return (
+        <g>
+            <Blob
+                cx={cx}
+                cy={cy}
+                rx={68}
+                ry={52}
+                fill={C[4]}
+                opacity={0.6}
+                filter={soft}
+            />
+            {Array.from({ length: count }, (_, i) => {
+                const rad = 12 + i * (6 + r() * 5);
+                const a0 = turn + i * 0.75;
+                const a1 = a0 + 1.6 + r() * 1.2;
+                const large = a1 - a0 > Math.PI ? 1 : 0;
+                return (
+                    <path
+                        key={i}
+                        d={`M ${cx + Math.cos(a0) * rad} ${cy + Math.sin(a0) * rad} A ${rad} ${rad} 0 ${large} 1 ${cx + Math.cos(a1) * rad} ${cy + Math.sin(a1) * rad}`}
+                        fill="none"
+                        stroke={C[i % 2 ? 1 : 3]}
+                        strokeWidth={3.4 - i * 0.22}
+                        strokeLinecap="round"
+                        opacity={0.9 - i * 0.07}
+                    />
+                );
+            })}
+        </g>
+    );
+};
+
+/** Thick diagonal bars with rounded ends. */
+const stripes: Draw = ({ r, id }) => {
+    const soft = `url(#${id("soft")})`;
+    const count = 4 + Math.floor(r() * 4);
+    const lean = r() < 0.5 ? -1 : 1;
+    const gap = (W + 80) / count;
+    return (
+        <g>
+            <Blob
+                cx={r() * W}
+                cy={r() * H}
+                rx={76}
+                ry={56}
+                fill={C[5]}
+                opacity={0.6}
+                filter={soft}
+            />
+            {Array.from({ length: count }, (_, i) => {
+                const x = -40 + i * gap + r() * 8;
+                return (
+                    <line
+                        key={i}
+                        x1={x}
+                        y1={-6}
+                        x2={x + lean * 46}
+                        y2={H + 6}
+                        stroke={C[[1, 3, 2, 4][i % 4]]}
+                        strokeWidth={7 + r() * 11}
+                        strokeLinecap="round"
+                        opacity={0.5 + r() * 0.3}
+                    />
+                );
+            })}
+        </g>
+    );
+};
+
+const DRAWINGS: Draw[] = [
+    aurora,
+    halo,
+    dunes,
+    orbs,
+    beams,
+    bloom,
+    ribbon,
+    rays,
+    mosaic,
+    lens,
+    spiral,
+    stripes,
+];
+
+/**
+ * A full turn of the wheel spread across the composition set, so a post's
+ * shape and its color advance together and neighbours differ in both.
+ */
+const HUE_STEP = 360 / DRAWINGS.length;
+
+/** Offsets cycle so pairings range from analogous to near-complementary. */
+const HUE_OFFSETS = [42, 165, 70, -52, 198, -78, 120, 32];
 
 export function Art({
     slug,
+    index = 0,
     className = "",
 }: {
     slug: string;
+    /** Chronological rank of the post, oldest = 0. */
+    index?: number;
     className?: string;
 }) {
     const seed = hash(slug);
     const r = rng(seed);
-    const draw = DRAWINGS[seed % DRAWINGS.length];
+    const draw = DRAWINGS[index % DRAWINGS.length];
 
-    // Golden-angle stepping spreads consecutive seeds far apart on the wheel,
-    // so neighbouring posts in the list never land on near-identical hues.
-    const h = (seed * 137.508) % 360;
-    const offset = [38, 62, 150, 196, -45, -72][seed % 6];
-    const h2 = (h + offset + 360) % 360;
+    // A half-step of jitter keeps the sequence from looking like a color wheel
+    // without letting any two neighbours collide.
+    const jitter = (r() - 0.5) * HUE_STEP * 0.5;
+    const h = (index * HUE_STEP + jitter + 360) % 360;
+    const h2 = (h + HUE_OFFSETS[index % HUE_OFFSETS.length] + 360) % 360;
 
-    const uid = seed.toString(36);
+    const uid = `${seed.toString(36)}${index}`;
     const id = (name: string) => `art-${uid}-${name}`;
     const angle = Math.floor(r() * 360);
 
@@ -372,7 +582,7 @@ export function Art({
                     gradientTransform={`rotate(${(angle + 45) % 360} 0.5 0.5)`}
                 >
                     <stop offset="0%" stopColor="var(--art-bg)" />
-                    <stop offset="100%" stopColor={C[5]} />
+                    <stop offset="100%" stopColor="var(--art-bg2)" />
                 </linearGradient>
                 {/* Generous region so the blur isn't clipped at the edges. */}
                 <filter

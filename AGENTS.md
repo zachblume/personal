@@ -92,18 +92,33 @@ generated per-post artwork.
 
 ### Generated artwork
 
-`app/components/Art.tsx` draws a unique SVG per post. An FNV-1a hash of the slug
-seeds a mulberry32 PRNG, which picks one of seven compositions (concentric rings,
-topographic contours, bar fields, ray fans, nested blocks, dot matrices, horizon
-sweeps) and all of its parameters. Deterministic, so a post keeps its image across
-builds, and there are no image assets to manage.
+`app/components/Art.tsx` draws a unique SVG per post from twelve compositions —
+`aurora`, `halo`, `dunes`, `orbs`, `beams`, `bloom`, `ribbon`, `rays`, `mosaic`,
+`lens`, `spiral`, `stripes` — all built from soft gradients, blur and overlapping
+translucent shapes. The overlaps blend the two hues into colors neither slot
+contains, which is most of what stops these reading as charts.
 
-Color is a duotone per post. The seed picks two hues — stepped by the golden angle
-(137.508°) so adjacent rows never land on near-identical colors — and `Art.tsx` sets
-them inline on the `<svg>` as `--art-h` and `--art-h2`. `global.css` expands those
-into the six-step `--art-bg` / `--art-0`…`--art-5` ramp with `oklch()`; slots 0-2
-take the primary hue, 3-5 the secondary. The palette is pastel: high lightness, low
-chroma.
+It takes two inputs:
+
+- **`index`** — the post's rank in _chronological_ order (oldest = 0), computed in
+  `app/page.tsx`. It picks the composition and the hue pair, so both advance
+  together and neighbouring rows differ in shape and color.
+- **`slug`** — hashed (FNV-1a) to seed a mulberry32 PRNG for the parameters inside
+  a composition, so two posts drawing the same shape still look unalike.
+
+Index chronologically, not by display position: new posts append to the end of that
+order, so publishing never reshuffles the artwork of a post that's already out.
+
+**Don't derive the composition or the hue from the hash.** It's the obvious move and
+it doesn't work — a hash gives no spacing guarantee, so compositions cluster
+(one shape drew 4 of 13 posts) and hues pile up in one corner of the wheel (7 of 13
+landed in blue-purple). Golden-angle stepping only spreads _consecutive integers_;
+applied to hash values it does nothing.
+
+Color is a duotone per post. The two hues are set inline on the `<svg>` as `--art-h`
+/ `--art-h2`, and `global.css` expands them into `--art-bg` / `--art-bg2` plus the
+six-step `--art-0`…`--art-5` ramp with `oklch()`. Slots 0-2 take the primary hue,
+3-5 the secondary.
 
 Two things to know before touching it:
 
@@ -114,10 +129,6 @@ Two things to know before touching it:
   renders solid black).
 - **`oklch`, not `hsl`.** Lightness and chroma stay perceptually even across hues;
   the same numbers in hsl make the yellows glare and the blues go muddy.
-
-Several compositions draw hairlines out of the pale end of the ramp, so don't widen
-the gap between `--art-bg` and slots 4-5 — at 0.45 stroke width a near-white tint
-disappears.
 
 To hand-author art for a post instead, add `image:` to its frontmatter and branch at
 the call site — every layout uses a 16:9 slot.
