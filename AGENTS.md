@@ -39,12 +39,14 @@ app/
   sitemap.ts            Exports `baseUrl` — imported elsewhere for metadata
   robots.ts
   rss/route.ts
-  og/route.tsx          Dynamic OG image generation
+  og/route.tsx          Legacy title-only OG image route; nothing links to it
+  fonts/                Kern-free Geist Sans / Serif TTFs for the share card (OFL)
   blog/
     utils.ts            Server-side: getBlogPosts() reads+parses MDX frontmatter from posts/; formatDate()
     clientUtils.ts      Client-safe formatDate()
     page.tsx            Blog index
     [slug]/page.tsx     Post page; generateStaticParams + generateMetadata from frontmatter
+    [slug]/opengraph-image.tsx   Per-post share card, prerendered (see "Share cards")
     posts/*.mdx         The posts themselves, named `YYYY-MM-DD-slug.mdx`
   components/
     Link.tsx            Wrapper over next/link; also records visits in localStorage
@@ -131,7 +133,44 @@ Two things to know before touching it:
   the same numbers in hsl make the yellows glare and the blues go muddy.
 
 To hand-author art for a post instead, add `image:` to its frontmatter and branch at
-the call site — every layout uses a 16:9 slot.
+the call site — every layout on the site uses a 16:9 slot. (`image:` also replaces the
+whole share card, below.)
+
+### Share cards
+
+`app/blog/[slug]/opengraph-image.tsx` draws each post's Open Graph / X card at build
+time with `next/og` (Satori): the site header in miniature (signature, date, hairline
+rule), the title in Geist Serif with the summary under it, and the post's artwork as a
+full-height panel on the right. Title size steps down with length so most titles set
+in two or three lines. Keep the bottom-left empty — X lays the domain over it.
+
+Two Satori quirks shaped it:
+
+- **It can't use the `geist` package's fonts as shipped.** Geist Serif is WOFF2-only,
+  which Satori can't read. And Satori breaks lines using unkerned glyph widths but
+  draws each word kerned, so a kerned font leaves a visibly wider gap after every
+  word. The card reads TTF copies with the `kern` feature emptied from `app/fonts/`.
+  To regenerate them after a Geist upgrade (`pip install fonttools brotli`):
+
+    ```python
+    from fontTools.ttLib import TTFont
+
+    for src, dest in [
+        ("node_modules/geist/dist/fonts/geist-serif/GeistSerif-Regular.woff2", "app/fonts/GeistSerif-Regular.ttf"),
+        ("node_modules/geist/dist/fonts/geist-sans/Geist-Regular.ttf", "app/fonts/Geist-Regular.ttf"),
+    ]:
+        font = TTFont(src)
+        font.flavor = None  # WOFF2 -> TTF
+        for record in font["GPOS"].table.FeatureList.FeatureRecord:
+            if record.FeatureTag == "kern":
+                record.Feature.LookupListIndex = []
+        font.save(dest)
+    ```
+
+- **It stretches an `<svg>` to fill its box, ignoring `preserveAspectRatio`.** Given
+  a `width` and `height`, `Art` crops its own viewBox to what `slice` would show, and
+  turns the drawing on its side when the box is portrait: a centre crop to portrait
+  keeps under half of a landscape composition.
 
 ### Full-bleed pages
 
