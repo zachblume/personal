@@ -15,13 +15,21 @@
     padding: 64px 24px 48px;
 }
 
-.section h2,
+.label,
 .pet figcaption,
 .contact {
     font-family: var(--font-geist-mono), monospace;
     font-size: 12px;
     font-weight: 400;
     line-height: 1.6;
+}
+
+/* Three classes to outrank the serif heading rule in global.css
+   (`.radix-themes .wrapper :is(h1, …)`, two classes and an element), which
+   would otherwise set these labels in Geist Serif. */
+.page .section .label {
+    font-family: var(--font-geist-mono), monospace;
+    letter-spacing: normal;
 }
 
 .avatar {
@@ -32,6 +40,7 @@
     border-radius: 50%;
     object-fit: cover;
     filter: grayscale(1);
+    transition: filter 300ms ease;
 }
 
 .bio {
@@ -43,6 +52,12 @@
 
 .bio p + p {
     margin-top: 16px;
+}
+
+/* Keep names in one piece: "New / York City" reads badly. */
+.bio a,
+.nowrap {
+    white-space: nowrap;
 }
 
 .bio a {
@@ -60,7 +75,7 @@
     margin-top: 36px;
 }
 
-.section h2 {
+.label {
     color: #737373;
     margin-bottom: 14px;
 }
@@ -142,7 +157,7 @@
     text-decoration-color: #525252;
 }
 
-:global(.dark) .section h2,
+:global(.dark) .label,
 :global(.dark) .work dd,
 :global(.dark) .pet figcaption,
 :global(.dark) .contact {
@@ -155,6 +170,7 @@
 }
 
 @media (hover: hover) {
+    .avatar:hover,
     .pet:hover img {
         filter: grayscale(0);
     }
@@ -165,18 +181,19 @@
 }
 
 @media (min-width: 768px) {
+    /* The cards share the column width, so the stack lines up with the text
+       on both edges. The top padding is headroom for the hover lift. */
     .pets {
         display: flex;
         gap: 0;
-        align-items: center;
-        min-height: 224px;
-        padding: 24px 8px 16px;
+        padding-top: 20px;
         isolation: isolate;
     }
 
     .pet {
         position: relative;
-        flex: 0 0 230px;
+        flex: 1 1 0;
+        min-width: 0;
         border-radius: 7px;
         box-shadow: 0 1px 4px #00000018;
         transition: transform 200ms ease-out;
@@ -207,7 +224,8 @@
         border-radius: 0 0 7px 7px;
         background: linear-gradient(transparent, #000000a6);
         color: #fff;
-        text-align: right;
+        /* Left, because each card's right edge sits under the next one. */
+        text-align: left;
     }
 
     :global(.dark) .pet figcaption {
@@ -254,6 +272,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .avatar,
     .pet,
     .pet img {
         transition: none;
