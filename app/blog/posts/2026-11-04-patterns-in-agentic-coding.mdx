@@ -1,5 +1,5 @@
 ---
-title: "Engineering patterns of agentic coding"
+title: "Patterns in agentic coding"
 publishedAt: "2026-11-04"
 summary: "Software engineering got reopened by coding agents, so I'm starting to write down the patterns I've seen work."
 ---
@@ -17,10 +17,6 @@ any function. Something like this, in Ruby:
 
 ```ruby
 class ApproveLoanApplication
-  def self.execute(application:)
-    new(application).execute
-  end
-
   def initialize(application)
     @application = application
   end
@@ -28,31 +24,16 @@ class ApproveLoanApplication
   def execute
     validate!
     offer = build_offer
-    record_decision(offer)
     notify_merchant(offer)
     offer
   end
 
   private
 
-  def validate!
-    raise InvalidApplication unless @application.complete?
-  end
-
-  def build_offer
-    # ...
-  end
-
-  def record_decision(offer)
-    # ...
-  end
-
-  def notify_merchant(offer)
-    # ...
-  end
+  # def validate!, def build_offer, def notify_merchant ...
 end
 
-ApproveLoanApplication.execute(application: application)
+ApproveLoanApplication.new(application).execute
 ```
 
 Whoever calls it just sees the one method, and when you open the file the
