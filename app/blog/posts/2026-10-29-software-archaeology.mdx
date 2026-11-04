@@ -60,7 +60,7 @@ automation that can decode it and run it, so they do. What they've actually dug
 up is the Blight, an incredibly hostile superintelligence. (That's the first
 few pages. It gets _much_ weirder.)
 
-The prequel, _A Deepness in the Sky_, is where the job I'm talking about gets
+The prequel, _A Deepness in the Sky_, is where the job I'm talking about gets a full explanations of
 its name: "programmer-archaeologist." Thousands of years in the future, ships
 run on software stacked on software stacked on software, nobody writes anything
 from scratch anymore, and the most valuable people on board are the ones who
@@ -69,62 +69,66 @@ There's this great detail where the ship's clock counts seconds from what
 everyone assumes is the first moon landing, but if you dig all the way down
 it's actually the Unix epoch, and nobody remembers what that was.
 
-Nobody is going to eat the galaxy over a nilable field, but somebody made a
-decision a long time ago, it made sense to them, and the code survived but the
-reason didn't.
+Nobody is going to destroy the galaxy all because of a nilable field api field
+at Stripe, so maybe the stakes are a bit lower. But somebody made a decision a
+long time ago, it made sense to them, and then the code state kept on surviving
+although the reasoning apparently didn't.
 
 ## Little and big codebases
 
-My side project has gotten pretty big (1m lines), but I wrote most of it and
-all of it for the first 30% of the project, so when something looks weird it's
-usually because I did it, and I can sort of remember why. Stripe is something
-like 50 million lines of Ruby, and nobody has that in their head, not even the
-people who've been here for a decade. So a lot of the job ends up being
-figuring out why something is the way it is, and then explaining that to other
-people.
+My side project has grown in codebase size (1m lines), but it still feels
+fairly small and -- I wrote most of it and all of it for the first 30% of the
+project, so when something looks weird it's usually because I did it, and I can
+sort of remember why. Stripe is something like 50 million lines of Ruby, and
+nobody has that in their head, not even the people who've been here for a
+decade. So a lot of the job ends up being figuring out why something is the way
+it is, and then explaining that to other people.
 
-Figuring it out usually starts with git blame, and the first commit you hit
-is almost always a formatter run or someone moving the file to a new folder, so
-you keep going. git log will find when the thing first showed up, and from
-there you can usually follow the PR to a ticket and the ticket to a design doc.
-If you're lucky there's an incident writeup or a Slack thread at the end where
-someone finally says the thing you needed to know. If you're not lucky, it was
-never written down anywhere, and you DM someone who worked on it four years ago
-and hope they remember (they usually sort of do).
+Figuring it out usually starts with sourcegraph / git blame, and the first
+commit you hit is almost always a formatter run or someone moving the file to a
+new folder or a repo change, so you keep going and control clicking. git log
+will find when the thing first showed up, and from there you can usually follow
+the PR to a ticket and the ticket to a design doc. If you're lucky there's an
+incident writeup or a Slack thread at the end where someone finally says the
+thing you needed to know. If you're not lucky, it was never written down
+anywhere, and you DM someone who worked on it four years ago and hope they
+remember (they usually sort of do if you're lucky and they're still here).
 
 ## Latent knowledge
 
-In my experience the explaining part takes up more time than the digging.
-People ask why something works the way it does, or whether it's safe to change,
-and a lot of the time whoever's been around that part of the system the longest
-already knows, because they figured it out years ago.
+In my experience the explaining part takes up more time than the digging
+around. People ask why something works the way it does, or whether it's safe to
+change, and a lot of the time whoever's been around that part of the system the
+longest already knows, because they figured it out years ago and cached that
+memory in their head.
 
-The design review my colleague liked is pretty much this happening live.
-Everyone in the room knows some part of the history, and the discussion is them
-putting it together out loud. They know things about the system that you can't
-learn from reading the code. Some of it's in old PR comments or Slack, but most
-of it is just in people's heads.
+The design reviews my coworker found particularly interesting is pretty much
+this happening live. Everyone in the room knows some part of the history, and
+the discussion is them putting it together out loud. They know things about the
+system that you can't learn from reading the code. Some of it's in old PR
+comments or Slack, but most of it is just in people's heads.
 
 ## Cognitive debt
 
 I don't think this is good! I think code should be self-documenting, and this
-part of the job is a big reason I believe that. The nilable field is a good
-example, because the code _was_ documenting itself (the type said nilable), it
-was just saying the wrong thing. Everyone who knew better learned it somewhere
-other than the code.
+part of the job is a big reason I believe that. The nilable field is one good
+example, because the code _was_ kinda documenting itself (I mean, the type said
+nilable), it was just saying ... the wrong thing. Everyone who knew better
+learned it somewhere other than that piece of code. Either somewhere else
+entirely on in this case, a bunch of contradictory code that outweighed it.
 
-This is why we're always told to write self-documenting code. If understanding
-it requires knowing things that only exist in someone's head or an old Slack
-thread, everyone after you has to become a programmer-archaeologist just to
+If understanding it requires knowing things that only exist in someone's head
+or an old Slack thread, everyone after you has to do archaeology first just to
 work on it. We might call this cognitive debt (not quite in the sense people
 have been using it lately, for offloading your thinking to ChatGPT): everything
 you need to know to safely change the code that the code itself doesn't tell
 you. You pay for it when people leave and take what they knew with them, and
 when new people take months to get up to speed.
 
-With people, at least, the cost is sort of bounded. Someone does the dig once,
-remembers what they found, and becomes the person you go ask about that part of
-the system, and as long as they stick around it stays paid.
+With people, at least, the potential overrun cost here is sort of bounded.
+Someone does the digging around once, remembers what they found, and becomes
+the person you go ask about that part of the system, and as long as they stick
+around it stays paid.
 
 ## Agents doing the digging
 
