@@ -4,6 +4,8 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { highlight } from "sugar-high";
 import React from "react";
 import { slugify } from "app/lib/slugify";
+import { CopyButton } from "app/components/CopyButton";
+import { HeadingAnchor } from "app/components/HeadingAnchor";
 
 function Table({ data }) {
     const headers = data.headers.map((header, index) => (
@@ -54,6 +56,64 @@ function Code({ children, ...props }) {
     return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />;
 }
 
+/** `title="app/x.ts"`, `filename=...`, or a bare path-looking first token. */
+function parseFilename(meta?: string) {
+    if (!meta) return undefined;
+    const named = meta.match(
+        /(?:title|filename|file)=(?:"([^"]+)"|'([^']+)'|(\S+))/,
+    );
+    if (named) return named[1] ?? named[2] ?? named[3];
+    const bare = meta.split(/\s+/)[0];
+    return /[./]/.test(bare) && !bare.includes("=") ? bare : undefined;
+}
+
+/**
+ * Fenced code gets a tab with its filename (from the fence's meta string,
+ * e.g. ```ts title="app/x.ts") or, failing that, its language, plus a copy
+ * button. Unlabelled blocks keep just the button, shown on hover.
+ */
+function Pre({ children, ...props }) {
+    const code = React.isValidElement(children)
+        ? (children.props as {
+              className?: string;
+              children?: unknown;
+              "data-meta"?: string;
+          })
+        : {};
+    const source =
+        typeof code.children === "string" ? code.children.trimEnd() : "";
+    const language = code.className?.replace(/^language-/, "");
+    const label = parseFilename(code["data-meta"]) ?? language;
+
+    return (
+        <figure className="code-block group">
+            {label ? (
+                <figcaption>
+                    <span className="truncate">{label}</span>
+                    <CopyButton text={source} />
+                </figcaption>
+            ) : (
+                <CopyButton
+                    text={source}
+                    className="absolute right-3 top-2.5 z-10 font-mono text-xs opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+                />
+            )}
+            <pre {...props}>{children}</pre>
+        </figure>
+    );
+}
+
+/** MDX drops a code fence's meta string; keep it on the <code> as data-meta. */
+function rehypeCodeMeta() {
+    const visit = (node) => {
+        if (node.tagName === "code" && node.data?.meta) {
+            node.properties = { ...node.properties, dataMeta: node.data.meta };
+        }
+        node.children?.forEach(visit);
+    };
+    return visit;
+}
+
 function createHeading(level, headers) {
     const Heading = ({ children }) => {
         const slug = slugify(children);
@@ -61,13 +121,7 @@ function createHeading(level, headers) {
         return React.createElement(
             `h${level}`,
             { id: slug },
-            [
-                React.createElement("a", {
-                    href: `#${slug}`,
-                    key: `link-${slug}`,
-                    className: "anchor",
-                }),
-            ],
+            [React.createElement(HeadingAnchor, { slug, key: `link-${slug}` })],
             children,
         );
     };
@@ -87,6 +141,7 @@ const components = (headers) => ({
     Image: RoundedImage,
     a: CustomLink,
     code: Code,
+    pre: Pre,
     Table,
 });
 
@@ -95,6 +150,16 @@ export function CustomMDX(props) {
     return (
         <MDXRemote
             {...props}
+            options={{
+                ...props.options,
+                mdxOptions: {
+                    ...props.options?.mdxOptions,
+                    rehypePlugins: [
+                        rehypeCodeMeta,
+                        ...(props.options?.mdxOptions?.rehypePlugins || []),
+                    ],
+                },
+            }}
             components={{ ...components(headers), ...(props.components || {}) }}
         />
     );

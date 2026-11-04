@@ -93,3 +93,19 @@ export function formatDate(date: string, includeRelative = false) {
 
     return `${fullDate} (${formattedDate})`;
 }
+
+/** Chronological order, oldest first. */
+export function getPostsOldestFirst() {
+    return getBlogPosts().sort((a, b) =>
+        a.metadata.publishedAt < b.metadata.publishedAt ? -1 : 1,
+    );
+}
+
+/**
+ * A post's rank in chronological order (oldest = 0), which is what Art is
+ * keyed on: new posts append to the end of that order, so publishing never
+ * reshuffles the artwork of a post that's already out.
+ */
+export function getArtIndex(slug: string) {
+    return getPostsOldestFirst().findIndex((post) => post.slug === slug);
+}

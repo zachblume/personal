@@ -39,6 +39,26 @@ a {
     @apply bg-neutral-50 dark:bg-black/50 dark:backdrop-blur-sm rounded-xl overflow-x-auto border border-neutral-200 dark:border-white/[0.06] py-3 px-4 text-sm dark:shadow-[inset_0_0_20px_rgba(255,255,255,0.02)];
 }
 
+/* Fenced code (Pre in components/mdx.tsx): the figure carries the frame, so
+   the <pre> inside it drops its own. */
+.prose .code-block {
+    @apply relative my-5 overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50 dark:border-white/[0.06] dark:bg-black/50;
+}
+
+.prose .code-block figcaption {
+    @apply flex h-9 items-center justify-between gap-4 border-b border-neutral-200 px-4 text-xs text-neutral-500 dark:border-white/[0.06] dark:text-neutral-400;
+    font-family: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+.prose .code-block pre {
+    @apply m-0 rounded-none border-0 bg-transparent shadow-none dark:bg-transparent dark:shadow-none dark:backdrop-blur-none;
+}
+
+/* The inline-code chip background would otherwise paint behind each line. */
+.prose .code-block pre code {
+    @apply bg-transparent dark:bg-transparent;
+}
+
 .prose code {
     @apply px-1.5 py-0.5 rounded-md bg-neutral-100 dark:bg-white/[0.03] text-neutral-800 dark:text-neutral-100 border border-neutral-200 dark:border-white/[0.06] text-sm dark:backdrop-blur-sm;
 }
@@ -318,4 +338,45 @@ html {
 .prose :is(h2, h3) {
     font-size: 28px;
     line-height: 1.2;
+}
+
+/* Living art: inside a hovered link (any `.group`), each shape in a tile
+   drifts about its own centre. Paused rather than absent otherwise, and the
+   keyframes start from identity, so a tile at rest draws exactly as authored
+   and simply holds wherever it stopped. Mixed durations keep the shapes from
+   moving in lockstep. */
+.art > g > * {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: art-drift 6s ease-in-out infinite alternate paused;
+}
+
+.art > g > :nth-child(2n) {
+    animation-duration: 8s;
+}
+
+.art > g > :nth-child(3n) {
+    animation-duration: 7s;
+}
+
+.group:hover .art > g > * {
+    animation-play-state: running;
+}
+
+@keyframes art-drift {
+    0% {
+        transform: none;
+    }
+    50% {
+        transform: translate(5%, -4%) rotate(6deg) scale(1.06);
+    }
+    100% {
+        transform: translate(-5%, 4%) rotate(-6deg) scale(0.95);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .art > g > * {
+        animation: none;
+    }
 }

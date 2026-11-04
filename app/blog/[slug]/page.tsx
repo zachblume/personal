@@ -4,6 +4,7 @@ import { formatDate, getBlogPosts } from "app/blog/utils";
 import { baseUrl } from "app/sitemap";
 import Outline from "app/components/outline";
 import { PostList } from "app/components/PostList";
+import { PostNeighbours } from "app/components/PostNeighbours";
 import { PAD, SiteFooter, SiteHeader } from "app/components/SiteChrome";
 
 export async function generateStaticParams() {
@@ -31,10 +32,6 @@ export async function generateMetadata({ params }: BlogProps) {
         summary: description,
         image,
     } = post.metadata;
-    const ogImage = image
-        ? image
-        : `${baseUrl}/og?title=${encodeURIComponent(title)}`;
-
     return {
         title,
         description,
@@ -44,17 +41,14 @@ export async function generateMetadata({ params }: BlogProps) {
             type: "article",
             publishedTime,
             url: `${baseUrl}/blog/${post.slug}`,
-            images: [
-                {
-                    url: ogImage,
-                },
-            ],
+            // Without a hand-authored image, opengraph-image.tsx draws one.
+            ...(image ? { images: [{ url: image }] } : {}),
         },
         twitter: {
             card: "summary_large_image",
             title,
             description,
-            images: [ogImage],
+            ...(image ? { images: [image] } : {}),
         },
     };
 }
@@ -93,9 +87,7 @@ export default async function Blog({ params }: BlogProps) {
                             description: post.metadata.summary,
                             image: post.metadata.image
                                 ? `${baseUrl}${post.metadata.image}`
-                                : `/og?title=${encodeURIComponent(
-                                      post.metadata.title,
-                                  )}`,
+                                : `${baseUrl}/blog/${post.slug}/opengraph-image`,
                             url: `${baseUrl}/blog/${post.slug}`,
                             author: {
                                 "@type": "Person",
@@ -121,6 +113,7 @@ export default async function Blog({ params }: BlogProps) {
                     </div>
                 </aside>
             </section>
+            <PostNeighbours slug={post.slug} />
             <section aria-labelledby="past-writing-title">
                 <h2
                     id="past-writing-title"
