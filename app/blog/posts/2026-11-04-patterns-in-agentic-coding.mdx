@@ -13,7 +13,53 @@ The command pattern is where you make a class instead of a function, so you can
 decompose the function into its constituent parts, group them under that
 class, and expose an `execute` method on it. So you have a complex function
 that's essentially nicely abstracted, and you call it the same way you'd call
-any function. We use this all the time at Stripe. I had no idea that this was a
+any function. Something like this, in Ruby:
+
+```ruby
+class ApproveLoanApplication
+  def self.execute(application:)
+    new(application).execute
+  end
+
+  def initialize(application)
+    @application = application
+  end
+
+  def execute
+    validate!
+    offer = build_offer
+    record_decision(offer)
+    notify_merchant(offer)
+    offer
+  end
+
+  private
+
+  def validate!
+    raise InvalidApplication unless @application.complete?
+  end
+
+  def build_offer
+    # ...
+  end
+
+  def record_decision(offer)
+    # ...
+  end
+
+  def notify_merchant(offer)
+    # ...
+  end
+end
+
+ApproveLoanApplication.execute(application: application)
+```
+
+Whoever calls it just sees the one method, and when you open the file the
+`execute` method reads kind of like a table of contents for everything below
+it.
+
+We use this all the time at Stripe. I had no idea that this was a
 general software pattern that went far beyond Stripe, let alone one with its own
 chapter in a book from the nineties.
 
