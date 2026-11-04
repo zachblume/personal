@@ -1,8 +1,9 @@
 {
     "private": true,
+    "packageManager": "pnpm@10.34.4",
     "scripts": {
         "dev": "next dev",
-        "build": "npm run check:compiler && next build",
+        "build": "pnpm run check:compiler && next build",
         "check:compiler": "node scripts/check-react-compiler.mjs",
         "start": "next start",
         "prepare": "husky",

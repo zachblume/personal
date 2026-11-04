@@ -20,10 +20,14 @@ Deployed on Vercel.
 
 ## Commands
 
-- `npm run dev` (or `make dev`) — dev server
-- `npm run build` / `npm run start`
-- `npm run format` — Prettier (`.prettierrc`: `tabWidth: 4`)
-- `npm run lint` — ESLint with `--fix` (next/core-web-vitals + mdx plugin)
+Use pnpm 10.34.4 (pinned in `package.json`) with Node.js 24. Run `pnpm install`
+after cloning; CI installs should use `pnpm install --frozen-lockfile`. Commit
+`pnpm-lock.yaml` when dependencies change.
+
+- `pnpm run dev` (or `make dev`) — dev server
+- `pnpm run build` / `pnpm run start`
+- `pnpm run format` — Prettier (`.prettierrc`: `tabWidth: 4`)
+- `pnpm run lint` — ESLint with `--fix` (next/core-web-vitals + mdx plugin)
 - Husky is installed; keep the tree Prettier-clean before committing.
 
 ## Layout of the code
@@ -196,7 +200,7 @@ creates a transformed ancestor that breaks `position: fixed` for anything inside
   has to break out with CSS (e.g. `w-screen relative left-1/2 -translate-x-1/2`)
   rather than by overriding the layout.
 - ESLint uses flat config in `eslint.config.mjs`. Keep ESLint on the latest 9.x until the React/import/accessibility plugins support 10.
-- `typescript` aliases `@typescript/typescript6` for tooling APIs; `@typescript/native` aliases TypeScript 7 and supplies `npx tsc`. Both are required until tooling supports the TypeScript 7 API.
+- `typescript` aliases `@typescript/typescript6` for tooling APIs; `@typescript/native` aliases TypeScript 7 and supplies `pnpm exec tsc`. Both are required until tooling supports the TypeScript 7 API.
 - Dynamic route `params` are promises in Next.js 16; await them in pages and metadata functions.
 - **Fonts must be set through Radix's tokens, not on `html`/`body`.** `<Theme>` renders a
   `.radix-themes` wrapper that hard-sets `font-family: var(--default-font-family)`. A class
