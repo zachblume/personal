@@ -34,50 +34,11 @@ export default function About() {
                         <span className={styles.nowrap}>{SITE.city}</span>.
                     </p>
                     <p>
-                        Previously, I worked as an engineer and team lead at{" "}
-                        <a href={SITE.previousEmployer.href}>
-                            {SITE.previousEmployer.label}
-                        </a>
-                        . I also founded{" "}
+                        I also founded{" "}
                         <a href={SITE.company.href}>{SITE.company.label}</a>,{" "}
                         {SITE.companyBlurb}.
                     </p>
                 </div>
-
-                <section
-                    className={styles.section}
-                    aria-labelledby="work-title"
-                >
-                    <h2 id="work-title" className={styles.label}>
-                        Work
-                    </h2>
-                    <dl className={styles.work}>
-                        <div>
-                            <dt>
-                                <a href={SITE.employer.href}>
-                                    {SITE.employer.label}
-                                </a>
-                            </dt>
-                            <dd>{SITE.employer.role}</dd>
-                        </div>
-                        <div>
-                            <dt>
-                                <a href={SITE.previousEmployer.href}>
-                                    {SITE.previousEmployer.label}
-                                </a>
-                            </dt>
-                            <dd>{SITE.previousEmployer.role}</dd>
-                        </div>
-                        <div>
-                            <dt>
-                                <a href={SITE.company.href}>
-                                    {SITE.company.label}
-                                </a>
-                            </dt>
-                            <dd>Founder</dd>
-                        </div>
-                    </dl>
-                </section>
 
                 <section
                     className={styles.section}
