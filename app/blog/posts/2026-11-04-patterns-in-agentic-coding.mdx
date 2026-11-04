@@ -108,23 +108,60 @@ way it almost feels like scrolling TikTok. You're sending ideas at a bunch of
 parallel coding agents and getting back full demo videos in minutes, over and
 over.
 
-## 3. Put every correction in AGENTS.md
+## 3. Lint for purity
 
-When I correct an agent, I try to put the correction in `AGENTS.md` and not
-just in the chat. If it's only in the chat it's gone the next session, and the
-next agent makes the same mistake and I explain it again.
+The other big thing I've seen is an explosion in integration tests, end-to-end
+tests, and especially custom linters that enforce coding standards and the
+shape of whatever framework you've built. The point is to give agents guidance
+that's deterministic, so they find out they did it wrong from a failing check
+instead of from me in review.
 
-The `AGENTS.md` for this site has a paragraph that starts "Don't derive the
-composition or the hue from the hash. It's the obvious move and it doesn't
-work," and it's there because an agent made exactly that move and I didn't
-want to have that conversation twice. After a while the file ends up being a
-list of every mistake anyone has made in the codebase, written as
-instructions, which is a pretty weird document but a useful one.
+A good example is banning data access outside of a data access layer. In
+JavaScript that can be as simple as an ESLint rule:
 
-I try to write down why, too. If the agent only has the rule it'll follow it
-in the situations I was picturing when I wrote it and then miss the next one.
-It's the same thing I was getting at about [code explaining
-itself](/blog/2026-10-29-software-archaeology), just for the agents.
+```js
+// eslint.config.mjs
+export default [
+    {
+        files: ["**/*.ts"],
+        ignores: ["src/data/**"],
+        rules: {
+            "no-restricted-imports": [
+                "error",
+                {
+                    paths: [
+                        {
+                            name: "src/db",
+                            message: "Go through src/data instead.",
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+];
+```
+
+Humans mostly skipped writing these kinds of "purity" rules.
+Somebody would query the database from a controller once because there was a
+deadline, and then there were two ways to do it, and eventually five, and we
+all sort of lived in that mixed state because writing and maintaining the rule
+felt like more work than it was worth. And for people it kind of was, because
+you could just tell the new person how things were supposed to work.
+
+Agents really benefit from this, though, and I think they can go 10x faster
+when the guardrails are strict and clear. If the questions are already settled
+and there's one correct pattern, the agent doesn't have to guess which of the
+five ways is the real one by reading the codebase (and it'll often pick the
+wrong one, because the wrong one is usually the most common). When correctness
+is automated through really expansive linting and testing, the agent just keeps
+going until everything passes, and I'm only reviewing the stuff that a check
+can't catch.
+
+The cost of writing them changed too. Writing a custom lint rule used to be a whole
+afternoon for something that saved a few review comments a year. Now an agent
+writes the rule in a few minutes, and it gets enforced on hundreds of agent
+PRs.
 
 ## 4. Run the same prompt a few times
 
