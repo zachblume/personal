@@ -1,0 +1,140 @@
+---
+title: "Patterns in agentic coding"
+publishedAt: "2026-11-04"
+summary: "Software engineering just got reopened. Here are a few patterns I've seen work."
+---
+
+I got the idea for this while reading Martin Fowler's _Refactoring_. One of the
+refactorings in it, "Replace Function with Command," points back to an older
+book, the Gang of Four's _Design Patterns_, and I was really surprised to see
+the command pattern in there.
+
+The command pattern is where you make a class instead of a function. You take
+some big, complicated function, decompose it into its constituent parts, group
+those parts as methods under the class, and expose a single `execute` method.
+From the outside it's still just a function you call. On the inside you get
+somewhere to put the pieces, so a complex function ends up nicely abstracted.
+
+We use this _all the time_ at Stripe. I had no idea it was a general software
+pattern that went far beyond Stripe, with a name and a book chapter from 1994.
+
+## An unsettled field
+
+It reminded me how many software patterns there are out there that I might not
+know about, or that I do know but never learned as a named thing -- and that
+still form the core of my understanding of how to be a software developer.
+
+It's tempting to think of computer science, or computer engineering, as a
+settled science or a settled engineering field. But really it's still quite
+unsettled, and that's what makes it interesting. There are decades of
+engineering thinking on problems where there's no correct solution, just models
+people have iterated on. Those models inform what we know, but they aren't
+self-evident to an engineer working on their own. Somebody had to notice them
+and write them down.
+
+Now that coding agents have totally recreated the way we write software, the
+whole field is reopened. A lot of the patterns we already discovered are still
+useful, for sure, and some of them are even more useful now than they were.
+But there are also hundreds or thousands of new patterns for how we'll write
+software that haven't been consolidated into best practices yet.
+
+So I want to start writing them down -- things I do at Stripe and outside of
+Stripe that I've seen actually work. Here are a few.
+
+## 1. Refactor, then backfill coverage against main
+
+Do a giant refactor, and then stop.
+
+Take the existing main branch and your refactor branch, give both to a coding
+agent, and say something like:
+
+> I want you to build 100% behavioral coverage of everything I've refactored.
+> Build it to 100% line coverage against **main**. Think about every possible
+> way this refactor could fail and make sure we have total coverage.
+
+Then check that the tests pass on main, and see whether they fail on your new
+branch. Anything that passes on main and fails on the branch is a behavior
+change you didn't mean to make (or did, and now you know for sure).
+
+You might think this is kind of pointless. The agent has access to everything,
+including the refactor it's supposed to be catching, so there's no test
+holdout. But in practice I've found it extremely helpful. The trick is that the
+tests have to be _right_ about main first, which anchors them to the old
+behavior rather than the new code. It's one of the core things that has let me
+do gigantic refactors -- the 50,000-line kind -- that I would never have had
+the nerve to merge otherwise.
+
+## 2. PR walkthrough videos
+
+This one is basically a prompt in `AGENTS.md` that tells the agent to always do
+a full end-to-end manual test of whatever it built, record a video of it, and
+then add voice narration from the agent explaining the walkthrough.
+
+It sounds totally crazy, but it has become one of the most turnkey things that
+help me evaluate agentic PRs quickly. You can often tell a PR is wrong almost
+instantly, without reading any code, and send back behavioral changes based on
+what you saw in the video. There's just something about a demo -- video and
+voice combined -- that lets you reason extremely fast. It's the same reason a
+live demo in a meeting beats a design doc for some questions.
+
+This has really begun to redefine how I write software outside of Stripe. In a
+way it almost feels like scrolling TikTok: you're firing ideas at a bunch of
+parallel coding agents and getting back a full demo video for each one, every
+few minutes.
+
+## 3. The ratchet
+
+Every time I correct an agent, the correction goes into `AGENTS.md`, not just
+into the chat.
+
+A correction in chat lasts one session. A correction in the repo lasts forever,
+and every agent after that one starts out knowing it. Over time the file turns
+into a record of every mistake that's been made in the codebase, written as
+instructions. The `AGENTS.md` for this site has a paragraph that starts
+"**Don't derive the composition or the hue from the hash.** It's the obvious
+move and it doesn't work" -- because an agent made exactly that obvious move,
+and I didn't want to explain it twice.
+
+The important part is writing down the _why_, not just the rule. An agent that
+only knows the rule will follow it in the cases you imagined and break it in
+the ones you didn't. This is pretty much the same advice as [making code
+explain itself](/blog/2026-10-29-software-archaeology), just one level up.
+
+## 4. Best of N
+
+When something is ambiguous, I don't try to write the perfect prompt. I give
+roughly the same prompt to three or four agents in parallel and pick the best
+result.
+
+Attempts are cheap now, and my review time is the expensive part. Comparing
+three working versions of a feature side by side is a lot faster than
+specifying one in enough detail that a single attempt gets it right. Seeing the
+three of them also tends to tell me what I actually wanted, which I usually
+couldn't have written down beforehand. Often the winner is "version two, but
+with the layout from version three," and that's the next prompt.
+
+This pairs really well with walkthrough videos. Four PRs is a lot of code to
+read. Four two-minute videos is not.
+
+## 5. Build it to throw it away
+
+Fred Brooks said to plan to throw one away, because you will anyways. That's
+an old pattern that got a lot more useful.
+
+For anything where I don't understand the problem yet, I have an agent build a
+fast, sloppy version first -- no tests, no cleanup, just enough to run. Then I
+look at it, figure out what the real shape of the thing is, delete the branch,
+and start over with a much better prompt. The first version is a question, not
+a deliverable.
+
+The hard part is actually deleting it. The sloppy version works, sort of, and
+it's really tempting to keep going from there. But an agent extending a
+prototype will happily build on every bad decision in it, and you end up with
+exactly the kind of layers nobody understands.
+
+## More to come
+
+These are the ones I'm confident about. There are a bunch more I'm still
+figuring out, and I'm sure most of them will look obvious in ten years, the
+way the command pattern looks obvious now. That's sort of the point of writing
+them down.
