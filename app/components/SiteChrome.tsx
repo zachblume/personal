@@ -9,7 +9,7 @@ function SiteNavigation({ current }: { current: "home" | "about" }) {
         <>
             <Link
                 href="/"
-                className="text-[13px] font-medium tracking-tight text-neutral-900 dark:text-white"
+                className="site-name text-[13px] font-medium tracking-tight text-neutral-900 dark:text-white"
             >
                 {SITE.name}
             </Link>
