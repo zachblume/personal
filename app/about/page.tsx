@@ -30,7 +30,8 @@ export default function About() {
                     <p>
                         I&rsquo;m a senior software engineer at{" "}
                         <a href={SITE.employer.href}>{SITE.employer.label}</a>.
-                        I&rsquo;m based in {SITE.city}.
+                        I&rsquo;m based in{" "}
+                        <span className={styles.nowrap}>{SITE.city}</span>.
                     </p>
                     <p>
                         Previously, I worked as an engineer and team lead at{" "}
@@ -47,7 +48,9 @@ export default function About() {
                     className={styles.section}
                     aria-labelledby="work-title"
                 >
-                    <h2 id="work-title">Work</h2>
+                    <h2 id="work-title" className={styles.label}>
+                        Work
+                    </h2>
                     <dl className={styles.work}>
                         <div>
                             <dt>
@@ -80,7 +83,9 @@ export default function About() {
                     className={styles.section}
                     aria-labelledby="home-title"
                 >
-                    <h2 id="home-title">At home</h2>
+                    <h2 id="home-title" className={styles.label}>
+                        At home
+                    </h2>
                     <div className={styles.pets}>
                         {SITE.pets.map((pet) => (
                             <figure
@@ -94,7 +99,7 @@ export default function About() {
                                     alt={pet.name}
                                     width={700}
                                     height={467}
-                                    sizes="(min-width: 768px) 230px, (max-width: 640px) 30vw, 190px"
+                                    sizes="(min-width: 768px) 240px, (max-width: 640px) 30vw, 190px"
                                 />
                                 <figcaption>{pet.name}</figcaption>
                             </figure>
