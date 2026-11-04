@@ -1,4 +1,4 @@
-npm install
-npm run format
-npm run lint
-npx tsc --noEmit
+pnpm install --frozen-lockfile
+pnpm run format
+pnpm run lint
+pnpm exec tsc --noEmit
