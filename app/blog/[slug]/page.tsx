@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { CustomMDX } from "app/components/mdx";
-import { formatDate, getArtIndex, getBlogPosts } from "app/blog/utils";
-import { Art } from "app/components/Art";
+import { formatDate, getBlogPosts } from "app/blog/utils";
 import { baseUrl } from "app/sitemap";
 import Outline from "app/components/outline";
 import { PostList } from "app/components/PostList";
@@ -75,15 +74,6 @@ export default async function Blog({ params }: BlogProps) {
         <div className="full-bleed min-h-screen w-full bg-white dark:bg-black">
             <SiteHeader current="home" />
             <section className="relative mx-6 max-w-xl py-12 md:mx-auto md:py-16">
-                {/* The post's artwork as a card above the title, so the color
-                    clicked in the archive carries through to the page. */}
-                <div className="mb-10 overflow-hidden rounded-lg border border-neutral-200/80 dark:border-neutral-800">
-                    <Art
-                        slug={post.slug}
-                        index={getArtIndex(post.slug)}
-                        className="aspect-[16/9] w-full"
-                    />
-                </div>
                 <script
                     type="application/ld+json"
                     suppressHydrationWarning
