@@ -105,6 +105,23 @@ function literalPalette(h: number, h2: number): Palette {
     };
 }
 
+/**
+ * How the drawing fills a fixed width × height box. Satori stretches an <svg>
+ * to its box whatever preserveAspectRatio says, so the viewBox is cropped here
+ * to what `xMidYMid slice` would show. A portrait box takes the drawing on its
+ * side: a landscape composition centre-cropped to portrait loses half its
+ * width, often including whatever it's centred on.
+ */
+function fit(width?: number, height?: number) {
+    if (!width || !height) return { viewBox: `0 0 ${W} ${H}`, turn: false };
+    const turn = height > width;
+    const [dw, dh] = turn ? [H, W] : [W, H];
+    const scale = Math.max(width / dw, height / dh);
+    const w = width / scale;
+    const h = height / scale;
+    return { viewBox: `${(dw - w) / 2} ${(dh - h) / 2} ${w} ${h}`, turn };
+}
+
 type Ctx = {
     r: () => number;
     /** The six-step ramp: 0-2 primary hue, 3-5 secondary. */
@@ -592,6 +609,9 @@ export function Art({
     /** Inline literal light-theme colors instead of CSS variables, for
      *  renderers without a stylesheet. */
     literal?: boolean;
+    /** A fixed render size, for renderers that size the <svg> themselves.
+     *  The drawing is cropped to it rather than stretched, and turned on its
+     *  side if the box is portrait. */
     width?: number;
     height?: number;
 }) {
@@ -610,10 +630,18 @@ export function Art({
     const angle = Math.floor(r() * 360);
     const palette = literal ? literalPalette(h, h2) : VARS;
     const C = palette.ramp;
+    const { viewBox, turn } = fit(width, height);
+
+    const drawing = (
+        <>
+            <rect width={W} height={H} fill={`url(#${id("bg")})`} />
+            {draw({ r, id, C })}
+        </>
+    );
 
     return (
         <svg
-            viewBox={`0 0 ${W} ${H}`}
+            viewBox={viewBox}
             preserveAspectRatio="xMidYMid slice"
             width={width}
             height={height}
@@ -670,8 +698,11 @@ export function Art({
                     <feGaussianBlur stdDeviation="20" />
                 </filter>
             </defs>
-            <rect width={W} height={H} fill={`url(#${id("bg")})`} />
-            {draw({ r, id, C })}
+            {turn ? (
+                <g transform={`translate(${H} 0) rotate(90)`}>{drawing}</g>
+            ) : (
+                drawing
+            )}
         </svg>
     );
 }
