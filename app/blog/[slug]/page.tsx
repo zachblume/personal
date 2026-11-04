@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation";
 import { CustomMDX } from "app/components/mdx";
-import { formatDate, getBlogPosts } from "app/blog/utils";
+import { formatDate, getArtIndex, getBlogPosts } from "app/blog/utils";
+import { Art } from "app/components/Art";
 import { baseUrl } from "app/sitemap";
 import Outline from "app/components/outline";
 import { PostList } from "app/components/PostList";
+import { PostNeighbours } from "app/components/PostNeighbours";
 import { PAD, SiteFooter, SiteHeader } from "app/components/SiteChrome";
 
 export async function generateStaticParams() {
@@ -31,10 +33,6 @@ export async function generateMetadata({ params }: BlogProps) {
         summary: description,
         image,
     } = post.metadata;
-    const ogImage = image
-        ? image
-        : `${baseUrl}/og?title=${encodeURIComponent(title)}`;
-
     return {
         title,
         description,
@@ -44,17 +42,14 @@ export async function generateMetadata({ params }: BlogProps) {
             type: "article",
             publishedTime,
             url: `${baseUrl}/blog/${post.slug}`,
-            images: [
-                {
-                    url: ogImage,
-                },
-            ],
+            // Without a hand-authored image, opengraph-image.tsx draws one.
+            ...(image ? { images: [{ url: image }] } : {}),
         },
         twitter: {
             card: "summary_large_image",
             title,
             description,
-            images: [ogImage],
+            ...(image ? { images: [image] } : {}),
         },
     };
 }
@@ -80,6 +75,15 @@ export default async function Blog({ params }: BlogProps) {
         <div className="full-bleed min-h-screen w-full bg-white dark:bg-black">
             <SiteHeader current="home" />
             <section className="relative mx-6 max-w-xl py-12 md:mx-auto md:py-16">
+                {/* The post's artwork as a card above the title, so the color
+                    clicked in the archive carries through to the page. */}
+                <div className="mb-10 overflow-hidden rounded-lg border border-neutral-200/80 dark:border-neutral-800">
+                    <Art
+                        slug={post.slug}
+                        index={getArtIndex(post.slug)}
+                        className="aspect-[16/9] w-full"
+                    />
+                </div>
                 <script
                     type="application/ld+json"
                     suppressHydrationWarning
@@ -93,9 +97,7 @@ export default async function Blog({ params }: BlogProps) {
                             description: post.metadata.summary,
                             image: post.metadata.image
                                 ? `${baseUrl}${post.metadata.image}`
-                                : `/og?title=${encodeURIComponent(
-                                      post.metadata.title,
-                                  )}`,
+                                : `${baseUrl}/blog/${post.slug}/opengraph-image`,
                             url: `${baseUrl}/blog/${post.slug}`,
                             author: {
                                 "@type": "Person",
@@ -121,6 +123,7 @@ export default async function Blog({ params }: BlogProps) {
                     </div>
                 </aside>
             </section>
+            <PostNeighbours slug={post.slug} />
             <section aria-labelledby="past-writing-title">
                 <h2
                     id="past-writing-title"

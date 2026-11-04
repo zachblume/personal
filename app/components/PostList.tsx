@@ -1,6 +1,7 @@
 import { getBlogPosts } from "app/blog/utils";
 import { Art } from "app/components/Art";
 import { PostRow } from "app/components/PostRow";
+import { ReadingHistory } from "app/components/ReadingHistory";
 
 function shortDate(publishedAt: string) {
     return new Date(`${publishedAt}T00:00:00`).toLocaleDateString("en-US", {
@@ -24,24 +25,33 @@ export function PostList() {
     });
 
     return (
-        <ul>
-            {posts.map((post, i) => (
-                <PostRow
-                    key={post.slug}
-                    slug={post.slug}
-                    title={post.metadata.title}
-                    summary={post.metadata.summary || ""}
-                    date={shortDate(post.metadata.publishedAt)}
-                    ordinal={posts.length - i}
-                    art={
-                        <Art
-                            slug={post.slug}
-                            index={rank[post.slug]}
-                            className="aspect-[16/9] w-full transition-transform duration-500 ease-out group-hover:scale-[1.06]"
-                        />
-                    }
-                />
-            ))}
-        </ul>
+        <>
+            <ul>
+                {posts.map((post, i) => (
+                    <PostRow
+                        key={post.slug}
+                        slug={post.slug}
+                        title={post.metadata.title}
+                        summary={post.metadata.summary || ""}
+                        date={shortDate(post.metadata.publishedAt)}
+                        ordinal={posts.length - i}
+                        art={
+                            <Art
+                                slug={post.slug}
+                                index={rank[post.slug]}
+                                className="aspect-[16/9] w-full transition-transform duration-500 ease-out group-hover:scale-[1.06]"
+                            />
+                        }
+                    />
+                ))}
+            </ul>
+            <ReadingHistory
+                posts={posts.map((post) => ({
+                    slug: post.slug,
+                    title: post.metadata.title,
+                    year: post.metadata.publishedAt.slice(0, 4),
+                }))}
+            />
+        </>
     );
 }

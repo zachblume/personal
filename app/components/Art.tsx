@@ -46,17 +46,69 @@ function rng(seed: number) {
     };
 }
 
-const C = [
-    "var(--art-0)",
-    "var(--art-1)",
-    "var(--art-2)",
-    "var(--art-3)",
-    "var(--art-4)",
-    "var(--art-5)",
-];
+/** The ramp as CSS variables, resolved by `.art` in global.css. */
+const VARS = {
+    bg: "var(--art-bg)",
+    bg2: "var(--art-bg2)",
+    ramp: [
+        "var(--art-0)",
+        "var(--art-1)",
+        "var(--art-2)",
+        "var(--art-3)",
+        "var(--art-4)",
+        "var(--art-5)",
+    ],
+};
+
+type Palette = typeof VARS;
+
+/** oklch → sRGB hex, clamped rather than gamut-mapped. */
+function oklch(l: number, c: number, h: number) {
+    const a = c * Math.cos((h * Math.PI) / 180);
+    const b = c * Math.sin((h * Math.PI) / 180);
+    const L = (l + 0.3963377774 * a + 0.2158037573 * b) ** 3;
+    const M = (l - 0.1055613458 * a - 0.0638541728 * b) ** 3;
+    const S = (l - 0.0894841775 * a - 1.291485548 * b) ** 3;
+    const linear = [
+        4.0767416621 * L - 3.3077115913 * M + 0.2309699292 * S,
+        -1.2684380046 * L + 2.6097574011 * M - 0.3413193965 * S,
+        -0.0041960863 * L - 0.7034186147 * M + 1.707614701 * S,
+    ];
+    return `#${linear
+        .map((x) => {
+            const v =
+                x <= 0.0031308 ? 12.92 * x : 1.055 * x ** (1 / 2.4) - 0.055;
+            return Math.round(Math.min(1, Math.max(0, v)) * 255)
+                .toString(16)
+                .padStart(2, "0");
+        })
+        .join("")}`;
+}
+
+/**
+ * The light ramp from `.art` in global.css, computed to literal colors for
+ * renderers that can't resolve CSS variables (the OG image). Keep the numbers
+ * in step with the stylesheet.
+ */
+function literalPalette(h: number, h2: number): Palette {
+    return {
+        bg: oklch(0.88, 0.138, h),
+        bg2: oklch(0.84, 0.152, h2),
+        ramp: [
+            oklch(0.47, 0.205, h),
+            oklch(0.59, 0.225, h),
+            oklch(0.71, 0.192, h),
+            oklch(0.54, 0.225, h2),
+            oklch(0.67, 0.2, h2),
+            oklch(0.8, 0.15, h2),
+        ],
+    };
+}
 
 type Ctx = {
     r: () => number;
+    /** The six-step ramp: 0-2 primary hue, 3-5 secondary. */
+    C: string[];
     /** Namespaced so several <Art> on one page don't collide on gradient ids. */
     id: (name: string) => string;
 };
@@ -95,7 +147,7 @@ function Blob({
 
 /** Pools of color around a ring. Kept apart — blobs free to pile up in the
  *  middle average out into a flat wash, which is this one's failure mode. */
-const aurora: Draw = ({ r, id }) => {
+const aurora: Draw = ({ r, id, C }) => {
     const blur = `url(#${id("blur")})`;
     const spin = r() * Math.PI * 2;
     return (
@@ -120,7 +172,7 @@ const aurora: Draw = ({ r, id }) => {
 };
 
 /** A low sun behind concentric rings. */
-const halo: Draw = ({ r, id }) => {
+const halo: Draw = ({ r, id, C }) => {
     const blur = `url(#${id("blur")})`;
     const cx = 30 + r() * 100;
     const cy = 30 + r() * 50;
@@ -155,7 +207,7 @@ const halo: Draw = ({ r, id }) => {
 };
 
 /** Stacked smooth ridges. */
-const dunes: Draw = ({ r, id }) => {
+const dunes: Draw = ({ r, id, C }) => {
     const count = 4 + Math.floor(r() * 3);
     return (
         <g>
@@ -182,7 +234,7 @@ const dunes: Draw = ({ r, id }) => {
 };
 
 /** Overlapping translucent discs; the intersections make the palette. */
-const orbs: Draw = ({ r, id }) => {
+const orbs: Draw = ({ r, id, C }) => {
     const soft = `url(#${id("soft")})`;
     const count = 5 + Math.floor(r() * 3);
     return (
@@ -211,7 +263,7 @@ const orbs: Draw = ({ r, id }) => {
 };
 
 /** Wide diagonal light falling across the frame. */
-const beams: Draw = ({ r, id }) => {
+const beams: Draw = ({ r, id, C }) => {
     const blur = `url(#${id("blur")})`;
     const count = 3 + Math.floor(r() * 3);
     const lean = -40 + r() * 80;
@@ -243,7 +295,7 @@ const beams: Draw = ({ r, id }) => {
 };
 
 /** Dot field blooming out of a point. */
-const bloom: Draw = ({ r, id }) => {
+const bloom: Draw = ({ r, id, C }) => {
     const soft = `url(#${id("soft")})`;
     const cols = 22;
     const rows = 14;
@@ -283,7 +335,7 @@ const bloom: Draw = ({ r, id }) => {
 };
 
 /** Thick flowing strokes with round caps. */
-const ribbon: Draw = ({ r, id }) => {
+const ribbon: Draw = ({ r, id, C }) => {
     const blur = `url(#${id("blur")})`;
     const y = 30 + r() * 40;
     const sway = 18 + r() * 24;
@@ -315,7 +367,7 @@ const ribbon: Draw = ({ r, id }) => {
 };
 
 /** Wedges fanning out of one corner. */
-const rays: Draw = ({ r, id }) => {
+const rays: Draw = ({ r, id, C }) => {
     const soft = `url(#${id("soft")})`;
     const corner = Math.floor(r() * 4);
     const ox = corner % 2 ? W + 10 : -10;
@@ -352,7 +404,7 @@ const rays: Draw = ({ r, id }) => {
 };
 
 /** Soft rounded tiles, fading across a diagonal. */
-const mosaic: Draw = ({ r, id }) => {
+const mosaic: Draw = ({ r, id, C }) => {
     const cols = 7 + Math.floor(r() * 4);
     const rows = Math.max(3, Math.round(cols * 0.6));
     const cw = W / cols;
@@ -394,7 +446,7 @@ const mosaic: Draw = ({ r, id }) => {
 };
 
 /** Big offset circle outlines, like overlapping lenses. */
-const lens: Draw = ({ r, id }) => {
+const lens: Draw = ({ r, id, C }) => {
     const soft = `url(#${id("soft")})`;
     const count = 3 + Math.floor(r() * 3);
     const cx = 40 + r() * 80;
@@ -426,7 +478,7 @@ const lens: Draw = ({ r, id }) => {
 };
 
 /** Arc segments sweeping around a point. */
-const spiral: Draw = ({ r, id }) => {
+const spiral: Draw = ({ r, id, C }) => {
     const soft = `url(#${id("soft")})`;
     const cx = 40 + r() * 80;
     const cy = 25 + r() * 50;
@@ -465,7 +517,7 @@ const spiral: Draw = ({ r, id }) => {
 };
 
 /** Thick diagonal bars with rounded ends. */
-const stripes: Draw = ({ r, id }) => {
+const stripes: Draw = ({ r, id, C }) => {
     const soft = `url(#${id("soft")})`;
     const count = 4 + Math.floor(r() * 4);
     const lean = r() < 0.5 ? -1 : 1;
@@ -529,11 +581,19 @@ export function Art({
     slug,
     index = 0,
     className = "",
+    literal = false,
+    width,
+    height,
 }: {
     slug: string;
     /** Chronological rank of the post, oldest = 0. */
     index?: number;
     className?: string;
+    /** Inline literal light-theme colors instead of CSS variables, for
+     *  renderers without a stylesheet. */
+    literal?: boolean;
+    width?: number;
+    height?: number;
 }) {
     const seed = hash(slug);
     const r = rng(seed);
@@ -548,17 +608,23 @@ export function Art({
     const uid = `${seed.toString(36)}${index}`;
     const id = (name: string) => `art-${uid}-${name}`;
     const angle = Math.floor(r() * 360);
+    const palette = literal ? literalPalette(h, h2) : VARS;
+    const C = palette.ramp;
 
     return (
         <svg
             viewBox={`0 0 ${W} ${H}`}
             preserveAspectRatio="xMidYMid slice"
+            width={width}
+            height={height}
             className={`art ${className}`}
             style={
-                {
-                    "--art-h": h.toFixed(1),
-                    "--art-h2": h2.toFixed(1),
-                } as React.CSSProperties
+                literal
+                    ? undefined
+                    : ({
+                          "--art-h": h.toFixed(1),
+                          "--art-h2": h2.toFixed(1),
+                      } as React.CSSProperties)
             }
             aria-hidden
         >
@@ -581,8 +647,8 @@ export function Art({
                     id={id("bg")}
                     gradientTransform={`rotate(${(angle + 45) % 360} 0.5 0.5)`}
                 >
-                    <stop offset="0%" stopColor="var(--art-bg)" />
-                    <stop offset="100%" stopColor="var(--art-bg2)" />
+                    <stop offset="0%" stopColor={palette.bg} />
+                    <stop offset="100%" stopColor={palette.bg2} />
                 </linearGradient>
                 {/* Generous region so the blur isn't clipped at the edges. */}
                 <filter
@@ -605,7 +671,7 @@ export function Art({
                 </filter>
             </defs>
             <rect width={W} height={H} fill={`url(#${id("bg")})`} />
-            {draw({ r, id })}
+            {draw({ r, id, C })}
         </svg>
     );
 }
