@@ -8,8 +8,7 @@ import { createPortal } from "react-dom";
  * it also copies the full link and says so.
  *
  * The toast is portalled to <body> rather than rendered in the heading, so
- * it never becomes part of the article's text — Listen reads that aloud.
- * Like the resume toast, it rises above a bottom player bar via --listen-bar.
+ * it never becomes part of the heading's text.
  */
 export function HeadingAnchor({ slug }: { slug: string }) {
     const [copied, setCopied] = useState(false);
@@ -21,7 +20,6 @@ export function HeadingAnchor({ slug }: { slug: string }) {
                 href={`#${slug}`}
                 aria-label="Copy link to this section"
                 className="anchor"
-                data-listen-skip
                 onClick={() => {
                     const url = new URL(`#${slug}`, window.location.href);
                     navigator.clipboard?.writeText(url.href).catch(() => {});
@@ -34,7 +32,7 @@ export function HeadingAnchor({ slug }: { slug: string }) {
                 ? createPortal(
                       <div
                           role="status"
-                          className="fixed bottom-[calc(1.5rem_+_var(--listen-bar,0px))] left-1/2 z-50 -translate-x-1/2 rounded-full bg-neutral-900 px-3.5 py-1.5 text-[13px] text-white shadow-lg dark:bg-white dark:text-black"
+                          className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full bg-neutral-900 px-3.5 py-1.5 text-[13px] text-white shadow-lg dark:bg-white dark:text-black"
                       >
                           Link copied
                       </div>,

@@ -614,16 +614,16 @@ const DRAWINGS: { name: string; note: string; draw: Draw }[] = [
 ];
 
 /** The twelve compositions in the order `index` cycles through them. */
-export const COMPOSITIONS = DRAWINGS.map(({ name, note }) => ({ name, note }));
+const COMPOSITIONS = DRAWINGS.map(({ name, note }) => ({ name, note }));
 
 /**
  * A full turn of the wheel spread across the composition set, so a post's
  * shape and its color advance together and neighbours differ in both.
  */
-export const HUE_STEP = 360 / DRAWINGS.length;
+const HUE_STEP = 360 / DRAWINGS.length;
 
 /** Offsets cycle so pairings range from analogous to near-complementary. */
-export const HUE_OFFSETS = [42, 165, 70, -52, 198, -78, 120, 32];
+const HUE_OFFSETS = [42, 165, 70, -52, 198, -78, 120, 32];
 
 /** `firstDraw` is the slug's PRNG's first value, which only sets the jitter. */
 function hues(index: number, firstDraw: number) {

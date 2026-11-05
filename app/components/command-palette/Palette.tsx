@@ -1,9 +1,7 @@
 "use client";
 
 import {
-    BookmarkIcon,
     CalendarIcon,
-    ColorWheelIcon,
     CopyIcon,
     Cross2Icon,
     GitHubLogoIcon,
@@ -103,25 +101,11 @@ const PAGES: Destination[] = [
         icon: <HomeIcon />,
     },
     {
-        href: "/start-here",
-        label: "Start here",
-        keywords: "begin new reading paths guide themes",
-        detail: "Short reading paths through the archive, by theme.",
-        icon: <BookmarkIcon />,
-    },
-    {
         href: "/timeline",
         label: "Timeline",
         keywords: "chronology history years dates",
         detail: "The archive laid out in time, each post sized by its length.",
         icon: <CalendarIcon />,
-    },
-    {
-        href: "/art",
-        label: "Art studio",
-        keywords: "artwork generative playground wallpaper",
-        detail: "Draw the site’s generated artwork from any seed, and download it as a wallpaper.",
-        icon: <ColorWheelIcon />,
     },
     {
         href: "/about",

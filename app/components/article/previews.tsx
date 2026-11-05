@@ -117,8 +117,7 @@ function place(card: HTMLElement, anchor: HTMLElement, line: number) {
  * hover-intent timers, and dismissal. Links talk to it through context.
  *
  * The card is portalled to <body>: it's fixed, so it can't sit under a
- * transformed ancestor, and it must stay out of <article>, whose text
- * Listen reads aloud.
+ * transformed ancestor, and it stays out of the article's text.
  */
 export function PreviewProvider({ children }: { children: React.ReactNode }) {
     const [open, setOpen] = useState<Open | null>(null);
@@ -497,10 +496,7 @@ export function PreviewLink({
             {...handlers}
         >
             {children}
-            <span className="sr-only" data-listen-skip>
-                {" "}
-                (opens in a new tab)
-            </span>
+            <span className="sr-only"> (opens in a new tab)</span>
         </a>
     );
 }

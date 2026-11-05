@@ -462,11 +462,9 @@ export function ReadingChrome({
                 </dialog>
             ) : null}
 
-            {/* Lifted by --listen-bar, should a player bar be pinned to the
-                bottom of the screen at the same time. */}
             <div
                 role="status"
-                className="pointer-events-none fixed inset-x-4 bottom-[calc(1rem_+_var(--listen-bar,0px))] z-40 flex justify-center sm:inset-x-auto sm:right-6 sm:bottom-[calc(1.5rem_+_var(--listen-bar,0px))]"
+                className="pointer-events-none fixed inset-x-4 bottom-4 z-40 flex justify-center sm:inset-x-auto sm:right-6 sm:bottom-6"
             >
                 {bookmark ? (
                     <div className="pointer-events-auto flex w-full items-center gap-4 rounded-lg border border-neutral-200 bg-white py-3 pr-3 pl-4 shadow-[0_8px_30px_rgba(0,0,0,0.08)] sm:w-auto sm:max-w-md dark:border-neutral-800 dark:bg-neutral-950 dark:shadow-none">

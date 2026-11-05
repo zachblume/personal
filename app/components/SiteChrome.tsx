@@ -7,17 +7,11 @@ import { SITE } from "app/lib/site";
 export const PAD = "px-6 md:px-10 lg:px-16";
 
 /** Which page the chrome is on, so navigation can mark or skip it. */
-export type Section =
-    "home" | "about" | "start-here" | "timeline" | "art" | "article";
+export type Section = "home" | "about" | "timeline" | "article";
 
 type NavItem = { href: string; label: string; section: Section };
 
 const WRITING: NavItem = { href: "/", label: "Writing", section: "home" };
-const START_HERE: NavItem = {
-    href: "/start-here",
-    label: "Start here",
-    section: "start-here",
-};
 const TIMELINE: NavItem = {
     href: "/timeline",
     label: "Timeline",
@@ -26,13 +20,7 @@ const TIMELINE: NavItem = {
 const ABOUT: NavItem = { href: "/about", label: "About", section: "about" };
 
 /** Every page, in the order the footer lists them. */
-const SITEMAP: NavItem[] = [
-    WRITING,
-    START_HERE,
-    TIMELINE,
-    { href: "/art", label: "Art studio", section: "art" },
-    ABOUT,
-];
+const SITEMAP: NavItem[] = [WRITING, TIMELINE, ABOUT];
 
 function Signature({ current }: { current?: Section }) {
     return (
@@ -47,15 +35,14 @@ function Signature({ current }: { current?: Section }) {
 }
 
 /**
- * The header holds down to 360px: as the width runs out, Start here and
- * Timeline give way first. The footer lists every page and ⌘K reaches them
- * all, so nothing becomes unreachable.
+ * The header holds down to 360px: as the width runs out, Timeline gives way
+ * first. The footer lists every page and ⌘K reaches them all, so nothing
+ * becomes unreachable.
  */
 export function SiteHeader({ current }: { current: Section }) {
     // The signature already leads home, so Writing joins only elsewhere.
     const items = [
         ...(current === "home" ? [] : [{ ...WRITING, narrow: true }]),
-        { ...START_HERE, narrow: false },
         { ...TIMELINE, narrow: false },
         { ...ABOUT, narrow: true },
     ];

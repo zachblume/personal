@@ -26,8 +26,7 @@ const MARKER = `relative -top-[0.5em] ml-px inline-block rounded-[3px] px-[3px] 
  * a number; narrow ones fold the note away behind it, so it's a button.
  *
  * The note stays in the DOM straight after its marker, so anything reading
- * the article in order (a screen reader, Listen) reads it in place. The
- * numbers are skipped by Listen.
+ * the article in order (a screen reader) reads it in place.
  */
 export function Sidenote({
     n,
@@ -46,7 +45,7 @@ export function Sidenote({
             data-open={open ? "" : undefined}
         >
             {wide ? (
-                <span className={MARKER} aria-hidden data-listen-skip>
+                <span className={MARKER} aria-hidden>
                     {n}
                 </span>
             ) : (
@@ -56,7 +55,6 @@ export function Sidenote({
                     aria-controls={id}
                     aria-label={`Aside ${n}`}
                     onClick={() => setOpen(!open)}
-                    data-listen-skip
                     className={`${MARKER} cursor-pointer after:absolute after:-inset-2 after:content-[''] focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 aria-expanded:bg-neutral-900 aria-expanded:text-white dark:focus-visible:outline-white dark:aria-expanded:bg-white dark:aria-expanded:text-black`}
                 >
                     {n}
@@ -69,7 +67,6 @@ export function Sidenote({
             >
                 <span
                     aria-hidden
-                    data-listen-skip
                     className="mr-1.5 font-[family-name:var(--font-geist-mono)] text-[10.5px] tabular-nums text-neutral-400 group-hover/sn:text-neutral-900 dark:text-neutral-500 dark:group-hover/sn:text-white"
                 >
                     {n}

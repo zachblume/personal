@@ -96,10 +96,6 @@ export function getPosts(): Post[] {
         .reverse();
 }
 
-export function getPost(slug: string) {
-    return getPosts().find((post) => post.slug === slug);
-}
-
 /**
  * The fields that are safe and cheap to hand to a client component —
  * everything except the raw MDX and the full text.

@@ -41,9 +41,6 @@ app/
   timeline/             /timeline — every post on a time axis, with a by-year tally
   about/                About: bio, work (roles.ts), open source (github.ts, revalidates
                         hourly), pet photos, contact links
-  start-here/           /start-here — curated reading paths with per-reader progress
-  art/                  /art — the Art studio: any seed, any index, wallpaper downloads
-  api/listen/route.ts   Cartesia text-to-speech for Listen (see "Listen")
   global.css            Tailwind import + all `.prose` typography styles and misc utilities
   not-found.tsx
   sitemap.ts            Exports `baseUrl` — imported elsewhere for metadata
@@ -64,7 +61,6 @@ app/
     PostList.tsx / PostRow.tsx   The archive list (homepage and article "Past Writing")
     ReadingHistory.tsx  "You've read n of m" strip under the archive
     article/            Article page: reading bar (with the outline), sidenotes, link previews, Read next
-    listen/             Listen button + player (Cartesia audio, sentence highlighting)
     command-palette/    ⌘K palette; the dialog itself loads on first open
     BlogLink.tsx        A post row (date + title), shows a "previously read" icon for visited posts
     posts.tsx           BlogPosts — sorted list of BlogLink
@@ -73,7 +69,6 @@ app/
     LocalStorageLinkSyncer.tsx
   lib/posts.ts          getPosts(): every post with plain text, words, minutes, headings, art index
   lib/similarity.ts     TF-IDF over post prose, and the "Both about …" reasons — Read next
-  lib/cartesia.ts       Cartesia API version, model and voice
   lib/slugify.ts
   lib/site.ts           SITE: name, role, city, email, links, pet photos — shared bio constants
 public/                 zach.jpg (avatar), waldo/millie/luna.jpeg (pets)
@@ -96,9 +91,8 @@ Full-bleed, with a black-and-white interface. The only color on the page is the
 generated per-post artwork.
 
 - **Header** (every full-bleed page): signature, then Writing (off the homepage) ·
-  Start here · Timeline · About and a ⌘K search button. Start here and Timeline hide
-  on narrow screens; the palette and the footer reach everything. The **footer** is
-  the full sitemap.
+  Timeline · About and a ⌘K search button. Timeline hides on narrow screens; the
+  palette and the footer reach everything. The **footer** lists every page.
 - **Homepage** is the whole archive as an edge-to-edge listview: ordinal, artwork
   thumbnail, title, summary, date, hairline chevron. No hero, no CTA — the header
   rule sits directly on the first row. Rows highlight on hover.
@@ -160,9 +154,8 @@ Two things to know before touching it:
 - **`oklch`, not `hsl`.** Lightness and chroma stay perceptually even across hues;
   the same numbers in hsl make the yellows glare and the blues go muddy.
 
-`Art.tsx` exports `COMPOSITIONS`, `HUE_STEP`, `HUE_OFFSETS`, `hash` and
-`artParams(slug, index)` so pages that describe the art (the Art studio) never copy
-its math. When the same post's art appears twice on one page, give one copy an
+`Art.tsx` exports `hash` and `artParams(slug, index)` (a post's composition and two
+hues, without drawing it), so code that needs those never copies its math. When the same post's art appears twice on one page, give one copy an
 `idPrefix`: `url(#…)` resolves to the first matching id, and one inside a
 `display: none` subtree doesn't paint. Don't render `<Art>` during SSR inside a client
 component — its float coordinates differ in the last digit between Node and browsers,
@@ -207,22 +200,6 @@ Two Satori quirks shaped it:
   a `width` and `height`, `Art` crops its own viewBox to what `slice` would show, and
   turns the drawing on its side when the box is portrait: a centre crop to portrait
   keeps under half of a landscape composition.
-
-### Listen
-
-`<Listen slug>` (in `app/components/listen/`) renders a button under the post title
-when `CARTESIA_API_KEY` is set (Vercel: Production + Preview; locally `.env.local`), and
-nothing otherwise. The player segments the rendered `article.prose` into sentences
-(skipping `pre`, heading anchors and anything marked `data-listen-skip` — sidenote
-markers, injected UI), fetches each chunk's MP3 from `/api/listen`, highlights the
-sentence being read with the CSS Custom Highlight API, and wires up Media Session.
-
-`/api/listen` only voices the site's own words: it 403s unless the normalized text is a
-substring of that post's text, caps length, and returns `immutable` cache headers so
-Vercel's CDN serves repeats. It reads the MDX at request time, so `next.config.ts`
-traces `app/blog/posts/**` into it — keep that if you move the posts. Model, API
-version and the default voice are in `app/lib/cartesia.ts`; `CARTESIA_VOICE_ID`
-overrides the voice. Article pages are prerendered, so a key change needs a redeploy.
 
 ### Full-bleed pages
 

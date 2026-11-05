@@ -85,21 +85,18 @@ function Pre({ children, ...props }) {
     const language = code.className?.replace(/^language-/, "");
     const label = parseFilename(code["data-meta"]) ?? language;
 
-    // data-listen-skip: the label and button are chrome, not prose to read.
     return (
         <figure className="code-block group">
             {label ? (
-                <figcaption data-listen-skip>
+                <figcaption>
                     <span className="truncate">{label}</span>
                     <CopyButton text={source} />
                 </figcaption>
             ) : (
-                <span data-listen-skip className="contents">
-                    <CopyButton
-                        text={source}
-                        className="absolute right-3 top-2.5 z-10 font-mono text-xs opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
-                    />
-                </span>
+                <CopyButton
+                    text={source}
+                    className="absolute right-3 top-2.5 z-10 font-mono text-xs opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+                />
             )}
             <pre {...props}>{children}</pre>
         </figure>

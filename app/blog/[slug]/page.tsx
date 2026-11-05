@@ -8,7 +8,6 @@ import { ReadingChrome } from "app/components/article/ReadingChrome";
 import { ReadNext } from "app/components/article/ReadNext";
 import { Sidenote } from "app/components/article/Sidenote";
 import { toSidenotes } from "app/components/article/sidenotes";
-import { Listen } from "app/components/listen/Listen";
 import { CustomMDX } from "app/components/mdx";
 import { PostList } from "app/components/PostList";
 import { PAD, SiteFooter, SiteHeader } from "app/components/SiteChrome";
@@ -124,7 +123,7 @@ export default async function Blog({ params }: BlogProps) {
                         <h1 className="title font-semibold text-2xl tracking-tighter">
                             {post.title}
                         </h1>
-                        <div className="mt-2 mb-8 flex min-h-8 items-center justify-between gap-4 text-sm">
+                        <div className="mt-2 mb-8 text-sm">
                             <p className="flex flex-wrap items-baseline gap-x-3 text-sm text-neutral-600 dark:text-neutral-400">
                                 <time dateTime={post.publishedAt}>
                                     {post.date}
@@ -133,7 +132,6 @@ export default async function Blog({ params }: BlogProps) {
                                     {post.minutes} min read
                                 </span>
                             </p>
-                            <Listen slug={post.slug} />
                         </div>
                         <article className="prose">
                             <CustomMDX
