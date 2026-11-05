@@ -4,24 +4,16 @@ publishedAt: "2026-11-04"
 summary: "How the art on this site gets made, plus a thing to play with"
 ---
 
-When I redid this site I went black and white for basically everything, so the
-only color left is the little picture next to each post. Those are all generated
-in code -- there aren't any image files, each one gets drawn from the post when
-the site builds.
+I wanted to add some color to this site. Everything else here is black and
+white, so the little picture next to each post is pretty much the only color
+anywhere.
 
-The first version worked out the shape and colors from the post's name. That
-seemed fine until I looked at the whole list together and one shape was on 4 of
-13 posts, and 7 of 13 were some kind of blue-purple. So I learned that a
-scrambled name doesn't actually spread things out, it just kind of clumps.
+I thought about using AI generated images for those, but so far I've settled on
+procedurally generated ones, which I prototyped with Claude. There aren't any
+image files -- each picture gets drawn in code from the post itself when the
+site builds, so every post ends up with its own.
 
-Now it goes by order instead. The oldest post gets the first shape and color,
-the next post gets the next one, and it keeps going around the color wheel from
-there, which means two posts next to each other never look alike. The name still
-gets used for the small stuff, like where the shapes sit, so two posts with the
-same shape still come out different. And new posts just get added on the end, so
-publishing something doesn't change any of the old pictures.
-
-Anyways -- the actual thing that draws them is below. Type in whatever you want,
+You can play with the thing that draws them below. Type in whatever you want,
 click around, and if you like one you can download it as a wallpaper.
 
 <ArtStudio />
