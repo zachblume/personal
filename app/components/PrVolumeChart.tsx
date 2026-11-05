@@ -69,8 +69,8 @@ const TOOLS: {
     row?: number;
 }[] = [
     { month: "2023-05", name: "Aider" },
-    { month: "2024-04", name: "SWE-agent, Sweep" },
-    { month: "2024-08", name: "Tusk" },
+    { month: "2024-04", name: "SWE-agent, sweep.dev" },
+    { month: "2024-08", name: "usetusk.ai" },
     { month: "2025-03", name: "Claude Code" },
     { month: "2025-04", name: "Devin" },
     { month: "2025-06", name: "Codex" },
