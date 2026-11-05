@@ -147,6 +147,185 @@
     border-color: #262626;
 }
 
+/* Work: one row per role, its artwork beside it. */
+.roles,
+.repos {
+    border-top: 1px solid #e5e5e5;
+}
+
+.role {
+    display: grid;
+    grid-template-columns: 104px minmax(0, 1fr);
+    gap: 18px;
+    align-items: start;
+    padding: 18px 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.roleArt {
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+}
+
+.roleArt :global(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.roleHead {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.roleHead a {
+    color: #171717;
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 4px;
+}
+
+.roleHead a:hover {
+    text-decoration-color: currentColor;
+}
+
+.roleTitle {
+    margin-top: 2px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #525252;
+}
+
+.host {
+    color: #a3a3a3;
+}
+
+.roleText {
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #525252;
+}
+
+.writing {
+    margin-top: 10px;
+    display: grid;
+    gap: 4px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.writing a {
+    color: #525252;
+    text-decoration: underline;
+    text-decoration-color: #d4d4d4;
+    text-underline-offset: 3px;
+}
+
+.writing a:hover {
+    color: #171717;
+    text-decoration-color: currentColor;
+}
+
+.meta {
+    flex-shrink: 0;
+    font-family: var(--font-geist-mono), monospace;
+    font-size: 11px;
+    line-height: 1.6;
+    color: #a3a3a3;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Open source: text only, so the pets stay the pictures on the page. */
+.repo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 16px;
+    row-gap: 2px;
+    align-items: baseline;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e5e5;
+    color: #262626;
+}
+
+.repoName {
+    font-size: 14px;
+    font-weight: 500;
+    color: #171717;
+}
+
+.repoText {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    overflow: hidden;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #737373;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.repo:hover .repoName {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.more {
+    margin-top: 14px;
+    font-family: var(--font-geist-mono), monospace;
+    font-size: 12px;
+    color: #737373;
+}
+
+.more a:hover {
+    color: #171717;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+:global(.dark) .roles,
+:global(.dark) .repos,
+:global(.dark) .role,
+:global(.dark) .repo,
+:global(.dark) .roleArt {
+    border-color: #262626;
+}
+
+:global(.dark) .roleHead a,
+:global(.dark) .repoName,
+:global(.dark) .writing a:hover,
+:global(.dark) .more a:hover {
+    color: #f5f5f5;
+}
+
+:global(.dark) .roleTitle,
+:global(.dark) .roleText,
+:global(.dark) .writing a {
+    color: #a3a3a3;
+}
+
+:global(.dark) .writing a {
+    text-decoration-color: #525252;
+}
+
+:global(.dark) .host,
+:global(.dark) .meta {
+    color: #737373;
+}
+
+:global(.dark) .repoText,
+:global(.dark) .more {
+    color: #a3a3a3;
+}
+
 @media (hover: hover) {
     .avatar:hover,
     .pet:hover img {
@@ -230,6 +409,11 @@
 @media (max-width: 480px) {
     .content {
         padding-top: 40px;
+    }
+
+    .role {
+        grid-template-columns: 72px minmax(0, 1fr);
+        gap: 14px;
     }
 
     .avatar {

@@ -3,7 +3,6 @@ import { getBlogPosts } from "app/blog/utils";
 import { ArticleLink } from "app/components/article/ArticleLink";
 import { CurrentSectionProvider } from "app/components/article/CurrentSection";
 import { articleHeadings } from "app/components/article/headings";
-import { Outline } from "app/components/article/Outline";
 import { PreviewProvider } from "app/components/article/previews";
 import { ReadingChrome } from "app/components/article/ReadingChrome";
 import { ReadNext } from "app/components/article/ReadNext";
@@ -65,8 +64,8 @@ export async function generateMetadata({ params }: BlogProps) {
 /*
  * The reading column. From lg up the right margin holds the sidenotes (each
  * hangs 17rem past the text): at lg that's reserved inside the column, which
- * pushes the text left of centre; from xl there's room on both sides, so the
- * text centres and the outline takes the left margin. Headings land below
+ * pushes the text left of centre; from xl there's room for them past a
+ * centred column. The outline lives in the reading bar. Headings land below
  * the reading bar after a jump.
  */
 const COLUMN =
@@ -144,11 +143,6 @@ export default async function Blog({ params }: BlogProps) {
                         </article>
                         {/* The last notes can hang past the final paragraph. */}
                         <div className="clear-both" />
-                        <aside className="absolute inset-y-16 right-full mr-16 hidden w-48 xl:block">
-                            <div className="sticky top-20">
-                                <Outline headings={headings} />
-                            </div>
-                        </aside>
                     </ReadingChrome>
                 </PreviewProvider>
             </CurrentSectionProvider>

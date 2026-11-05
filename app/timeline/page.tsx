@@ -1,4 +1,3 @@
-import { ViewSwitcher } from "app/components/archive/ViewSwitcher";
 import { PAD, SiteFooter, SiteHeader } from "app/components/SiteChrome";
 import { getPosts, shortDate, toClientPost } from "app/lib/posts";
 import { buildTimeline } from "app/timeline/geometry";
@@ -23,10 +22,7 @@ export default function TimelinePage() {
 
     return (
         <div className="full-bleed min-h-screen w-full bg-white dark:bg-black">
-            <SiteHeader
-                current="timeline"
-                actions={<ViewSwitcher current="timeline" />}
-            />
+            <SiteHeader current="timeline" />
             <section
                 aria-labelledby="timeline-title"
                 className={`${PAD} py-12`}
@@ -35,12 +31,13 @@ export default function TimelinePage() {
                     <div>
                         <h1
                             id="timeline-title"
-                            className="font-[family-name:var(--font-geist-sans)]! text-[12px] uppercase tracking-wider! text-neutral-400 dark:text-neutral-500"
+                            className="font-[family-name:var(--font-editorial)] text-[34px] leading-[1.08] tracking-[-0.025em] text-neutral-900 md:text-[44px] dark:text-white"
                         >
-                            {t.total.posts} posts since {t.firstMonth}
+                            Timeline
                         </h1>
-                        <p className="mt-2 max-w-md text-[14px] leading-relaxed text-neutral-500 dark:text-neutral-400">
-                            Each disc is a post&rsquo;s artwork, its area the
+                        <p className="mt-3 max-w-md text-[15px] leading-relaxed text-neutral-500 dark:text-neutral-400">
+                            {t.total.posts} posts since {t.firstMonth}. Each
+                            disc is a post&rsquo;s artwork, its area the
                             post&rsquo;s length in words.
                         </p>
                     </div>

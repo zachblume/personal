@@ -64,14 +64,7 @@ export default function ArtPage() {
                     Every post here has artwork drawn in code from two inputs:
                     its slug and its place in the archive. Here you choose both.
                     Type any seed, step through the index, and download what you
-                    like as a wallpaper. The{" "}
-                    <Link
-                        href="/colophon#artwork"
-                        className="text-neutral-900 underline decoration-neutral-300 underline-offset-2 hover:decoration-neutral-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:text-neutral-100 dark:decoration-neutral-700 dark:hover:decoration-white dark:focus-visible:outline-white"
-                    >
-                        colophon
-                    </Link>{" "}
-                    explains how it works.
+                    like as a wallpaper.
                 </p>
             </div>
 

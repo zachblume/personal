@@ -8,15 +8,7 @@ export const PAD = "px-6 md:px-10 lg:px-16";
 
 /** Which page the chrome is on, so navigation can mark or skip it. */
 export type Section =
-    | "home"
-    | "about"
-    | "work"
-    | "start-here"
-    | "constellation"
-    | "timeline"
-    | "art"
-    | "colophon"
-    | "article";
+    "home" | "about" | "start-here" | "timeline" | "art" | "article";
 
 type NavItem = { href: string; label: string; section: Section };
 
@@ -26,22 +18,19 @@ const START_HERE: NavItem = {
     label: "Start here",
     section: "start-here",
 };
-const WORK: NavItem = { href: "/work", label: "Work", section: "work" };
+const TIMELINE: NavItem = {
+    href: "/timeline",
+    label: "Timeline",
+    section: "timeline",
+};
 const ABOUT: NavItem = { href: "/about", label: "About", section: "about" };
 
 /** Every page, in the order the footer lists them. */
 const SITEMAP: NavItem[] = [
     WRITING,
     START_HERE,
-    WORK,
-    {
-        href: "/constellation",
-        label: "Constellation",
-        section: "constellation",
-    },
-    { href: "/timeline", label: "Timeline", section: "timeline" },
+    TIMELINE,
     { href: "/art", label: "Art studio", section: "art" },
-    { href: "/colophon", label: "Colophon", section: "colophon" },
     ABOUT,
 ];
 
@@ -58,32 +47,18 @@ function Signature({ current }: { current?: Section }) {
 }
 
 /**
- * `actions` is page-specific controls set between the signature and the
- * navigation — the homepage puts its archive view switcher there.
- *
- * The header has to hold all of it down to 360px, so as the width runs out
- * the navigation gives way before the actions do, least-needed first: Start
- * here and Work, then the rest. The footer lists every page and ⌘K reaches
- * them all, so nothing becomes unreachable.
+ * The header holds down to 360px: as the width runs out, Start here and
+ * Timeline give way first. The footer lists every page and ⌘K reaches them
+ * all, so nothing becomes unreachable.
  */
-export function SiteHeader({
-    current,
-    actions,
-}: {
-    current: Section;
-    actions?: React.ReactNode;
-}) {
+export function SiteHeader({ current }: { current: Section }) {
     // The signature already leads home, so Writing joins only elsewhere.
     const items = [
         ...(current === "home" ? [] : [{ ...WRITING, narrow: true }]),
         { ...START_HERE, narrow: false },
-        { ...WORK, narrow: false },
+        { ...TIMELINE, narrow: false },
         { ...ABOUT, narrow: true },
     ];
-    // Breakpoints from the widths involved: the homepage's switcher is about
-    // 290px with its labels, and "Ctrl K" makes the trigger about 95px.
-    const nav = actions ? "hidden md:flex" : "flex";
-    const roomy = actions ? "hidden lg:block" : "hidden sm:block";
 
     return (
         <header
@@ -91,12 +66,9 @@ export function SiteHeader({
         >
             <Signature current={current} />
             <div className="ml-auto flex items-center gap-4 md:gap-6">
-                {actions ? (
-                    <div className="flex items-center">{actions}</div>
-                ) : null}
                 <nav
                     aria-label="Primary"
-                    className={`${nav} items-center gap-5 text-[13px] md:gap-6 lg:gap-7`}
+                    className="flex items-center gap-5 text-[13px] md:gap-6 lg:gap-7"
                 >
                     {items.map((item) => (
                         <Link
@@ -108,7 +80,7 @@ export function SiteHeader({
                             className={
                                 item.narrow
                                     ? styles.link
-                                    : `${styles.link} ${roomy}`
+                                    : `${styles.link} hidden sm:block`
                             }
                         >
                             {item.label}

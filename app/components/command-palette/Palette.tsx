@@ -1,29 +1,19 @@
 "use client";
 
 import {
-    choose as chooseView,
-    VIEWS as ARCHIVE_VIEWS,
-} from "app/components/archive/viewStore";
-import {
-    BackpackIcon,
     BookmarkIcon,
     CalendarIcon,
     ColorWheelIcon,
     CopyIcon,
     Cross2Icon,
     GitHubLogoIcon,
-    GridIcon,
     HomeIcon,
-    ListBulletIcon,
     MagnifyingGlassIcon,
     MoonIcon,
     PersonIcon,
-    PilcrowIcon,
     ReaderIcon,
     ShuffleIcon,
-    StarIcon,
     SunIcon,
-    TextAlignLeftIcon,
 } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
@@ -43,7 +33,7 @@ import { SITE } from "app/lib/site";
 type Heading = PalettePost["headings"][number];
 
 /** Where a command is listed. */
-type CommandGroup = "Pages" | "Archive views" | "Actions";
+type CommandGroup = "Pages" | "Actions";
 
 type Command = {
     id: string;
@@ -94,13 +84,7 @@ const MIN_OF_BEST = 0.4;
 const SECONDARY = 1;
 
 /** While searching, groups sort by their best match; ties keep this order. */
-const SEARCH_GROUPS = [
-    "Posts",
-    "Sections",
-    "Pages",
-    "Archive views",
-    "Actions",
-] as const;
+const SEARCH_GROUPS = ["Posts", "Sections", "Pages", "Actions"] as const;
 
 type Destination = {
     href: string;
@@ -126,20 +110,6 @@ const PAGES: Destination[] = [
         icon: <BookmarkIcon />,
     },
     {
-        href: "/work",
-        label: "Work",
-        keywords: "portfolio projects jobs career resume open source",
-        detail: "Roles, companies and open-source projects.",
-        icon: <BackpackIcon />,
-    },
-    {
-        href: "/constellation",
-        label: "Constellation",
-        keywords: "map graph related similar network",
-        detail: "Every post on one map, linked by the vocabulary they share.",
-        icon: <StarIcon />,
-    },
-    {
         href: "/timeline",
         label: "Timeline",
         keywords: "chronology history years dates",
@@ -154,43 +124,12 @@ const PAGES: Destination[] = [
         icon: <ColorWheelIcon />,
     },
     {
-        href: "/colophon",
-        label: "Colophon",
-        keywords: "how made design typography fonts stack",
-        detail: "How the site is made: type, color, the artwork and the stack.",
-        icon: <PilcrowIcon />,
-    },
-    {
         href: "/about",
         label: "About",
-        keywords: "bio contact zach me",
-        detail: "Bio, the pets, and how to get in touch.",
+        keywords:
+            "bio contact zach me work portfolio jobs career resume open source projects",
+        detail: "Bio, work, open source, the pets, and how to get in touch.",
         icon: <PersonIcon />,
-    },
-];
-
-/** The homepage's layouts, which it reads from `?view=`. */
-const VIEWS: Destination[] = [
-    {
-        href: "/?view=list",
-        label: "List view",
-        keywords: "archive layout homepage rows",
-        detail: "The archive as rows: artwork, title, summary and date.",
-        icon: <ListBulletIcon />,
-    },
-    {
-        href: "/?view=grid",
-        label: "Grid view",
-        keywords: "archive layout homepage artwork tiles",
-        detail: "The archive as a grid, artwork first.",
-        icon: <GridIcon />,
-    },
-    {
-        href: "/?view=index",
-        label: "Index view",
-        keywords: "archive layout homepage dense titles years",
-        detail: "Titles only, grouped by year, like the index of a book.",
-        icon: <TextAlignLeftIcon />,
     },
 ];
 
@@ -376,7 +315,6 @@ function search(
             { label: "Suggested", items: suggested.map(blank) },
             { label: "Pages", items: commands("Pages") },
             { label: "Actions", items: commands("Actions") },
-            { label: "Archive views", items: commands("Archive views") },
         ];
     } else {
         const run = (min: number) => {
@@ -536,34 +474,17 @@ export function Palette({
     const unread = posts.filter((post) => !read.has(post.slug));
     const isDark = resolvedTheme === "dark";
 
-    /** On the archive already: a same-route push wouldn't make it re-read
-     *  `?view=`, so switch it in place (which also gets the crossfade). */
-    const switchView = (href: string) => {
-        const view = new URL(href, window.location.href).searchParams.get(
-            "view",
-        );
-        const inPlace = ARCHIVE_VIEWS.find((v) => v === view);
-        if (window.location.pathname !== "/" || !inPlace) return false;
-        onClose(false);
-        chooseView(inPlace);
-        return true;
-    };
-
     const destination =
         (group: CommandGroup) =>
         ({ href, ...rest }: Destination): Command => ({
-            id: `${group === "Pages" ? "page" : "view"}:${href}`,
+            id: `page:${href}`,
             group,
             ...rest,
-            run: () => {
-                if (group === "Archive views" && switchView(href)) return;
-                go(href);
-            },
+            run: () => go(href),
         });
 
     const commands: Command[] = [
         ...PAGES.map(destination("Pages")),
-        ...VIEWS.map(destination("Archive views")),
         {
             id: "theme",
             group: "Actions",

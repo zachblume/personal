@@ -2,7 +2,7 @@ import type { Post } from "app/lib/posts";
 
 /**
  * Server-only. TF-IDF over post prose, for "these two posts are about the
- * same thing" — Read next and the constellation.
+ * same thing" — the Read next list under each article.
  */
 
 const STOPWORDS = new Set(
@@ -71,14 +71,6 @@ export function sharedTerms(a: Vector, b: Vector, limit = 5) {
         if (other) shared.push([term, w * other]);
     }
     return shared
-        .sort((x, y) => y[1] - x[1])
-        .slice(0, limit)
-        .map(([term]) => term);
-}
-
-/** A post's most distinctive terms. */
-export function topTerms(v: Vector, limit = 8) {
-    return [...v.entries()]
         .sort((x, y) => y[1] - x[1])
         .slice(0, limit)
         .map(([term]) => term);

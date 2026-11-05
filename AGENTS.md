@@ -37,14 +37,12 @@ app/
   layout.tsx            Root layout: html > body > ThemeProvider > Theme > main, plus the
                         ⌘K CommandPalette (outside <main>). Body is width-constrained:
                         `max-w-xl mx-4 lg:mx-auto`
-  page.tsx              Homepage: the archive with a List / Grid / Index view switcher
+  page.tsx              Homepage: full-bleed list of every post (PostList)
   timeline/             /timeline — every post on a time axis, with a by-year tally
-  about/page.tsx        About: bio, pet photos, contact links
-  work/                 /work — roles (from lib/site.ts) and recent GitHub repos (revalidates hourly)
+  about/                About: bio, work (roles.ts), open source (github.ts, revalidates
+                        hourly), pet photos, contact links
   start-here/           /start-here — curated reading paths with per-reader progress
-  constellation/        /constellation — posts as a map linked by shared vocabulary
   art/                  /art — the Art studio: any seed, any index, wallpaper downloads
-  colophon/             /colophon — how the site is made, plus numbers on the writing
   api/listen/route.ts   Cartesia text-to-speech for Listen (see "Listen")
   global.css            Tailwind import + all `.prose` typography styles and misc utilities
   not-found.tsx
@@ -63,10 +61,9 @@ app/
   components/
     SiteChrome.tsx      SiteHeader (nav, ⌘K button, an `actions` slot) and SiteFooter (sitemap)
     Link.tsx            Wrapper over next/link; also records visits in localStorage
-    PostList.tsx / PostRow.tsx   The archive list (homepage List view and article "Past Writing")
+    PostList.tsx / PostRow.tsx   The archive list (homepage and article "Past Writing")
     ReadingHistory.tsx  "You've read n of m" strip under the archive
-    archive/            Homepage views, the view switcher and its no-flash store
-    article/            Article page: reading chrome, outline, sidenotes, link previews, Read next
+    article/            Article page: reading bar (with the outline), sidenotes, link previews, Read next
     listen/             Listen button + player (Cartesia audio, sentence highlighting)
     command-palette/    ⌘K palette; the dialog itself loads on first open
     BlogLink.tsx        A post row (date + title), shows a "previously read" icon for visited posts
@@ -75,7 +72,7 @@ app/
     EmailLink.tsx       Obfuscated mailto link
     LocalStorageLinkSyncer.tsx
   lib/posts.ts          getPosts(): every post with plain text, words, minutes, headings, art index
-  lib/similarity.ts     TF-IDF over post prose — Read next and the constellation
+  lib/similarity.ts     TF-IDF over post prose, and the "Both about …" reasons — Read next
   lib/cartesia.ts       Cartesia API version, model and voice
   lib/slugify.ts
   lib/site.ts           SITE: name, role, city, email, links, pet photos — shared bio constants
@@ -99,23 +96,23 @@ Full-bleed, with a black-and-white interface. The only color on the page is the
 generated per-post artwork.
 
 - **Header** (every full-bleed page): signature, then Writing (off the homepage) ·
-  Start here · Work · About and a ⌘K search button. Lower-priority links hide on
-  narrow screens; the palette and the footer reach everything. The **footer** is the
-  full sitemap.
-- **Homepage** is the whole archive, edge to edge, in one of three views chosen from a
-  switcher in the header: **List** (ordinal, artwork thumbnail, title, summary, date,
-  hairline chevron), **Grid** (art cards), **Index** (dense, by year, no art). A fourth
-  option links to `/timeline`. The choice lives in `?view=` and localStorage; an inline
-  script applies it before first paint. No hero, no CTA — the header rule sits directly
-  on the first row. Rows highlight on hover.
-- **About** (`/about`) holds the bio, the avatar, the three pet photos (grayscale,
-  colorizing on hover), and contact links.
-- **Article pages** have a centered `max-w-xl` reading column. At `xl` the outline sits
-  in the left margin; from `lg` long parentheticals (4+ words) are set as sidenotes in
-  the right margin, automatically, by a transform of the MDX source (inline expanders on
-  narrow screens). A fixed reading bar appears once the title scrolls away: current
-  section (opens the outline on any screen), minutes left, a progress rule, and a
-  resume prompt on return. Links to other posts show a preview card on hover. After
+  Start here · Timeline · About and a ⌘K search button. Start here and Timeline hide
+  on narrow screens; the palette and the footer reach everything. The **footer** is
+  the full sitemap.
+- **Homepage** is the whole archive as an edge-to-edge listview: ordinal, artwork
+  thumbnail, title, summary, date, hairline chevron. No hero, no CTA — the header
+  rule sits directly on the first row. Rows highlight on hover.
+- **About** (`/about`) is also the portfolio, in one quiet column: the bio and avatar;
+  **Work** (each role with its own generated artwork and the posts about it); **Open
+  source** (recent public repos, text only); the three pet photos (grayscale,
+  colorizing on hover); and contact links. Roles live in `app/about/roles.ts` with
+  optional `description` / `dates` fields that render only when set.
+- **Article pages** have a centered `max-w-xl` reading column. From `lg` long
+  parentheticals (4+ words) are set as sidenotes in the right margin, automatically, by
+  a transform of the MDX source (inline expanders on narrow screens). A fixed reading
+  bar appears once the title scrolls away: current section (opens the outline — the
+  only table of contents), minutes left, a progress rule, and a resume prompt on
+  return. Links to other posts show a preview card on hover. After
   the article: **Read next** (the three most similar posts by TF-IDF, not by date), then
   the archive list. The blog index keeps the narrow reading column from the root layout.
 - Body font is **Geist Sans**, code is **Geist Mono** (the `geist` package, which ships
@@ -133,8 +130,8 @@ contains, which is most of what stops these reading as charts.
 
 It takes two inputs:
 
-- **`index`** — the post's rank in _chronological_ order (oldest = 0), computed in
-  `app/components/PostList.tsx`. It picks the composition and the hue pair, so both advance
+- **`index`** — the post's rank in _chronological_ order (oldest = 0), computed once in
+  `app/lib/posts.ts` as `artIndex`. It picks the composition and the hue pair, so both advance
   together and neighbouring rows differ in shape and color.
 - **`slug`** — hashed (FNV-1a) to seed a mulberry32 PRNG for the parameters inside
   a composition, so two posts drawing the same shape still look unalike.
@@ -164,8 +161,8 @@ Two things to know before touching it:
   the same numbers in hsl make the yellows glare and the blues go muddy.
 
 `Art.tsx` exports `COMPOSITIONS`, `HUE_STEP`, `HUE_OFFSETS`, `hash` and
-`artParams(slug, index)` so pages that describe the art (the studio, the colophon) never
-copy its math. When the same post's art appears twice on one page, give one copy an
+`artParams(slug, index)` so pages that describe the art (the Art studio) never copy
+its math. When the same post's art appears twice on one page, give one copy an
 `idPrefix`: `url(#…)` resolves to the first matching id, and one inside a
 `display: none` subtree doesn't paint. Don't render `<Art>` during SSR inside a client
 component — its float coordinates differ in the last digit between Node and browsers,
