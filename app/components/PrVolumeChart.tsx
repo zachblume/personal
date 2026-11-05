@@ -1,4 +1,5 @@
 import { getArtIndex } from "app/blog/utils";
+import { Fragment } from "react";
 import { artHues } from "app/components/Art";
 
 /**
@@ -63,22 +64,43 @@ const MONTHS: [string, number][] = [
  */
 const TOOLS: {
     month: string;
-    name: string;
+    /** One or more tools that arrived the same month, each with its site. */
+    links: [name: string, href: string][];
     anchor?: "end";
     /** Override the date-order row, for a label with room higher up. */
     row?: number;
 }[] = [
-    { month: "2023-05", name: "Aider" },
-    { month: "2024-04", name: "SWE-agent, sweep.dev" },
-    { month: "2024-08", name: "usetusk.ai" },
-    { month: "2025-03", name: "Claude Code" },
-    { month: "2025-04", name: "Devin" },
-    { month: "2025-06", name: "Codex" },
-    { month: "2025-07", name: "Cursor agents" },
-    { month: "2025-09", name: "Copilot agent" },
-    { month: "2025-10", name: "Claude Code on the web" },
-    { month: "2025-11", name: "Conductor" },
-    { month: "2026-08", name: "Conductor cloud", anchor: "end", row: 3 },
+    { month: "2023-05", links: [["Aider", "https://aider.chat"]] },
+    {
+        month: "2024-04",
+        links: [
+            ["SWE-agent", "https://swe-agent.com"],
+            ["sweep.dev", "https://sweep.dev"],
+        ],
+    },
+    { month: "2024-08", links: [["usetusk.ai", "https://usetusk.ai"]] },
+    {
+        month: "2025-03",
+        links: [["Claude Code", "https://claude.com/claude-code"]],
+    },
+    { month: "2025-04", links: [["Devin", "https://devin.ai"]] },
+    { month: "2025-06", links: [["Codex", "https://openai.com/codex"]] },
+    { month: "2025-07", links: [["Cursor agents", "https://cursor.com"]] },
+    {
+        month: "2025-09",
+        links: [["Copilot agent", "https://github.com/features/copilot"]],
+    },
+    {
+        month: "2025-10",
+        links: [["Claude Code on the web", "https://claude.ai/code"]],
+    },
+    { month: "2025-11", links: [["Conductor", "https://conductor.build"]] },
+    {
+        month: "2026-08",
+        links: [["Conductor cloud", "https://conductor.build"]],
+        anchor: "end",
+        row: 3,
+    },
 ];
 const ROW_TOP = 36;
 const ROW = 14;
@@ -202,11 +224,11 @@ export function PrVolumeChart({ slug }: { slug: string }) {
                         </g>
                     );
                 })}
-                {TOOLS.map(({ month, name, anchor, row }, i) => {
+                {TOOLS.map(({ month, links, anchor, row }, i) => {
                     const x = monthX(month);
                     const rowY = ROW_TOP + (row ?? i) * ROW;
                     return (
-                        <g key={name}>
+                        <g key={month}>
                             <line
                                 x1={x}
                                 x2={x}
@@ -232,7 +254,19 @@ export function PrVolumeChart({ slug }: { slug: string }) {
                                 strokeWidth={3}
                                 className="fill-neutral-700 stroke-white dark:fill-neutral-300 dark:stroke-black"
                             >
-                                {name}
+                                {links.map(([name, href], j) => (
+                                    <Fragment key={name}>
+                                        {j > 0 ? ", " : null}
+                                        <a
+                                            href={href}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="no-underline! hover:underline!"
+                                        >
+                                            {name}
+                                        </a>
+                                    </Fragment>
+                                ))}
                             </text>
                         </g>
                     );
