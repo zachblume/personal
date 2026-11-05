@@ -6,6 +6,7 @@ import React from "react";
 import { slugify } from "app/lib/slugify";
 import { CopyButton } from "app/components/CopyButton";
 import { HeadingAnchor } from "app/components/HeadingAnchor";
+import { PrVolumeChart } from "app/components/PrVolumeChart";
 
 function Table({ data }) {
     const headers = data.headers.map((header, index) => (
@@ -139,6 +140,7 @@ const components = (headers) => ({
     h5: createHeading(5, headers),
     h6: createHeading(6, headers),
     Image: RoundedImage,
+    PrVolumeChart,
     a: CustomLink,
     code: Code,
     pre: Pre,

@@ -71,6 +71,17 @@ discovered are still useful for sure, and some of them are even more useful now
 than they were. But there are also hundreds or thousands of new patterns for
 how we'll write software that nobody has consolidated into best practices yet.
 
+For a sense of how much has changed, here's every pull request I've opened on
+my side project, by month:
+
+<PrVolumeChart slug="2026-11-04-patterns-in-agentic-coding" />
+
+For two years I was opening about 16 PRs a month. Then at the end of 2025 it
+sort of went vertical, and last month it was 631, about 20 a day. Most of that
+isn't me writing code anymore. A lot of what I do now is closer to managing a
+bunch of agents, and the patterns below are the stuff that made that possible
+without the whole codebase turning into slop.
+
 So I wanted to begin writing these down, both things I do at Stripe and things
 I do outside of Stripe on my side project. Here's a first batch.
 
@@ -112,8 +123,9 @@ video and voice together, that helps you reason extremely quickly. (It's
 probably the same reason a live demo in a meeting usually goes better than
 everyone reading the doc.)
 
-This has really begun redefining how I write software outside of Stripe. In a
-way it almost feels like scrolling TikTok. You're sending ideas at a bunch of
+This has really begun redefining how I write software outside of Stripe. About
+70% of my PRs on my side project link a video now. In a way it almost feels
+like scrolling TikTok. You're sending ideas at a bunch of
 parallel coding agents and getting back full demo videos in minutes, over and
 over.
 
@@ -149,6 +161,10 @@ export default [
     },
 ];
 ```
+
+My side project has about 50 of these now, with names like
+`no-supabase-or-postgres-mocking`, `no-vague-variable-names`, and
+`require-useeffect-explanation`.
 
 Humans mostly skipped writing these kinds of "purity" rules.
 Somebody would query the database from a controller once because there was a
@@ -194,41 +210,137 @@ checks what's on the screen will fail when the feature is actually broken,
 no matter who wrote either one.
 
 So I've ended up with a lot more tests at the top of the pyramid than I ever
-would have written by hand, and agents run them on every change. They're still
-slow, so it's worth spending some time making them run in parallel, but the
-tradeoff is way different than it used to be.
+would have written by hand, and agents run them on every change. The catch is
+they're still slow, and at some point the suite gets slow enough that it's the
+bottleneck. Recently I had an agent fold 1,459 end-to-end tests into 368
+longer scenario tests that walk through a whole flow each, mostly to cut the
+runner time in half. Having way too many end-to-end tests is a new kind of
+problem, and I kind of like having it.
 
-## 5. Run the same prompt a few times
+## 5. Architecture for agents
 
-When something is ambiguous I've mostly stopped trying to write the perfect
-prompt. I'll give roughly the same prompt to three or four agents in parallel
-and then pick whichever one came out best.
+I've changed my mind about a lot of architecture stuff in the last year. I used
+to like frameworks that let you write less code, and I'd mostly push back on
+heavy structure like domain-driven design, because all those layers and folders
+are a lot of boilerplate for a person to type. But codegen is basically free
+now, so the boilerplate argument mostly goes away, and what's left is the part
+where everything has one obvious place to live.
 
-Each attempt is basically free now, so the thing I'm actually short on is my
-own time reviewing them. It's a lot faster for me to look at a few working
-versions next to each other than to spec one out well enough that a single
-attempt gets it right. And looking at them usually tells me what I wanted in
-the first place, which I couldn't really have written down beforehand. A lot of
-the time the answer is something like "the second one, but with the layout
-from the third one," and that becomes the next prompt.
+That turns out to matter way more for agents than it did for people. If there's
+a model layer, a command layer (the pattern from the start of this post), a
+single place for data access, and a folder structure that says which domain
+owns what, then an agent can find the right spot and copy the shape of the code
+already there. Small things count too. I now prefer `db.peer_fundraisers` over
+`db.peerFundraisers` because it matches the table name, and that means an agent
+(or me) can grep for one string and find everything.
 
-This goes really well with the walkthrough videos, since four PRs is a lot of
-code to read but four short videos isn't.
+The other funny thing is that the migration itself got cheap. A big
+restructuring like this used to be the kind of suggestion where people would
+say "zach, that is an insane suggestion, please stop." Now I think it's more
+like: write a spec for the pattern and the folder structure, and an agent can do
+most of the migration in one go. It doesn't take nearly as much emotional
+effort as it used to.
 
-## 6. Build one to throw away
+## 6. Build the first one by hand
 
-Fred Brooks said to plan to throw one away, because you're going to anyways.
-That's an old one, and I think it got a lot more useful.
+Once a design is agreed on, it's really tempting to hand the whole design doc
+to an agent and get the entire project back in one PR. I do this a lot now,
+and it works surprisingly well. I've gotten a project to 80% in a single day
+this way, sometimes 10,000+ lines in one PR, merged behind a feature flag and
+then fixed up in follow-ups.
 
-If I don't really understand the problem yet, I'll have an agent build a fast,
-sloppy version first, just enough to run. Then I look at it, figure out what
-the thing should actually look like, delete the branch, and start over with a
-much better prompt.
+But I think it mostly works when there's already a really good example in the
+codebase of the thing you're asking for. The first feature of a new kind should
+get built slowly and carefully and reviewed line by line, because that's the
+one the agent is going to copy. After that, the next five similar features can
+go fast, because the agent has a model of what good looks like in your style.
 
-Actually deleting it is harder than it sounds. The sloppy version sort of
-works, and it's really tempting to just keep going from there. But an agent
-extending a prototype will happily build on top of every bad decision in it,
-and pretty soon you've got layers nobody understands.
+There's a limit, too. If a change touches something dangerous, like the query
+compiler or anything with money, I still want it in smaller pieces, even when
+the agent could do it all at once.
+
+## 7. Build the metric first
+
+On my side project we pull in campaign contribution data from every state, and
+every state does it a little differently, which is a great job for a big fan-out
+of agents. But before I pointed agents at it I spent a while on something
+boring: an accuracy page I could actually trust. That meant fixing the
+ground-truth samples (some of the hand-gathered ones were just wrong) and adding
+about a thousand new samples from official disclosures.
+
+Once that page was the north star, I opened one agent per state, and they all
+reported their results against the same numbers. A lot of them fixed their
+state. Some of them came back with a PR that only documented why the data
+couldn't be fixed yet, which honestly was the result I wanted from those
+states, and not a fake fix that looked good.
+
+I think this is the general version: before you fan out a lot of agents, build
+the scoreboard. Each agent is only as good as whatever it's being graded
+against, and if you can't trust the metric you'll get a lot of confident PRs
+that moved it in the wrong direction.
+
+## 8. Let a backtested reviewer approve PRs
+
+At 20-ish PRs a day, I can't review everything carefully, so I built an AI
+reviewer that rates every PR from 1 to 10 and is allowed to approve the safe
+ones on its own. The part I think is interesting is how it's kept honest. The
+final rating is the lowest of a few things: the model's rubric score, a set of
+hard caps from plain rules (migrations, auth, anything with money, big diffs), a
+cap whenever a serious finding is still open, and a second judge that only sees
+the title, description and diff. In my notes for it I wrote that "a model
+rating is easy to talk up," which is the whole reason for the caps.
+
+Then I tuned it like a model. I backtested it against the last 1,000 PRs,
+including a list of known-bad PRs that had caused real problems. The setting I
+landed on approves about 30% of PRs and would have let through 1 of the 7
+known-bad ones. When an approved PR does cause a problem, it goes on the
+known-bad list and the next backtest has to catch it.
+
+I'm not totally sure 30% is right. I think line count is a bad signal on its
+own, but the AI is decent at combining a bunch of signals, so the threshold is
+really a bet on that. It's a lot better than either reviewing everything
+myself or approving everything.
+
+## 9. Agents launching agents
+
+A lot of my agent sessions aren't started by me anymore. When a ticket gets
+created in Linear, it automatically turns into a Conductor workspace with an
+agent working it end to end, unless the ticket says "no conductor." There's
+also a Slack bot that can read the codebase and our support tickets, and if a
+conversation turns into "can we fix this," it can start a coding session,
+check in on it, and send it follow-ups.
+
+The hard part of this ended up being the handoff. The bot's instructions say
+"Write a self-contained brief. The coding agent cannot read this thread,"
+because the new agent starts with none of the conversation that led to it.
+They also say "Do not infer authorization from a request to start coding,"
+because an agent that's allowed to start another agent will happily read a lot
+of permission into a casual message.
+
+## 10. Own the code instead of buying it
+
+This one is less of a coding pattern and more of a business one. Because code
+is so cheap now, I keep ending up replacing vendors with code we own: a CSV
+import tool, a data grid library, a hosted job queue, an email editor, even our
+monitoring setup. A few years ago a lot of these would've been obviously wrong
+calls, the kind of thing where you'd spend a year maintaining something a
+company does better.
+
+I think the math is different now, and owning the code keeps turning out to be
+good. As long as it's good code, which, you know, I'm not sure about yet in
+every case. But it's a really different tradeoff than it was a few years ago.
+
+## 11. Notice when you followed Claude too far
+
+The last one is more of a warning. Every so often I'll be a few days into an
+agent-driven refactor and realize I don't really understand where it's going
+anymore. Each step made sense, the agent kept proposing reasonable next steps,
+and I kept saying yes, and now the code is in a state nobody actually chose.
+
+When that happens I think the right move is to stop and say it out loud, that I
+followed Claude too far, and then go back to talking it through with people
+about what end state we actually want before anything else gets written.
+Sometimes you just have to go "slop!" and recalibrate.
 
 ## More to come
 

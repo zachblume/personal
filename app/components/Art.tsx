@@ -594,6 +594,22 @@ const HUE_STEP = 360 / DRAWINGS.length;
 /** Offsets cycle so pairings range from analogous to near-complementary. */
 const HUE_OFFSETS = [42, 165, 70, -52, 198, -78, 120, 32];
 
+/** The duotone for a post. Draws from `r` first, so it must stay the PRNG's
+ *  first call in Art. */
+function pickHues(index: number, r: () => number) {
+    // A half-step of jitter keeps the sequence from looking like a color wheel
+    // without letting any two neighbours collide.
+    const jitter = (r() - 0.5) * HUE_STEP * 0.5;
+    const h = (index * HUE_STEP + jitter + 360) % 360;
+    const h2 = (h + HUE_OFFSETS[index % HUE_OFFSETS.length] + 360) % 360;
+    return { h, h2 };
+}
+
+/** A post's two artwork hues, for anything else that wants to match its art. */
+export function artHues(slug: string, index: number) {
+    return pickHues(index, rng(hash(slug)));
+}
+
 export function Art({
     slug,
     index = 0,
@@ -618,12 +634,7 @@ export function Art({
     const seed = hash(slug);
     const r = rng(seed);
     const draw = DRAWINGS[index % DRAWINGS.length];
-
-    // A half-step of jitter keeps the sequence from looking like a color wheel
-    // without letting any two neighbours collide.
-    const jitter = (r() - 0.5) * HUE_STEP * 0.5;
-    const h = (index * HUE_STEP + jitter + 360) % 360;
-    const h2 = (h + HUE_OFFSETS[index % HUE_OFFSETS.length] + 360) % 360;
+    const { h, h2 } = pickHues(index, r);
 
     const uid = `${seed.toString(36)}${index}`;
     const id = (name: string) => `art-${uid}-${name}`;
