@@ -77,10 +77,10 @@ my side project, by month:
 <PrVolumeChart slug="2026-11-04-patterns-in-agentic-coding" />
 
 For two years I was opening about 16 PRs a month. Then at the end of 2025 it
-sort of went vertical, and last month it was 631, about 20 a day. Most of that
-isn't me writing code anymore. A lot of what I do now is closer to managing a
-bunch of agents, and the patterns below are the stuff that made that possible
-without the whole codebase turning into slop.
+kind of went vertical, and last month it was 631, which is about 20 a day. I'm
+obviously not writing most of that code myself anymore. A lot of my day now is
+closer to managing a bunch of agents, and the stuff below is what's let me do
+that without the whole codebase turning into slop (mostly).
 
 So I wanted to begin writing these down, both things I do at Stripe and things
 I do outside of Stripe on my side project. Here's a first batch.
@@ -113,7 +113,23 @@ otherwise.
 
 This one is basically a prompt in `AGENTS.md` that tells the agent to always do
 a full end-to-end manual test of whatever it built and record a video of it,
-and then to add voice narration where the agent explains the walkthrough.
+and then to add voice narration where the agent explains the walkthrough. So
+now if I just go into Conductor and say "make this simple change and put up a
+PR," it comes back with a guided product tour of the change.
+
+Here's a real one, from a pretty small PR on my side project that hides the
+lists a contact is already on when you go to add them to a list. Everything in
+it is fake seed data. Turn your sound on:
+
+<video
+    controls
+    playsInline
+    preload="metadata"
+    poster="/videos/pr-walkthrough-add-to-list.jpg"
+    className="my-6 w-full rounded-lg border border-neutral-200 dark:border-neutral-800"
+>
+    <source src="/videos/pr-walkthrough-add-to-list.mp4" type="video/mp4" />
+</video>
 
 This sounds totally crazy, but it has become one of the most turnkey things
 that help me evaluate agentic PRs quickly. You can often tell that they're
@@ -124,17 +140,17 @@ probably the same reason a live demo in a meeting usually goes better than
 everyone reading the doc.)
 
 This has really begun redefining how I write software outside of Stripe. About
-70% of my PRs on my side project link a video now. In a way it almost feels
-like scrolling TikTok. You're sending ideas at a bunch of
-parallel coding agents and getting back full demo videos in minutes, over and
-over.
+70% of my PRs on my side project have a video now. In a way it almost feels
+like scrolling TikTok. You're sending ideas at a bunch of parallel coding
+agents and getting back full demo videos every few minutes, over and over.
 
 ## 3. Lint for purity
 
 One of the biggest changes I've seen is an explosion in custom linters that
 enforce coding standards and the shape of whatever framework you've built. The
-point is to give agents guidance that's deterministic, so they find out they
-did it wrong from a failing check instead of from me in review.
+idea is to give agents guidance that's deterministic, so they find out they
+did something wrong from a failing check, and I don't have to be the one who
+tells them in review.
 
 A good example is banning data access outside of a data access layer. In
 JavaScript that can be as simple as an ESLint rule:
@@ -162,19 +178,20 @@ export default [
 ];
 ```
 
-My side project has about 50 of these now, with names like
+My side project has about 50 custom rules now, with names like
 `no-supabase-or-postgres-mocking`, `no-vague-variable-names`, and
 `require-useeffect-explanation`.
 
-Humans mostly skipped writing these kinds of "purity" rules.
-Somebody would query the database from a controller once because there was a
-deadline, and then there were two ways to do it, and eventually five, and we
-all sort of lived in that mixed state because writing and maintaining the rule
-felt like more work than it was worth. And for people it kind of was, because
-you could just tell the new person how things were supposed to work.
+Before agents, we humans often skipped writing these kinds of "purity" rules
+and left ourselves in a more mixed state. Somebody would query the database
+from a controller once because there was a deadline, and then there were two
+ways to do it, and eventually five, and everyone sort of lived with it because
+writing and maintaining the rule felt like more work than it was worth. And for
+people it kind of was! You could just tell the new person how things were
+supposed to work.
 
-Agents really benefit from this, though, and I think they can go 10x faster
-when the guardrails are strict and clear. If the questions are already settled
+Agents really benefit from this stuff, though, and I think they can go 10x
+faster when the guardrails are strict and clear. If the questions are already settled
 and there's one correct pattern, the agent doesn't have to guess which of the
 five ways is the real one by reading the codebase (and it'll often pick the
 wrong one, because the wrong one is usually the most common). When correctness
@@ -182,10 +199,10 @@ is automated through really expansive linting, the agent just keeps going
 until everything passes, and I'm only reviewing the stuff that a check
 can't catch.
 
-The cost of writing them changed too. Writing a custom lint rule used to be a whole
-afternoon for something that saved a few review comments a year. Now an agent
-writes the rule in a few minutes, and it gets enforced on hundreds of agent
-PRs.
+The cost of writing them changed too. A custom lint rule used to be a whole
+afternoon of work for something that saved you a few review comments a year.
+Now an agent writes the rule in a few minutes, and then it gets enforced on
+hundreds of agent PRs.
 
 ## 4. Way more integration and end-to-end tests
 
@@ -206,16 +223,16 @@ because an agent can't look at the app the way I can unless something makes it
 look. A unit test that an agent wrote for code it just wrote tends to check
 that the code does what the agent thinks it does, which isn't very much
 information. An end-to-end test that logs in, clicks through the flow, and
-checks what's on the screen will fail when the feature is actually broken,
-no matter who wrote either one.
+checks what's on the screen is going to fail when the feature is actually
+broken, no matter who wrote it.
 
 So I've ended up with a lot more tests at the top of the pyramid than I ever
 would have written by hand, and agents run them on every change. The catch is
 they're still slow, and at some point the suite gets slow enough that it's the
 bottleneck. Recently I had an agent fold 1,459 end-to-end tests into 368
 longer scenario tests that walk through a whole flow each, mostly to cut the
-runner time in half. Having way too many end-to-end tests is a new kind of
-problem, and I kind of like having it.
+runner time in half. Having way too many end-to-end tests is a pretty funny
+problem to have, given where most of us started.
 
 ## 5. Architecture for agents
 
@@ -223,67 +240,71 @@ I've changed my mind about a lot of architecture stuff in the last year. I used
 to like frameworks that let you write less code, and I'd mostly push back on
 heavy structure like domain-driven design, because all those layers and folders
 are a lot of boilerplate for a person to type. But codegen is basically free
-now, so the boilerplate argument mostly goes away, and what's left is the part
-where everything has one obvious place to live.
+now. My running joke at this point is "zach believes DDD is important as
+codegen becomes free," and I kind of mean it: the boilerplate argument mostly
+goes away, and what's left is the part where everything has one obvious place
+to live.
 
 That turns out to matter way more for agents than it did for people. If there's
 a model layer, a command layer (the pattern from the start of this post), a
 single place for data access, and a folder structure that says which domain
 owns what, then an agent can find the right spot and copy the shape of the code
-already there. Small things count too. I now prefer `db.peer_fundraisers` over
-`db.peerFundraisers` because it matches the table name, and that means an agent
-(or me) can grep for one string and find everything.
+already there. Even little stuff like naming matters more. I now prefer
+`db.peer_fundraisers` over `db.peerFundraisers` because it matches the table
+name, so an agent (or me) can grep for one string and find everything.
 
 The other funny thing is that the migration itself got cheap. A big
 restructuring like this used to be the kind of suggestion where people would
-say "zach, that is an insane suggestion, please stop." Now I think it's more
-like: write a spec for the pattern and the folder structure, and an agent can do
-most of the migration in one go. It doesn't take nearly as much emotional
-effort as it used to.
+say "zach, that is an insane suggestion, please stop." Now it's more like, we
+write a spec for the pattern and the folder structure, and an agent can do most
+of the migration in one go, without nearly as much emotional effort as it used
+to take.
 
 ## 6. Build the first one by hand
 
-Once a design is agreed on, it's really tempting to hand the whole design doc
-to an agent and get the entire project back in one PR. I do this a lot now,
-and it works surprisingly well. I've gotten a project to 80% in a single day
-this way, sometimes 10,000+ lines in one PR, merged behind a feature flag and
-then fixed up in follow-ups.
+Once the PRD and the eng design are agreed on, it's really tempting to hand the
+whole design doc to an agent and get the entire project back in one PR. I do
+this a lot now, and it works surprisingly well. It consistently makes sense to
+just go super fast and get an entire project to 80% in a single day, sometimes
+10,000+ lines in one PR, merged behind a feature flag and then fixed up in
+follow-ups. We have entered the yolo phase of software history, I think.
 
 But I think it mostly works when there's already a really good example in the
 codebase of the thing you're asking for. The first feature of a new kind should
-get built slowly and carefully and reviewed line by line, because that's the
-one the agent is going to copy. After that, the next five similar features can
-go fast, because the agent has a model of what good looks like in your style.
+get built slowly and painstakingly and reviewed line by line, because that's
+the one the agent is going to copy. After that the next few similar features
+can go fast, because there's actually a very good model for the AI to work off
+of, in our style.
 
-There's a limit, too. If a change touches something dangerous, like the query
-compiler or anything with money, I still want it in smaller pieces, even when
-the agent could do it all at once.
+I do still draw a line on dangerous stuff. If a change touches something like
+the filter compiler or anything with money, I want it in smaller pieces, even
+when the agent could do it all at once.
 
 ## 7. Build the metric first
 
 On my side project we pull in campaign contribution data from every state, and
-every state does it a little differently, which is a great job for a big fan-out
-of agents. But before I pointed agents at it I spent a while on something
-boring: an accuracy page I could actually trust. That meant fixing the
+every state does it a little differently, which makes it a great job for a big
+fan-out of agents. But before I pointed agents at it I spent a while on
+something pretty boring, which was an accuracy page I could actually trust. That meant fixing the
 ground-truth samples (some of the hand-gathered ones were just wrong) and adding
 about a thousand new samples from official disclosures.
 
-Once that page was the north star, I opened one agent per state, and they all
-reported their results against the same numbers. A lot of them fixed their
-state. Some of them came back with a PR that only documented why the data
-couldn't be fixed yet, which honestly was the result I wanted from those
-states, and not a fake fix that looked good.
+Once that page was the north star, I opened one agent per state (something
+like 44 PRs in about twenty minutes), and they all reported their results
+against the same numbers. A lot of them fixed their state. Some came back with
+a PR that only documented why the data couldn't be fixed yet, which honestly
+was the result I wanted from those states, way more than a fake fix that looked
+good.
 
-I think this is the general version: before you fan out a lot of agents, build
-the scoreboard. Each agent is only as good as whatever it's being graded
-against, and if you can't trust the metric you'll get a lot of confident PRs
-that moved it in the wrong direction.
+I think the general version of this is to build the scoreboard before you fan
+out. If you can't trust the metric, you just get a pile of confident PRs, and
+you have no idea which of them made things worse.
 
 ## 8. Let a backtested reviewer approve PRs
 
 At 20-ish PRs a day, I can't review everything carefully, so I built an AI
 reviewer that rates every PR from 1 to 10 and is allowed to approve the safe
-ones on its own. The part I think is interesting is how it's kept honest. The
+ones on its own. The interesting part to me is how it's kept honest. The
 final rating is the lowest of a few things: the model's rubric score, a set of
 hard caps from plain rules (migrations, auth, anything with money, big diffs), a
 cap whenever a serious finding is still open, and a second judge that only sees
@@ -296,10 +317,10 @@ landed on approves about 30% of PRs and would have let through 1 of the 7
 known-bad ones. When an approved PR does cause a problem, it goes on the
 known-bad list and the next backtest has to catch it.
 
-I'm not totally sure 30% is right. I think line count is a bad signal on its
-own, but the AI is decent at combining a bunch of signals, so the threshold is
-really a bet on that. It's a lot better than either reviewing everything
-myself or approving everything.
+I'm not totally sure 30% is right. I think line count is probably a bad signal
+by itself, but I actually think the AI is decent at combining signals, so the
+threshold is kind of a bet on that. We're not at 100%, but I think we're
+probably at 30%, which is why I tuned it to 30% in the backtest.
 
 ## 9. Agents launching agents
 
@@ -310,12 +331,12 @@ also a Slack bot that can read the codebase and our support tickets, and if a
 conversation turns into "can we fix this," it can start a coding session,
 check in on it, and send it follow-ups.
 
-The hard part of this ended up being the handoff. The bot's instructions say
+The tricky part has been the handoff between them. The bot's instructions say
 "Write a self-contained brief. The coding agent cannot read this thread,"
 because the new agent starts with none of the conversation that led to it.
 They also say "Do not infer authorization from a request to start coding,"
-because an agent that's allowed to start another agent will happily read a lot
-of permission into a casual message.
+since an agent that's allowed to start other agents will happily read a lot of
+permission into a pretty casual message.
 
 ## 10. Own the code instead of buying it
 
@@ -326,9 +347,9 @@ monitoring setup. A few years ago a lot of these would've been obviously wrong
 calls, the kind of thing where you'd spend a year maintaining something a
 company does better.
 
-I think the math is different now, and owning the code keeps turning out to be
-good. As long as it's good code, which, you know, I'm not sure about yet in
-every case. But it's a really different tradeoff than it was a few years ago.
+I think the math is different now. We keep learning this, that owning the code
+is good. As long as it's good code, which, you know, I'm not totally sure about
+yet in every case.
 
 ## 11. Notice when you followed Claude too far
 
@@ -337,10 +358,10 @@ agent-driven refactor and realize I don't really understand where it's going
 anymore. Each step made sense, the agent kept proposing reasonable next steps,
 and I kept saying yes, and now the code is in a state nobody actually chose.
 
-When that happens I think the right move is to stop and say it out loud, that I
-followed Claude too far, and then go back to talking it through with people
-about what end state we actually want before anything else gets written.
-Sometimes you just have to go "slop!" and recalibrate.
+When that happens I think the right move is to stop and just say it out loud: I
+followed Claude too far. Then go back to talking it through as humans, about
+where we're actually at and what end state we want, before anything else gets
+written. Sometimes you just gotta go "slop!" and recalibrate.
 
 ## More to come
 
