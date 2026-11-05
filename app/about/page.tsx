@@ -4,22 +4,13 @@ import { Link } from "app/components/Link";
 import { SiteFooter, SiteHeader } from "app/components/SiteChrome";
 import { getPosts, type Post } from "app/lib/posts";
 import { SITE } from "app/lib/site";
-import { getRepos } from "./github";
-import { ROLES } from "./roles";
+import { WORK } from "./work";
 import styles from "./about.module.css";
 
 export const metadata = {
     title: "About",
-    description: `${SITE.name}: senior software engineer at ${SITE.employer.label} in ${SITE.city} and founder of ${SITE.company.label}, with work history and open-source projects.`,
+    description: `${SITE.name}: senior software engineer at ${SITE.employer.label} in ${SITE.city} and founder of ${SITE.company.label}.`,
 };
-
-// The GitHub response is cached for a day; rebuilding hourly from that cache
-// costs nothing and lets a failed fetch recover within the hour.
-export const revalidate = 3600;
-
-function host(href: string) {
-    return new URL(href).hostname.replace(/^www\./, "");
-}
 
 function Work({ posts }: { posts: Post[] }) {
     return (
@@ -27,95 +18,46 @@ function Work({ posts }: { posts: Post[] }) {
             <h2 id="work-title" className={styles.label}>
                 Work
             </h2>
-            <ol className={styles.roles}>
-                {ROLES.map((role) => {
-                    const writing = role.writing
-                        .map((slug) => posts.find((post) => post.slug === slug))
-                        .filter((post): post is Post => post !== undefined);
-                    return (
-                        <li
-                            key={role.slug}
-                            // `group` runs the shared art drift on hover.
-                            className={`${styles.role} group`}
-                        >
-                            <span className={styles.roleArt}>
-                                <Art slug={role.slug} index={role.artIndex} />
-                            </span>
-                            <div className={styles.roleBody}>
-                                <p className={styles.roleHead}>
-                                    <a href={role.href}>{role.company}</a>
-                                    <span className={styles.meta}>
-                                        {role.dates ?? role.status}
-                                    </span>
-                                </p>
-                                <p className={styles.roleTitle}>
-                                    {role.role}
-                                    <span className={styles.host}>
-                                        {" "}
-                                        · {host(role.href)}
-                                    </span>
-                                </p>
-                                {role.description ? (
-                                    <p className={styles.roleText}>
-                                        {role.description}
-                                    </p>
-                                ) : null}
-                                {writing.length ? (
-                                    <ul
-                                        className={styles.writing}
-                                        aria-label={`Writing about ${role.company}`}
+            {WORK.map((group) => {
+                const writing = group.posts
+                    .map((slug) => posts.find((post) => post.slug === slug))
+                    .filter((post): post is Post => post !== undefined);
+                const id = `work-${group.company.toLowerCase().replace(/\W+/g, "-")}`;
+                return (
+                    <div key={group.company} className={styles.workGroup}>
+                        <h3 id={id} className={styles.company}>
+                            {group.company}
+                        </h3>
+                        <ul className={styles.posts} aria-labelledby={id}>
+                            {writing.map((post) => (
+                                <li key={post.slug}>
+                                    {/* `group` runs the shared art drift on hover. */}
+                                    <Link
+                                        href={post.href}
+                                        className={`${styles.post} group`}
                                     >
-                                        {writing.map((post) => (
-                                            <li key={post.slug}>
-                                                <Link href={post.href}>
-                                                    {post.title}
-                                                </Link>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                ) : null}
-                            </div>
-                        </li>
-                    );
-                })}
-            </ol>
-        </section>
-    );
-}
-
-async function OpenSource() {
-    const repos = await getRepos();
-
-    return (
-        <section className={styles.section} aria-labelledby="code-title">
-            <h2 id="code-title" className={styles.label}>
-                Open source
-            </h2>
-            <ul className={styles.repos}>
-                {repos.map((repo) => (
-                    <li key={repo.name}>
-                        <a href={repo.url} className={styles.repo}>
-                            <span className={styles.repoName}>{repo.name}</span>
-                            <span className={styles.meta}>
-                                {[
-                                    repo.language,
-                                    repo.stars ? `★ ${repo.stars}` : null,
-                                ]
-                                    .filter(Boolean)
-                                    .join(" · ")}
-                            </span>
-                            {repo.description ? (
-                                <span className={styles.repoText}>
-                                    {repo.description}
-                                </span>
-                            ) : null}
-                        </a>
-                    </li>
-                ))}
-            </ul>
-            <p className={styles.more}>
-                <a href={SITE.github.href}>More on GitHub</a>
-            </p>
+                                        <span className={styles.postArt}>
+                                            <Art
+                                                slug={post.slug}
+                                                index={post.artIndex}
+                                            />
+                                        </span>
+                                        <span className={styles.postTitle}>
+                                            {post.title}
+                                        </span>
+                                        <time
+                                            dateTime={post.publishedAt}
+                                            className={styles.postDate}
+                                        >
+                                            {post.date}
+                                        </time>
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                );
+            })}
         </section>
     );
 }
@@ -155,8 +97,6 @@ export default function About() {
                 </div>
 
                 <Work posts={posts} />
-
-                <OpenSource />
 
                 <section
                     className={styles.section}
