@@ -62,6 +62,7 @@ app/
     ReadingHistory.tsx  "You've read n of m" strip under the archive
     article/            Article page: reading bar, margin outline, sidenotes, link previews
     PostNeighbours.tsx  Previous / next post tiles under an article
+    art-studio/         <ArtStudio />, the interactive artwork studio any post can embed in its MDX
     command-palette/    ⌘K palette; the dialog itself loads on first open
     BlogLink.tsx        A post row (date + title), shows a "previously read" icon for visited posts
     posts.tsx           BlogPosts — sorted list of BlogLink
@@ -153,8 +154,9 @@ Two things to know before touching it:
 - **`oklch`, not `hsl`.** Lightness and chroma stay perceptually even across hues;
   the same numbers in hsl make the yellows glare and the blues go muddy.
 
-`Art.tsx` exports `hash` and `artParams(slug, index)` (a post's composition and two
-hues, without drawing it), so code that needs those never copies its math. When the same post's art appears twice on one page, give one copy an
+`Art.tsx` exports `COMPOSITIONS`, `HUE_STEP`, `HUE_OFFSETS`, `hash` and
+`artParams(slug, index)` (a post's composition and two hues, without drawing it), so
+code that describes the art — the `<ArtStudio />` embed — never copies its math. When the same post's art appears twice on one page, give one copy an
 `idPrefix`: `url(#…)` resolves to the first matching id, and one inside a
 `display: none` subtree doesn't paint. Don't render `<Art>` during SSR inside a client
 component — its float coordinates differ in the last digit between Node and browsers,
