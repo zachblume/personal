@@ -387,22 +387,8 @@ function Swatch({ mark }: { mark: Mark }) {
 }
 
 /** Posts drawn in their own colors; words as a bar with the value at its tip. */
-export function YearTally({
-    t,
-    todayYear,
-}: {
-    t: Timeline;
-    todayYear: string;
-}) {
+export function YearTally({ t }: { t: Timeline }) {
     const maxWords = Math.max(...t.years.map((y) => y.words));
-    const first = t.years[0];
-    const latest = t.years[t.years.length - 1];
-    const partial = [
-        t.firstMonth.startsWith("Jan")
-            ? null
-            : `${first.year} starts in ${t.firstMonth.split(" ")[0]}`,
-        latest.year === todayYear ? `${latest.year} runs to today` : null,
-    ].filter(Boolean);
 
     return (
         <section
@@ -502,15 +488,8 @@ export function YearTally({
                 </tfoot>
             </table>
             <p className="mt-4 max-w-3xl text-[12px] leading-relaxed text-neutral-400 dark:text-neutral-500">
-                Words are prose only — code blocks and markup are left out.
-                Reading time is at 230 words a minute.
-                {partial.length
-                    ? ` ${partial.join(", and ")}, so ${
-                          partial.length > 1
-                              ? "neither end is a whole year"
-                              : "one end is a partial year"
-                      }.`
-                    : null}
+                Word counts leave out code, and reading time assumes 230 words a
+                minute.
             </p>
         </section>
     );

@@ -6,11 +6,11 @@ import { articleHeadings } from "app/components/article/headings";
 import { Outline } from "app/components/article/Outline";
 import { PreviewProvider } from "app/components/article/previews";
 import { ReadingChrome } from "app/components/article/ReadingChrome";
-import { ReadNext } from "app/components/article/ReadNext";
 import { Sidenote } from "app/components/article/Sidenote";
 import { toSidenotes } from "app/components/article/sidenotes";
 import { CustomMDX } from "app/components/mdx";
 import { PostList } from "app/components/PostList";
+import { PostNeighbours } from "app/components/PostNeighbours";
 import { PAD, SiteFooter, SiteHeader } from "app/components/SiteChrome";
 import { getPosts } from "app/lib/posts";
 import { baseUrl } from "app/sitemap";
@@ -152,7 +152,7 @@ export default async function Blog({ params }: BlogProps) {
                     </ReadingChrome>
                 </PreviewProvider>
             </CurrentSectionProvider>
-            <ReadNext posts={posts} slug={post.slug} />
+            <PostNeighbours slug={post.slug} />
             <section aria-labelledby="past-writing-title">
                 <h2
                     id="past-writing-title"
