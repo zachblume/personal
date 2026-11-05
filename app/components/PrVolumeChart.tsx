@@ -53,6 +53,36 @@ const MONTHS: [string, number][] = [
     ["2026-10", 553],
 ];
 
+/**
+ * When each coding agent first shows up in my PRs: its bot opening one, its
+ * branch prefix (`codex/`, `claude/`, ...), or its signature in a PR body.
+ * Aider and SWE-agent left no trace in the repo; they sit at their release
+ * months, which is when I tried them.
+ * Rows go top to bottom in date order, so a label's leader line only ever
+ * passes to the left of the labels below it.
+ */
+const TOOLS: {
+    month: string;
+    name: string;
+    anchor?: "end";
+    /** Override the date-order row, for a label with room higher up. */
+    row?: number;
+}[] = [
+    { month: "2023-05", name: "Aider" },
+    { month: "2024-04", name: "SWE-agent, Sweep" },
+    { month: "2024-08", name: "Tusk" },
+    { month: "2025-03", name: "Claude Code" },
+    { month: "2025-04", name: "Devin" },
+    { month: "2025-06", name: "Codex" },
+    { month: "2025-07", name: "Cursor agents" },
+    { month: "2025-09", name: "Copilot agent" },
+    { month: "2025-10", name: "Claude Code on the web" },
+    { month: "2025-11", name: "Conductor" },
+    { month: "2026-08", name: "Conductor cloud", anchor: "end", row: 3 },
+];
+const ROW_TOP = 36;
+const ROW = 14;
+
 const W = 600;
 const H = 300;
 const M = { top: 28, right: 4, bottom: 26, left: 34 };
@@ -84,6 +114,10 @@ export function PrVolumeChart({ slug }: { slug: string }) {
     const y = (n: number) => M.top + plotH - (n / MAX) * plotH;
     const peak = MONTHS.reduce((a, b) => (b[1] > a[1] ? b : a));
     const peakX = M.left + MONTHS.indexOf(peak) * step + step / 2;
+    const monthX = (month: string) =>
+        M.left + MONTHS.findIndex(([m]) => m === month) * step + step / 2;
+    const monthY = (month: string) =>
+        y(MONTHS.find(([m]) => m === month)?.[1] ?? 0);
 
     return (
         <figure
@@ -168,6 +202,41 @@ export function PrVolumeChart({ slug }: { slug: string }) {
                         </g>
                     );
                 })}
+                {TOOLS.map(({ month, name, anchor, row }, i) => {
+                    const x = monthX(month);
+                    const rowY = ROW_TOP + (row ?? i) * ROW;
+                    return (
+                        <g key={name}>
+                            <line
+                                x1={x}
+                                x2={x}
+                                y1={rowY + 3}
+                                y2={monthY(month) - 3}
+                                stroke="currentColor"
+                                strokeOpacity={0.45}
+                                strokeWidth={1}
+                            />
+                            <circle
+                                cx={x}
+                                cy={monthY(month) - 3}
+                                r={2}
+                                fill="currentColor"
+                            />
+                            <text
+                                x={anchor === "end" ? x - 4 : x + 4}
+                                y={rowY}
+                                dy="0.32em"
+                                textAnchor={anchor ?? "start"}
+                                fontSize={10.5}
+                                paintOrder="stroke"
+                                strokeWidth={3}
+                                className="fill-neutral-700 stroke-white dark:fill-neutral-300 dark:stroke-black"
+                            >
+                                {name}
+                            </text>
+                        </g>
+                    );
+                })}
                 <text
                     x={peakX}
                     y={y(peak[1]) - 8}
@@ -179,7 +248,8 @@ export function PrVolumeChart({ slug }: { slug: string }) {
                 </text>
             </svg>
             <figcaption className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-                My merged pull requests per month on my side project.
+                My merged pull requests per month on my side project, labeled
+                with roughly when I started using each coding agent.
             </figcaption>
         </figure>
     );
