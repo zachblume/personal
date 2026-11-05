@@ -6,8 +6,8 @@ const CurrentSectionContext = createContext<string | null>(null);
 
 /**
  * Which section of the article is being read, as its heading's id — null in
- * the introduction, before the first heading. The reading bar's section
- * label and its outline both read it, so they can't disagree.
+ * the introduction, before the first heading. The margin outline marks it,
+ * and the reading bar saves it with your place.
  *
  * The observer's root reaches far above the viewport and stops 30% of the
  * way down it, so a heading intersects exactly while it's above that line,

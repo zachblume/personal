@@ -1,6 +1,6 @@
 import { slugify } from "app/lib/slugify";
 
-/** A section heading as the outline and the reading bar list it. */
+/** A section heading as the outline lists it. */
 export type Heading = { level: number; text: string; id: string };
 
 /** Heading markdown → the text it renders as. */

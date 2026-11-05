@@ -1,7 +1,6 @@
 "use client";
 
-import { ChevronDownIcon, Cross2Icon } from "@radix-ui/react-icons";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCurrentSection } from "app/components/article/CurrentSection";
 import type { Heading } from "app/components/article/headings";
 import { PAD } from "app/components/SiteChrome";
@@ -13,15 +12,9 @@ type Geometry = {
     titleBottom: number;
     articleTop: number;
     articleBottom: number;
-    blocks: { top: number; bottom: number; words: number }[];
 };
 
-/** Same rate as the "min read" figure, so the two agree at the top. */
-const WPM = 230;
 const BAR = 48;
-/** Where a heading lands, measured from the top of the viewport, after a
- *  jump. Matches the headings' scroll-margin in the article page. */
-const LANDING = BAR + 24;
 const SAVE_EVERY = 500;
 
 const storageKey = (slug: string) => `reading-position:${slug}`;
@@ -76,9 +69,8 @@ function focusQuietly(el: HTMLElement | null | undefined) {
 
 /**
  * Wraps a post's title and article. Once the title scrolls off, a bar pins
- * the title, the section you're in (which opens the outline) and the time
- * left, with a hairline progress rule along its bottom edge. Remembers where
- * you were and offers to take you back next time.
+ * the title, with a hairline progress rule along its bottom edge. Remembers
+ * where you were and offers to take you back next time.
  *
  * The bar is fixed, so it must never end up inside a transformed ancestor.
  */
@@ -99,11 +91,8 @@ export function ReadingChrome({
     /** Must contain the post's <h1> and its <article>. */
     children: React.ReactNode;
 }) {
-    const outlineId = useId();
     const rootRef = useRef<HTMLDivElement>(null);
     const ruleRef = useRef<HTMLDivElement>(null);
-    const dialogRef = useRef<HTMLDialogElement>(null);
-    const triggerRef = useRef<HTMLButtonElement>(null);
     const geometry = useRef<Geometry | null>(null);
     const current = useCurrentSection();
     // For the save timer, which outlives the render it was scheduled in.
@@ -113,15 +102,13 @@ export function ReadingChrome({
     const holdRef = useRef(false);
 
     const [visible, setVisible] = useState(false);
-    const [minutesLeft, setMinutesLeft] = useState<number | null>(null);
-    const [outlineOpen, setOutlineOpen] = useState(false);
     const [bookmark, setBookmark] = useState<Bookmark | null>(null);
 
     useEffect(() => {
         currentRef.current = current;
     }, [current]);
 
-    // Position: progress rule, minutes left, bar visibility, and the bookmark.
+    // Position: progress rule, bar visibility, and the bookmark.
     useEffect(() => {
         const root = rootRef.current;
         const article = root?.querySelector("article");
@@ -139,19 +126,6 @@ export function ReadingChrome({
                 titleBottom: titleEl.getBoundingClientRect().bottom + y,
                 articleTop: box.top + y,
                 articleBottom: box.bottom + y,
-                blocks: Array.from(article.children)
-                    // Code isn't counted in the reading time either.
-                    .filter((el) => !el.matches("figure, pre"))
-                    .map((el) => {
-                        const r = el.getBoundingClientRect();
-                        return {
-                            top: r.top + y,
-                            bottom: r.bottom + y,
-                            words: (el.textContent ?? "")
-                                .split(/\s+/)
-                                .filter(Boolean).length,
-                        };
-                    }),
             };
             geometry.current = g;
             return g;
@@ -162,18 +136,6 @@ export function ReadingChrome({
             const g = geometry.current;
             if (!g) return;
             const y = window.scrollY;
-            const fold = y + window.innerHeight;
-            let words = 0;
-            for (const block of g.blocks) {
-                if (block.top >= fold) {
-                    words += block.words;
-                } else if (block.bottom > fold) {
-                    words +=
-                        (block.words * (block.bottom - fold)) /
-                        (block.bottom - block.top);
-                }
-            }
-            setMinutesLeft(Math.round(words / WPM));
             setVisible(y > g.titleBottom && y + BAR < g.articleBottom);
             if (rule) rule.style.transform = `scaleX(${progressAt(g, y)})`;
         };
@@ -265,32 +227,6 @@ export function ReadingChrome({
         headings[0]?.text ??
         "Outline";
 
-    const openOutline = () => {
-        const dialog = dialogRef.current;
-        if (!dialog) return;
-        dialog.showModal();
-        setOutlineOpen(true);
-        dialog.querySelector<HTMLElement>("[aria-current]")?.focus();
-    };
-
-    const jumpTo = (id: string | null) => {
-        dialogRef.current?.close();
-        const target = id
-            ? document.getElementById(id)
-            : rootRef.current?.querySelector("article");
-        if (!target) return;
-        window.scrollTo({
-            top: target.getBoundingClientRect().top + window.scrollY - LANDING,
-            behavior: scrollBehavior(),
-        });
-        history.replaceState(
-            null,
-            "",
-            id ? `#${id}` : window.location.pathname,
-        );
-        focusQuietly(target);
-    };
-
     const resume = () => {
         const g = geometry.current;
         holdRef.current = false;
@@ -314,14 +250,7 @@ export function ReadingChrome({
         } catch {}
     };
 
-    const minutesText =
-        minutesLeft === null
-            ? ""
-            : minutesLeft < 1
-              ? "< 1 min left"
-              : `${minutesLeft} min left`;
-
-    // A post with no headings has nothing to navigate to.
+    // A post with no headings has no section to name in the resume prompt.
     const hasOutline = headings.length > 0;
 
     return (
@@ -337,40 +266,9 @@ export function ReadingChrome({
                     visible ? "" : "-translate-y-full opacity-0"
                 }`}
             >
-                <div
-                    className={`${PAD} grid h-12 grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]`}
-                >
-                    <p
-                        className={`truncate font-[family-name:var(--font-editorial)] text-[16px] tracking-[-0.02em] text-neutral-900 dark:text-white ${
-                            hasOutline ? "hidden sm:block" : ""
-                        }`}
-                    >
+                <div className={`${PAD} flex h-12 items-center`}>
+                    <p className="truncate font-[family-name:var(--font-editorial)] text-[16px] tracking-[-0.02em] text-neutral-900 dark:text-white">
                         {title}
-                    </p>
-                    {hasOutline ? (
-                        <button
-                            ref={triggerRef}
-                            type="button"
-                            onClick={openOutline}
-                            aria-haspopup="dialog"
-                            aria-expanded={outlineOpen}
-                            aria-controls={outlineId}
-                            className={`group -mx-1.5 flex min-w-0 cursor-pointer items-center gap-1.5 justify-self-start rounded px-1.5 py-1 text-[13px] text-neutral-900 sm:max-w-[22rem] sm:justify-self-center dark:text-white ${FOCUS}`}
-                        >
-                            <span className="sr-only">Section: </span>
-                            <span className="truncate">
-                                {labelFor(current)}
-                            </span>
-                            <ChevronDownIcon
-                                aria-hidden
-                                className="h-3.5 w-3.5 shrink-0 text-neutral-400 transition-colors group-hover:text-neutral-900 dark:text-neutral-500 dark:group-hover:text-white"
-                            />
-                        </button>
-                    ) : (
-                        <span className="hidden sm:block" />
-                    )}
-                    <p className="justify-self-end whitespace-nowrap font-[family-name:var(--font-geist-mono)] text-[12px] tabular-nums text-neutral-500 dark:text-neutral-400">
-                        {minutesText}
                     </p>
                 </div>
                 <div
@@ -379,88 +277,6 @@ export function ReadingChrome({
                     className="absolute inset-x-0 -bottom-px h-px origin-left bg-neutral-900 dark:bg-white"
                 />
             </aside>
-
-            {/* A modal <dialog> sits in the top layer, so it escapes any
-                stacking or containing block it's declared in, and brings
-                focus trapping and Esc with it. A bottom sheet on phones, a
-                panel under the bar's label above that. */}
-            {hasOutline ? (
-                <dialog
-                    ref={dialogRef}
-                    id={outlineId}
-                    aria-labelledby={`${outlineId}-title`}
-                    onClose={() => {
-                        setOutlineOpen(false);
-                        // Browsers normally restore focus to the opener; make sure.
-                        if (document.activeElement === document.body) {
-                            triggerRef.current?.focus();
-                        }
-                    }}
-                    onClick={(event) => {
-                        if (event.target === event.currentTarget) {
-                            event.currentTarget.close();
-                        }
-                    }}
-                    className="m-0 mt-auto max-h-[75dvh] w-full max-w-none overflow-y-auto overscroll-contain rounded-t-xl border border-b-0 border-neutral-200 bg-white p-0 text-neutral-900 backdrop:bg-black/25 sm:mx-auto sm:mt-14 sm:mb-auto sm:max-h-[70dvh] sm:w-[22rem] sm:rounded-lg sm:border-b dark:border-neutral-800 dark:bg-neutral-950 dark:text-white dark:backdrop:bg-black/60"
-                >
-                    <div className="flex items-center justify-between border-b border-neutral-200 py-2 pr-2 pl-5 dark:border-neutral-800">
-                        <p
-                            id={`${outlineId}-title`}
-                            className="text-[12px] uppercase tracking-wider text-neutral-400 dark:text-neutral-500"
-                        >
-                            Outline
-                        </p>
-                        <button
-                            type="button"
-                            onClick={() => dialogRef.current?.close()}
-                            aria-label="Close outline"
-                            className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded text-neutral-400 hover:text-neutral-900 dark:text-neutral-500 dark:hover:text-white ${FOCUS}`}
-                        >
-                            <Cross2Icon aria-hidden />
-                        </button>
-                    </div>
-                    <ol className="py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
-                        {entries.map((entry) => {
-                            const active = entry.id === current;
-                            return (
-                                <li key={entry.id ?? "introduction"}>
-                                    <a
-                                        href={entry.id ? `#${entry.id}` : "#"}
-                                        aria-current={
-                                            active ? "location" : undefined
-                                        }
-                                        onClick={(event) => {
-                                            event.preventDefault();
-                                            jumpTo(entry.id);
-                                        }}
-                                        className="group flex items-baseline gap-3 px-5 py-2.5 outline-none hover:bg-neutral-50 focus-visible:bg-neutral-100 dark:hover:bg-neutral-900/60 dark:focus-visible:bg-neutral-900"
-                                    >
-                                        <span
-                                            aria-hidden
-                                            className={`h-1.5 w-1.5 shrink-0 -translate-y-px rounded-full ${
-                                                active
-                                                    ? "bg-neutral-900 dark:bg-white"
-                                                    : "bg-transparent"
-                                            }`}
-                                        />
-                                        <span
-                                            className={`text-[14px] leading-snug ${
-                                                entry.level > 2 ? "pl-4" : ""
-                                            } ${
-                                                active
-                                                    ? "text-neutral-900 dark:text-white"
-                                                    : "text-neutral-500 group-hover:text-neutral-900 dark:text-neutral-400 dark:group-hover:text-white"
-                                            }`}
-                                        >
-                                            {entry.text}
-                                        </span>
-                                    </a>
-                                </li>
-                            );
-                        })}
-                    </ol>
-                </dialog>
-            ) : null}
 
             <div
                 role="status"

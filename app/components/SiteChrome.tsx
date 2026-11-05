@@ -11,7 +11,6 @@ export type Section = "home" | "about" | "timeline" | "article";
 
 type NavItem = { href: string; label: string; section: Section };
 
-const WRITING: NavItem = { href: "/", label: "Writing", section: "home" };
 const TIMELINE: NavItem = {
     href: "/timeline",
     label: "Timeline",
@@ -20,7 +19,7 @@ const TIMELINE: NavItem = {
 const ABOUT: NavItem = { href: "/about", label: "About", section: "about" };
 
 /** Every page, in the order the footer lists them. */
-const SITEMAP: NavItem[] = [WRITING, TIMELINE, ABOUT];
+const SITEMAP: NavItem[] = [TIMELINE, ABOUT];
 
 function Signature({ current }: { current?: Section }) {
     return (
@@ -35,14 +34,11 @@ function Signature({ current }: { current?: Section }) {
 }
 
 /**
- * The header holds down to 360px: as the width runs out, Timeline gives way
- * first. The footer lists every page and ⌘K reaches them all, so nothing
- * becomes unreachable.
+ * The same links on every page; the signature is the way home. At 360px
+ * Timeline gives way first — the footer and ⌘K still reach it.
  */
 export function SiteHeader({ current }: { current: Section }) {
-    // The signature already leads home, so Writing joins only elsewhere.
     const items = [
-        ...(current === "home" ? [] : [{ ...WRITING, narrow: true }]),
         { ...TIMELINE, narrow: false },
         { ...ABOUT, narrow: true },
     ];

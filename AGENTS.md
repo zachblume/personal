@@ -60,7 +60,7 @@ app/
     Link.tsx            Wrapper over next/link; also records visits in localStorage
     PostList.tsx / PostRow.tsx   The archive list (homepage and article "Past Writing")
     ReadingHistory.tsx  "You've read n of m" strip under the archive
-    article/            Article page: reading bar (with the outline), sidenotes, link previews, Read next
+    article/            Article page: reading bar, margin outline, sidenotes, link previews, Read next
     command-palette/    ⌘K palette; the dialog itself loads on first open
     BlogLink.tsx        A post row (date + title), shows a "previously read" icon for visited posts
     posts.tsx           BlogPosts — sorted list of BlogLink
@@ -90,9 +90,9 @@ title, publishedAt (YYYY-MM-DD), summary, image?, draft?
 Full-bleed, with a black-and-white interface. The only color on the page is the
 generated per-post artwork.
 
-- **Header** (every full-bleed page): signature, then Writing (off the homepage) ·
-  Timeline · About and a ⌘K search button. Timeline hides on narrow screens; the
-  palette and the footer reach everything. The **footer** lists every page.
+- **Header** (every full-bleed page): signature (the way home), then Timeline · About
+  and a ⌘K search button — the same on every page. Timeline hides on narrow screens;
+  the palette and the footer reach everything.
 - **Homepage** is the whole archive as an edge-to-edge listview: ordinal, artwork
   thumbnail, title, summary, date, hairline chevron. No hero, no CTA — the header
   rule sits directly on the first row. Rows highlight on hover.
@@ -103,10 +103,11 @@ generated per-post artwork.
   optional `description` / `dates` fields that render only when set.
 - **Article pages** have a centered `max-w-xl` reading column. From `lg` long
   parentheticals (4+ words) are set as sidenotes in the right margin, automatically, by
-  a transform of the MDX source (inline expanders on narrow screens). A fixed reading
-  bar appears once the title scrolls away: current section (opens the outline — the
-  only table of contents), minutes left, a progress rule, and a resume prompt on
-  return. Links to other posts show a preview card on hover. After
+  a transform of the MDX source (inline expanders on narrow screens). At `xl` the
+  outline sits sticky in that same margin, lined up with the notes' column, and fades
+  out of the way whenever a note scrolls up beside it. A fixed bar with the title and
+  a hairline progress rule appears once the title scrolls away, and a resume prompt
+  offers your place on return. Links to other posts show a preview card on hover. After
   the article: **Read next** (the three most similar posts by TF-IDF, not by date), then
   the archive list. The blog index keeps the narrow reading column from the root layout.
 - Body font is **Geist Sans**, code is **Geist Mono** (the `geist` package, which ships
