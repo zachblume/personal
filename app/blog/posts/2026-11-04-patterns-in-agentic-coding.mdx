@@ -6,10 +6,16 @@ summary: "Novel approaches to pay attention to emerging from agentic coding prac
 
 Last month I shipped 553 pull requests on my side project, on nights and
 weekends, outside my full-time job at Stripe. That would've been a ridiculous
-sentence two years ago. A lot of what we know as software engineers comes down
-to patterns that got codified as best practices through decades of discovery,
-based on the tooling we had at the time. Coding agents have reopened the whole
-field, so new patterns are showing up faster than anyone is writing them down. Here are a few I've seen work so far.
+sentence two years ago. It's mostly possible because of a bunch of new
+patterns for working with coding agents, and I want to start writing them down.
+
+<PrVolumeChart slug="2026-11-04-patterns-in-agentic-coding" />
+
+For two years I was merging about 14 PRs a month, and then at the end of 2025
+it kind of went vertical. I'm obviously not writing most of that code myself
+anymore. A lot of my day now is closer to managing a bunch of agents, and the
+patterns below are what's let me do that without the whole codebase turning
+into slop (mostly).
 
 I decided I wanted to write this article when I was reading Martin Fowler's
 _Refactoring_ and he referenced another book about software patterns (the Gang
@@ -57,31 +63,17 @@ form the core of my understanding of how to be a software developer anyways.
 
 We tend to think of computer science or computer engineering as a settled
 science, or a settled engineering field. But really it's quite unsettled
-still, and I think that's what makes it really interesting. There are decades
-of engineering thinking on problems where there's no correct solution, and
-people have iterated on models that inform what we know. None of that was
-self-evident to an engineer working before AI. Somebody had to notice it and
-write it down.
+still, and I think that's what makes it really interesting. A lot of what we
+know comes down to patterns that got codified as best practices through
+decades of discovery, based on the tooling we had at the time. None of it was
+self-evident. Somebody had to notice it and write it down.
 
 Now that AI has totally recreated the way we write software through coding
-agents, the entire field is sort of back open. A lot of the patterns we already
-discovered are still useful for sure, and some of them are even more useful now
-than they were. But there are also hundreds or thousands of new patterns for
-how we'll write software that nobody has consolidated into best practices yet.
-
-For a sense of how much has changed, here's every pull request of mine that's
-merged on my side project, by month:
-
-<PrVolumeChart slug="2026-11-04-patterns-in-agentic-coding" />
-
-For two years I was merging about 14 PRs a month. Then at the end of 2025 it
-kind of went vertical, and last month it was 553, which is almost 20 a day. I'm
-obviously not writing most of that code myself anymore. A lot of my day now is
-closer to managing a bunch of agents, and the stuff below is what's let me do
-that without the whole codebase turning into slop (mostly).
-
-So I wanted to begin writing these down, both things I do at Stripe and things
-I do outside of Stripe on my side project. Here's a first batch.
+agents, the entire field is sort of back open. A lot of the old patterns are
+still useful for sure, and some of them are even more useful now than they
+were. But there are also hundreds or thousands of new ones that nobody has
+consolidated into best practices yet. Here's a first batch, from things I do at
+Stripe and on my side project.
 
 ## 1. Do the giant refactor, then backfill coverage against main
 
