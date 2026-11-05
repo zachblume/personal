@@ -110,11 +110,10 @@ over.
 
 ## 3. Lint for purity
 
-The other big thing I've seen is an explosion in integration tests, end-to-end
-tests, and especially custom linters that enforce coding standards and the
-shape of whatever framework you've built. The point is to give agents guidance
-that's deterministic, so they find out they did it wrong from a failing check
-instead of from me in review.
+One of the biggest changes I've seen is an explosion in custom linters that
+enforce coding standards and the shape of whatever framework you've built. The
+point is to give agents guidance that's deterministic, so they find out they
+did it wrong from a failing check instead of from me in review.
 
 A good example is banning data access outside of a data access layer. In
 JavaScript that can be as simple as an ESLint rule:
@@ -154,8 +153,8 @@ when the guardrails are strict and clear. If the questions are already settled
 and there's one correct pattern, the agent doesn't have to guess which of the
 five ways is the real one by reading the codebase (and it'll often pick the
 wrong one, because the wrong one is usually the most common). When correctness
-is automated through really expansive linting and testing, the agent just keeps
-going until everything passes, and I'm only reviewing the stuff that a check
+is automated through really expansive linting, the agent just keeps going
+until everything passes, and I'm only reviewing the stuff that a check
 can't catch.
 
 The cost of writing them changed too. Writing a custom lint rule used to be a whole
@@ -163,7 +162,34 @@ afternoon for something that saved a few review comments a year. Now an agent
 writes the rule in a few minutes, and it gets enforced on hundreds of agent
 PRs.
 
-## 4. Run the same prompt a few times
+## 4. Way more integration and end-to-end tests
+
+The same thing is happening with integration and end-to-end tests, and I think
+this one goes against something a lot of us were taught.
+
+The testing pyramid (another old pattern) says to write lots of unit tests, a
+smaller number of integration tests, and only a handful of end-to-end tests at
+the top, because end-to-end tests are slow, flaky, and a pain to write and keep
+working. That made sense when a person had to write and maintain every one of
+them. Most teams I've been on had a pretty thin layer of end-to-end tests
+because of it, and we leaned on people clicking around before a release to
+cover the rest.
+
+Agents change both sides of that. Writing and fixing an end-to-end test is
+cheap now, so the cost side mostly goes away. And the value side goes up,
+because an agent can't look at the app the way I can unless something makes it
+look. A unit test that an agent wrote for code it just wrote tends to check
+that the code does what the agent thinks it does, which isn't very much
+information. An end-to-end test that logs in, clicks through the flow, and
+checks what's on the screen will fail when the feature is actually broken,
+no matter who wrote either one.
+
+So I've ended up with a lot more tests at the top of the pyramid than I ever
+would have written by hand, and agents run them on every change. They're still
+slow, so it's worth spending some time making them run in parallel, but the
+tradeoff is way different than it used to be.
+
+## 5. Run the same prompt a few times
 
 When something is ambiguous I've mostly stopped trying to write the perfect
 prompt. I'll give roughly the same prompt to three or four agents in parallel
@@ -180,7 +206,7 @@ from the third one," and that becomes the next prompt.
 This goes really well with the walkthrough videos, since four PRs is a lot of
 code to read but four short videos isn't.
 
-## 5. Build one to throw away
+## 6. Build one to throw away
 
 Fred Brooks said to plan to throw one away, because you're going to anyways.
 That's an old one, and I think it got a lot more useful.
