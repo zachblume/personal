@@ -143,10 +143,13 @@ whole share card, below.)
 ### Share cards
 
 `app/blog/[slug]/opengraph-image.tsx` draws each post's Open Graph / X card at build
-time with `next/og` (Satori): the site header in miniature (signature, date, hairline
-rule), the title in Geist Serif with the summary under it, and the post's artwork as a
-full-height panel on the right. Title size steps down with length so most titles set
-in two or three lines. Keep the bottom-left empty — X lays the domain over it.
+time with `next/og` (Satori): the post's artwork as a full-bleed background, a white
+wash fading in from the left, and the title in large Geist Serif with the summary
+under it in Geist Sans. LinkedIn and X show the card as a small thumbnail, and
+LinkedIn's feed shows no description of its own, so the text has to be big enough
+to read at that size; the summary is on the card for that reason. Title size steps
+down with length so most titles set in two or three lines. Keep the bottom-left
+empty — X lays the domain over it.
 
 Two Satori quirks shaped it:
 
