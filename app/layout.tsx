@@ -6,11 +6,11 @@ import { GeistSans } from "geist/font/sans";
 import { GeistSerifRegular } from "geist/font/serif/regular";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import Footer from "./components/footer";
 import { baseUrl } from "./sitemap";
 import { Theme } from "@radix-ui/themes";
 import { ThemeProvider } from "next-themes";
 import "./global.css";
+import { CommandPalette } from "app/components/command-palette/CommandPalette";
 import { LocalStorageLinkSyncer } from "app/components/LocalStorageLinkSyncer";
 
 export const metadata: Metadata = {
@@ -66,9 +66,11 @@ export default function RootLayout({
                         hasBackground={false}
                     >
                         <main className="wrapper flex-auto min-w-0 mt-6 flex flex-col px-2 md:px-0">
-                            {/* <Navbar /> */}
                             {children}
-                            <Footer />
+                            {/* Bottom space for pages in the reading column.
+                                Full-bleed pages bring their own footer, and
+                                global.css hides this after them. */}
+                            <div className="mb-16" />
                             <Analytics />
                             <SpeedInsights />
                             <LocalStorageLinkSyncer />
@@ -89,6 +91,8 @@ export default function RootLayout({
                                 }}
                             />
                         </main>
+                        {/* Outside <main>, so `.full-bleed ~ div` can't hide it. */}
+                        <CommandPalette />
                     </Theme>
                 </ThemeProvider>
             </body>

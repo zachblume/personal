@@ -34,10 +34,18 @@ after cloning; CI installs should use `pnpm install --frozen-lockfile`. Commit
 
 ```
 app/
-  layout.tsx            Root layout: html > body > ThemeProvider > Theme > main
-                        Body is width-constrained: `max-w-xl mx-4 lg:mx-auto`
-  page.tsx              Homepage: full-bleed list of every post (PostRow + generated Art)
-  about/page.tsx        About: bio, "now" list, pet photos, contact links
+  layout.tsx            Root layout: html > body > ThemeProvider > Theme > main, plus the
+                        ⌘K CommandPalette (outside <main>). Body is width-constrained:
+                        `max-w-xl mx-4 lg:mx-auto`
+  page.tsx              Homepage: the archive with a List / Grid / Index view switcher
+  timeline/             /timeline — every post on a time axis, with a by-year tally
+  about/page.tsx        About: bio, pet photos, contact links
+  work/                 /work — roles (from lib/site.ts) and recent GitHub repos (revalidates hourly)
+  start-here/           /start-here — curated reading paths with per-reader progress
+  constellation/        /constellation — posts as a map linked by shared vocabulary
+  art/                  /art — the Art studio: any seed, any index, wallpaper downloads
+  colophon/             /colophon — how the site is made, plus numbers on the writing
+  api/listen/route.ts   Cartesia text-to-speech for Listen (see "Listen")
   global.css            Tailwind import + all `.prose` typography styles and misc utilities
   not-found.tsx
   sitemap.ts            Exports `baseUrl` — imported elsewhere for metadata
@@ -53,15 +61,22 @@ app/
     [slug]/opengraph-image.tsx   Per-post share card, prerendered (see "Share cards")
     posts/*.mdx         The posts themselves, named `YYYY-MM-DD-slug.mdx`
   components/
+    SiteChrome.tsx      SiteHeader (nav, ⌘K button, an `actions` slot) and SiteFooter (sitemap)
     Link.tsx            Wrapper over next/link; also records visits in localStorage
+    PostList.tsx / PostRow.tsx   The archive list (homepage List view and article "Past Writing")
+    ReadingHistory.tsx  "You've read n of m" strip under the archive
+    archive/            Homepage views, the view switcher and its no-flash store
+    article/            Article page: reading chrome, outline, sidenotes, link previews, Read next
+    listen/             Listen button + player (Cartesia audio, sentence highlighting)
+    command-palette/    ⌘K palette; the dialog itself loads on first open
     BlogLink.tsx        A post row (date + title), shows a "previously read" icon for visited posts
     posts.tsx           BlogPosts — sorted list of BlogLink
-    nav.tsx             Navbar — currently EMPTY (`navItems = {}`) and commented out of layout.tsx
-    footer.tsx          Currently just a spacer div; real footer is commented out
     mdx.tsx             CustomMDX component map for next-mdx-remote
-    outline.tsx / OutlineNavLink.tsx   In-post table of contents
     EmailLink.tsx       Obfuscated mailto link
     LocalStorageLinkSyncer.tsx
+  lib/posts.ts          getPosts(): every post with plain text, words, minutes, headings, art index
+  lib/similarity.ts     TF-IDF over post prose — Read next and the constellation
+  lib/cartesia.ts       Cartesia API version, model and voice
   lib/slugify.ts
   lib/site.ts           SITE: name, role, city, email, links, pet photos — shared bio constants
 public/                 zach.jpg (avatar), waldo/millie/luna.jpeg (pets)
@@ -83,14 +98,26 @@ title, publishedAt (YYYY-MM-DD), summary, image?, draft?
 Full-bleed, with a black-and-white interface. The only color on the page is the
 generated per-post artwork.
 
-- **Homepage** is the whole archive as an edge-to-edge listview: ordinal, artwork
-  thumbnail, title, summary, date, hairline chevron. No hero, no CTA — the header
-  rule sits directly on the first row. Rows highlight on hover.
-- **About** (`/about`) holds the bio, a "now" definition list, the avatar, the three
-  pet photos (grayscale, colorizing on hover), and contact links.
-- Article pages use the shared full-width header and archive list, with a centered
-  `max-w-xl` reading column and an outline confined to the article. The blog index
-  keeps the narrow reading column from the root layout.
+- **Header** (every full-bleed page): signature, then Writing (off the homepage) ·
+  Start here · Work · About and a ⌘K search button. Lower-priority links hide on
+  narrow screens; the palette and the footer reach everything. The **footer** is the
+  full sitemap.
+- **Homepage** is the whole archive, edge to edge, in one of three views chosen from a
+  switcher in the header: **List** (ordinal, artwork thumbnail, title, summary, date,
+  hairline chevron), **Grid** (art cards), **Index** (dense, by year, no art). A fourth
+  option links to `/timeline`. The choice lives in `?view=` and localStorage; an inline
+  script applies it before first paint. No hero, no CTA — the header rule sits directly
+  on the first row. Rows highlight on hover.
+- **About** (`/about`) holds the bio, the avatar, the three pet photos (grayscale,
+  colorizing on hover), and contact links.
+- **Article pages** have a centered `max-w-xl` reading column. At `xl` the outline sits
+  in the left margin; from `lg` long parentheticals (4+ words) are set as sidenotes in
+  the right margin, automatically, by a transform of the MDX source (inline expanders on
+  narrow screens). A fixed reading bar appears once the title scrolls away: current
+  section (opens the outline on any screen), minutes left, a progress rule, and a
+  resume prompt on return. Links to other posts show a preview card on hover. After
+  the article: **Read next** (the three most similar posts by TF-IDF, not by date), then
+  the archive list. The blog index keeps the narrow reading column from the root layout.
 - Body font is **Geist Sans**, code is **Geist Mono** (the `geist` package, which ships
   them locally via `next/font/local`). Tight negative tracking on headings, hairline
   `neutral-200` / `neutral-800` rules.
@@ -136,6 +163,14 @@ Two things to know before touching it:
 - **`oklch`, not `hsl`.** Lightness and chroma stay perceptually even across hues;
   the same numbers in hsl make the yellows glare and the blues go muddy.
 
+`Art.tsx` exports `COMPOSITIONS`, `HUE_STEP`, `HUE_OFFSETS`, `hash` and
+`artParams(slug, index)` so pages that describe the art (the studio, the colophon) never
+copy its math. When the same post's art appears twice on one page, give one copy an
+`idPrefix`: `url(#…)` resolves to the first matching id, and one inside a
+`display: none` subtree doesn't paint. Don't render `<Art>` during SSR inside a client
+component — its float coordinates differ in the last digit between Node and browsers,
+so hydration mismatches. Render it on the server and pass it in.
+
 To hand-author art for a post instead, add `image:` to its frontmatter and branch at
 the call site — every layout on the site uses a 16:9 slot. (`image:` also replaces the
 whole share card, below.)
@@ -176,6 +211,22 @@ Two Satori quirks shaped it:
   turns the drawing on its side when the box is portrait: a centre crop to portrait
   keeps under half of a landscape composition.
 
+### Listen
+
+`<Listen slug>` (in `app/components/listen/`) renders a button under the post title
+when `CARTESIA_API_KEY` is set (Vercel: Production + Preview; locally `.env.local`), and
+nothing otherwise. The player segments the rendered `article.prose` into sentences
+(skipping `pre`, heading anchors and anything marked `data-listen-skip` — sidenote
+markers, injected UI), fetches each chunk's MP3 from `/api/listen`, highlights the
+sentence being read with the CSS Custom Highlight API, and wires up Media Session.
+
+`/api/listen` only voices the site's own words: it 403s unless the normalized text is a
+substring of that post's text, caps length, and returns `immutable` cache headers so
+Vercel's CDN serves repeats. It reads the MDX at request time, so `next.config.ts`
+traces `app/blog/posts/**` into it — keep that if you move the posts. Model, API
+version and the default voice are in `app/lib/cartesia.ts`; `CARTESIA_VOICE_ID`
+overrides the voice. Article pages are prerendered, so a key change needs a redeploy.
+
 ### Full-bleed pages
 
 The root layout still clamps pages to `max-w-xl`, which is right for posts and wrong
@@ -209,6 +260,10 @@ creates a transformed ancestor that breaks `position: fixed` for anything inside
   `--default-font-family` / `--code-font-family` on `.radix-themes.radix-themes`; the class is
   doubled on purpose, because Next emits `@radix-ui/themes/styles.css` _after_ `global.css`,
   so a single-class rule ties on specificity and loses on source order.
+- Inside `.full-bleed`, `global.css` resets link hover to `color: inherit` (rows own
+  their hover treatment), which silently cancels a Tailwind `hover:text-*` on the
+  `<a>` itself. Put hover colors in a CSS module or on an inner span — see
+  `SiteChrome.module.css`.
 - `app/layout.tsx` injects a third-party `reb2b` visitor-tracking script.
 
 <!-- BEGIN:nextjs-agent-rules -->

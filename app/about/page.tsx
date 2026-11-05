@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { SiteHeader } from "app/components/SiteChrome";
+import { SiteFooter, SiteHeader } from "app/components/SiteChrome";
 import { SITE } from "app/lib/site";
 import styles from "./about.module.css";
 
@@ -73,6 +73,7 @@ export default function About() {
                     <a href={SITE.github.href}>GitHub</a>
                 </footer>
             </article>
+            <SiteFooter bordered />
         </div>
     );
 }

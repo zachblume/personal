@@ -1,0 +1,173 @@
+/* Two precomputed layouts, picked by the width the map actually gets rather
+   than the viewport — beside the panel on a tablet it's phone-sized. Every
+   position is a custom property set inline from the server; nothing here
+   knows a number from the layout. */
+
+.map {
+    container-type: inline-size;
+}
+
+.frame {
+    position: relative;
+    width: 100%;
+    max-width: 460px;
+    margin-inline: auto;
+    aspect-ratio: var(--narrow-aspect);
+}
+
+.wideOnly,
+.wideInline {
+    display: none;
+}
+
+/* Anything placed on the map: nodes, and the shared-term tags on edges. */
+.at {
+    position: absolute;
+    left: var(--nx);
+    top: var(--ny);
+    transform: translate(-50%, -50%);
+}
+
+.node {
+    width: var(--nd);
+}
+
+.label {
+    position: absolute;
+    width: max-content;
+    max-width: var(--narrow-label);
+    font-size: var(--narrow-font);
+    line-height: var(--narrow-line);
+    text-wrap: balance;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--narrow-lines);
+    line-clamp: var(--narrow-lines);
+    overflow: hidden;
+    /* Labels sit on the edges; a halo in the page colour keeps them legible
+       where a line runs underneath. */
+    text-shadow:
+        0 0 2px #fff,
+        0 0 4px #fff,
+        0 0 8px #fff;
+}
+
+:global(.dark) .label {
+    text-shadow:
+        0 0 2px #000,
+        0 0 4px #000,
+        0 0 8px #000;
+}
+
+.label[data-narrow="right"] {
+    inset: 50% auto auto calc(100% + var(--narrow-gap));
+    transform: translateY(-50%);
+    text-align: left;
+}
+
+.label[data-narrow="left"] {
+    inset: 50% calc(100% + var(--narrow-gap)) auto auto;
+    transform: translateY(-50%);
+    text-align: right;
+}
+
+.label[data-narrow="below"] {
+    inset: calc(100% + var(--narrow-gap)) auto auto 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+.label[data-narrow="above"] {
+    inset: auto auto calc(100% + var(--narrow-gap)) 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+@container (min-width: 640px) {
+    .frame {
+        max-width: 1100px;
+        aspect-ratio: var(--wide-aspect);
+    }
+
+    .wideOnly {
+        display: block;
+    }
+
+    .wideInline {
+        display: inline;
+    }
+
+    .narrowOnly {
+        display: none;
+    }
+
+    .at {
+        left: var(--wx);
+        top: var(--wy);
+    }
+
+    .node {
+        width: var(--wd);
+    }
+
+    .label {
+        max-width: var(--wide-label);
+        font-size: var(--wide-font);
+        line-height: var(--wide-line);
+        -webkit-line-clamp: var(--wide-lines);
+        line-clamp: var(--wide-lines);
+    }
+
+    .label[data-wide="right"] {
+        inset: 50% auto auto calc(100% + var(--wide-gap));
+        transform: translateY(-50%);
+        text-align: left;
+    }
+
+    .label[data-wide="left"] {
+        inset: 50% calc(100% + var(--wide-gap)) auto auto;
+        transform: translateY(-50%);
+        text-align: right;
+    }
+
+    .label[data-wide="below"] {
+        inset: calc(100% + var(--wide-gap)) auto auto 50%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
+
+    .label[data-wide="above"] {
+        inset: auto auto calc(100% + var(--wide-gap)) 50%;
+        transform: translateX(-50%);
+        text-align: center;
+    }
+}
+
+/* The phone sheet slides up; everything else just appears. */
+@keyframes sheet-in {
+    from {
+        transform: translateY(24px);
+        opacity: 0;
+    }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+    .sheet {
+        animation: sheet-in 200ms ease-out;
+    }
+}
+
+/* Monochrome focus rings for anything that doesn't draw its own. Zero
+   specificity, so an element's own outline utilities still win — the map's
+   nodes ring just their circle. */
+:where(.page a:focus-visible, .page button:focus-visible) {
+    outline: 2px solid #171717;
+    outline-offset: 2px;
+}
+
+:where(
+    :global(.dark) .page a:focus-visible,
+    :global(.dark) .page button:focus-visible
+) {
+    outline-color: #fff;
+}
