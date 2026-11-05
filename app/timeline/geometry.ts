@@ -109,7 +109,7 @@ export function quietLabel(days: number) {
     const months = Math.round(days / 30.44);
     return {
         months,
-        label: `quiet · ${months} ${months === 1 ? "month" : "months"}`,
+        label: `${months} month gap`,
     };
 }
 

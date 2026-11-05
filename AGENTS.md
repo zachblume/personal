@@ -60,7 +60,8 @@ app/
     Link.tsx            Wrapper over next/link; also records visits in localStorage
     PostList.tsx / PostRow.tsx   The archive list (homepage and article "Past Writing")
     ReadingHistory.tsx  "You've read n of m" strip under the archive
-    article/            Article page: reading bar, margin outline, sidenotes, link previews, Read next
+    article/            Article page: reading bar, margin outline, sidenotes, link previews
+    PostNeighbours.tsx  Previous / next post tiles under an article
     art-studio/         <ArtStudio />, the interactive artwork studio any post can embed in its MDX
     command-palette/    ⌘K palette; the dialog itself loads on first open
     BlogLink.tsx        A post row (date + title), shows a "previously read" icon for visited posts
@@ -69,7 +70,6 @@ app/
     EmailLink.tsx       Obfuscated mailto link
     LocalStorageLinkSyncer.tsx
   lib/posts.ts          getPosts(): every post with plain text, words, minutes, headings, art index
-  lib/similarity.ts     TF-IDF over post prose, and the "Both about …" reasons — Read next
   lib/slugify.ts
   lib/site.ts           SITE: name, role, city, email, links, pet photos — shared bio constants
 public/                 zach.jpg (avatar), waldo/millie/luna.jpeg (pets)
@@ -99,18 +99,17 @@ generated per-post artwork.
   rule sits directly on the first row. Rows highlight on hover.
 - **About** (`/about`) is also the portfolio, in one quiet column: the bio and avatar;
   **Work** (each role with its own generated artwork and the posts about it); **Open
-  source** (recent public repos, text only); the three pet photos (grayscale,
+  source** (repos pinned by hand in `app/about/github.ts`, text only); the three pet photos (grayscale,
   colorizing on hover); and contact links. Roles live in `app/about/roles.ts` with
   optional `description` / `dates` fields that render only when set.
 - **Article pages** have a centered `max-w-xl` reading column. From `lg` long
   parentheticals (4+ words) are set as sidenotes in the right margin, automatically, by
   a transform of the MDX source (inline expanders on narrow screens). At `xl` the
-  outline sits sticky in that same margin, lined up with the notes' column, and fades
-  out of the way whenever a note scrolls up beside it. A fixed bar with the title and
+  outline sits sticky in that same margin, lined up with the notes' column; as a note
+  scrolls past, only the outline rows it would cover fade out. A fixed bar with the title and
   a hairline progress rule appears once the title scrolls away, and a resume prompt
   offers your place on return. Links to other posts show a preview card on hover. After
-  the article: **Read next** (the three most similar posts by TF-IDF, not by date), then
-  the archive list. The blog index keeps the narrow reading column from the root layout.
+  the article: previous / next tiles, then the archive list. The blog index keeps the narrow reading column from the root layout.
 - Body font is **Geist Sans**, code is **Geist Mono** (the `geist` package, which ships
   them locally via `next/font/local`). Tight negative tracking on headings, hairline
   `neutral-200` / `neutral-800` rules.

@@ -17,18 +17,8 @@ export const metadata = {
 // costs nothing and lets a failed fetch recover within the hour.
 export const revalidate = 3600;
 
-const REPOS = 6;
-
 function host(href: string) {
     return new URL(href).hostname.replace(/^www\./, "");
-}
-
-function pushed(iso: string) {
-    return new Date(iso).toLocaleDateString("en-US", {
-        month: "short",
-        year: "numeric",
-        timeZone: "UTC",
-    });
 }
 
 function Work({ posts }: { posts: Post[] }) {
@@ -94,53 +84,38 @@ function Work({ posts }: { posts: Post[] }) {
 }
 
 async function OpenSource() {
-    const result = await getRepos(REPOS);
+    const repos = await getRepos();
 
     return (
         <section className={styles.section} aria-labelledby="code-title">
             <h2 id="code-title" className={styles.label}>
                 Open source
             </h2>
-            {result.ok ? (
-                <>
-                    <ul className={styles.repos}>
-                        {result.repos.map((repo) => (
-                            <li key={repo.name}>
-                                <a href={repo.url} className={styles.repo}>
-                                    <span className={styles.repoName}>
-                                        {repo.name}
-                                    </span>
-                                    {repo.description ? (
-                                        <span className={styles.repoText}>
-                                            {repo.description}
-                                        </span>
-                                    ) : null}
-                                    <span className={styles.meta}>
-                                        {[
-                                            repo.language,
-                                            repo.stars
-                                                ? `★ ${repo.stars}`
-                                                : null,
-                                            pushed(repo.pushedAt),
-                                        ]
-                                            .filter(Boolean)
-                                            .join(" · ")}
-                                    </span>
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                    <p className={styles.more}>
-                        <a href={SITE.github.href}>
-                            All {result.total} repositories on GitHub
+            <ul className={styles.repos}>
+                {repos.map((repo) => (
+                    <li key={repo.name}>
+                        <a href={repo.url} className={styles.repo}>
+                            <span className={styles.repoName}>{repo.name}</span>
+                            <span className={styles.meta}>
+                                {[
+                                    repo.language,
+                                    repo.stars ? `★ ${repo.stars}` : null,
+                                ]
+                                    .filter(Boolean)
+                                    .join(" · ")}
+                            </span>
+                            {repo.description ? (
+                                <span className={styles.repoText}>
+                                    {repo.description}
+                                </span>
+                            ) : null}
                         </a>
-                    </p>
-                </>
-            ) : (
-                <p className={styles.more}>
-                    <a href={result.profile}>Repositories on GitHub</a>
-                </p>
-            )}
+                    </li>
+                ))}
+            </ul>
+            <p className={styles.more}>
+                <a href={SITE.github.href}>More on GitHub</a>
+            </p>
         </section>
     );
 }

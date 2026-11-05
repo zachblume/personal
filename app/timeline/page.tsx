@@ -5,8 +5,7 @@ import { SizeKey, TimelineChart, YearTally } from "app/timeline/Timeline";
 
 export const metadata = {
     title: "Timeline",
-    description:
-        "Every post on one time axis, sized by length, with the quiet stretches between them and a tally by year.",
+    description: "Everything I've written, laid out by date.",
 };
 
 export default function TimelinePage() {
@@ -36,16 +35,15 @@ export default function TimelinePage() {
                             Timeline
                         </h1>
                         <p className="mt-3 max-w-md text-[15px] leading-relaxed text-neutral-500 dark:text-neutral-400">
-                            {t.total.posts} posts since {t.firstMonth}. Each
-                            disc is a post&rsquo;s artwork, its area the
-                            post&rsquo;s length in words.
+                            {t.total.posts} posts since {t.firstMonth}, laid out
+                            by date. Bigger circles are longer posts.
                         </p>
                     </div>
                     <SizeKey />
                 </div>
                 <TimelineChart t={t} today={shortDate(todayIso)} />
             </section>
-            <YearTally t={t} todayYear={todayIso.slice(0, 4)} />
+            <YearTally t={t} />
             <SiteFooter bordered />
         </div>
     );

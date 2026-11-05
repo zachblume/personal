@@ -244,7 +244,8 @@
     font-variant-numeric: tabular-nums;
 }
 
-/* Open source: text only, so the pets stay the pictures on the page. */
+/* Open source: a few pinned projects, text only, so the pets stay the
+   pictures on the page. */
 .repo {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -265,12 +266,9 @@
 .repoText {
     grid-column: 1 / -1;
     grid-row: 2;
-    overflow: hidden;
     font-size: 13px;
-    line-height: 1.5;
+    line-height: 1.6;
     color: #737373;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .repo:hover .repoName {
