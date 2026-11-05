@@ -2,62 +2,62 @@ import { getArtIndex } from "app/blog/utils";
 import { artHues } from "app/components/Art";
 
 /**
- * Pull requests I opened per month on my side project, from GitHub search
- * (`is:pr author:zachblume created:<month>`). Starts at my first PR there and
- * stops at the last full month.
+ * Pull requests of mine merged per month on my side project, from GitHub
+ * search (`is:pr author:zachblume merged:<month>`). Starts at my first PR
+ * there and stops at the last full month.
  */
 const MONTHS: [string, number][] = [
     ["2023-03", 16],
     ["2023-04", 23],
     ["2023-05", 14],
     ["2023-06", 42],
-    ["2023-07", 16],
-    ["2023-08", 2],
-    ["2023-09", 17],
-    ["2023-10", 28],
-    ["2023-11", 21],
-    ["2023-12", 21],
-    ["2024-01", 17],
+    ["2023-07", 13],
+    ["2023-08", 1],
+    ["2023-09", 14],
+    ["2023-10", 25],
+    ["2023-11", 19],
+    ["2023-12", 18],
+    ["2024-01", 14],
     ["2024-02", 12],
-    ["2024-03", 27],
-    ["2024-04", 27],
-    ["2024-05", 26],
+    ["2024-03", 21],
+    ["2024-04", 25],
+    ["2024-05", 23],
     ["2024-06", 8],
-    ["2024-07", 16],
-    ["2024-08", 6],
-    ["2024-09", 1],
+    ["2024-07", 11],
+    ["2024-08", 3],
+    ["2024-09", 0],
     ["2024-10", 0],
-    ["2024-11", 7],
+    ["2024-11", 8],
     ["2024-12", 0],
-    ["2025-01", 1],
-    ["2025-02", 14],
-    ["2025-03", 12],
-    ["2025-04", 26],
-    ["2025-05", 9],
-    ["2025-06", 24],
-    ["2025-07", 32],
-    ["2025-08", 20],
-    ["2025-09", 49],
-    ["2025-10", 48],
-    ["2025-11", 159],
-    ["2025-12", 101],
-    ["2026-01", 199],
-    ["2026-02", 259],
-    ["2026-03", 55],
-    ["2026-04", 59],
-    ["2026-05", 309],
-    ["2026-06", 200],
-    ["2026-07", 184],
-    ["2026-08", 239],
-    ["2026-09", 245],
-    ["2026-10", 631],
+    ["2025-01", 0],
+    ["2025-02", 6],
+    ["2025-03", 8],
+    ["2025-04", 20],
+    ["2025-05", 5],
+    ["2025-06", 5],
+    ["2025-07", 25],
+    ["2025-08", 16],
+    ["2025-09", 33],
+    ["2025-10", 39],
+    ["2025-11", 123],
+    ["2025-12", 85],
+    ["2026-01", 171],
+    ["2026-02", 211],
+    ["2026-03", 50],
+    ["2026-04", 45],
+    ["2026-05", 259],
+    ["2026-06", 178],
+    ["2026-07", 157],
+    ["2026-08", 196],
+    ["2026-09", 201],
+    ["2026-10", 553],
 ];
 
 const W = 600;
 const H = 300;
 const M = { top: 28, right: 4, bottom: 26, left: 34 };
 const GAP = 2;
-const MAX = 700;
+const MAX = 600;
 const TICKS = [0, 200, 400, 600];
 
 const label = (month: string) =>
@@ -99,7 +99,7 @@ export function PrVolumeChart({ slug }: { slug: string }) {
                 viewBox={`0 0 ${W} ${H}`}
                 className="h-auto w-full overflow-visible text-neutral-500 dark:text-neutral-400"
                 role="img"
-                aria-label={`Bar chart of pull requests I opened per month, from about 20 a month in 2023 and 2024 to ${peak[1]} in ${label(peak[0])}.`}
+                aria-label={`Bar chart of my merged pull requests per month, from about 14 a month in 2023 and 2024 to ${peak[1]} in ${label(peak[0])}.`}
             >
                 <defs>
                     <linearGradient
@@ -153,7 +153,7 @@ export function PrVolumeChart({ slug }: { slug: string }) {
                                 height={plotH}
                                 fill="transparent"
                             >
-                                <title>{`${label(month)}: ${n} PRs`}</title>
+                                <title>{`${label(month)}: ${n} merged PRs`}</title>
                             </rect>
                             {month.endsWith("-01") || i === 0 ? (
                                 <text
@@ -179,21 +179,8 @@ export function PrVolumeChart({ slug }: { slug: string }) {
                 </text>
             </svg>
             <figcaption className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-                Pull requests I opened per month on my side project.
+                My merged pull requests per month on my side project.
             </figcaption>
-            <details className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-                <summary className="cursor-pointer">Data</summary>
-                <table className="mt-2">
-                    <tbody>
-                        {MONTHS.map(([month, n]) => (
-                            <tr key={month}>
-                                <td className="pr-6">{label(month)}</td>
-                                <td className="text-right tabular-nums">{n}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </details>
         </figure>
     );
 }
