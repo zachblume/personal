@@ -56,7 +56,7 @@ app/
     [slug]/opengraph-image.tsx   Per-post share card, prerendered (see "Share cards")
     posts/*.mdx         The posts themselves, named `YYYY-MM-DD-slug.mdx`
   components/
-    SiteChrome.tsx      SiteHeader (Timeline · About) and SiteFooter (sitemap and the ⌘K button)
+    SiteChrome.tsx      SiteHeader (About) and SiteFooter (Timeline, About, GitHub and the ⌘K button)
     Link.tsx            Wrapper over next/link; also records visits in localStorage
     PostList.tsx / PostRow.tsx   The archive list (homepage and article "Past Writing")
     ReadingHistory.tsx  "You've read n of m" strip under the archive
@@ -90,15 +90,16 @@ title, publishedAt (YYYY-MM-DD), summary, image?, draft?
 Full-bleed, with a black-and-white interface. The only color on the page is the
 generated per-post artwork.
 
-- **Header** (every full-bleed page): signature (the way home), then Timeline · About —
-  the same on every page. The **footer** lists every page and holds the ⌘K search
-  button; the ⌘K shortcut itself works anywhere.
+- **Header** (every full-bleed page): signature (the way home), then About — the same
+  on every page. The **footer** has Timeline, About, GitHub and the ⌘K search button;
+  the ⌘K shortcut itself works anywhere. Nothing links to `/rss`, though the feed is
+  still served there.
 - **Homepage** is the whole archive as an edge-to-edge listview: ordinal, artwork
   thumbnail, title, summary, date, hairline chevron. No hero, no CTA — the header
   rule sits directly on the first row. Rows highlight on hover.
-- **About** (`/about`) is one quiet column: the bio and avatar; **Work**, which doesn't
-  restate the jobs — just each company's name over the posts that came out of it
-  (with their artwork), picked by hand in `app/about/work.ts`; the three pet photos
+- **About** (`/about`) is one quiet column: the bio and avatar; a "Posts about <company>"
+  section per job, listing the posts that came out of it (with their artwork) rather
+  than restating the job, picked by hand in `app/about/work.ts`; the three pet photos
   (grayscale, colorizing on hover); and contact links.
 - **Article pages** have a centered `max-w-xl` reading column. From `lg` long
   parentheticals (4+ words) are set as sidenotes in the right margin, automatically, by

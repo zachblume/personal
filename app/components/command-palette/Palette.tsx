@@ -360,20 +360,6 @@ function pickAtRandom<T>(list: T[]) {
     return list[Math.floor(Math.random() * list.length)];
 }
 
-function RssIcon() {
-    return (
-        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden>
-            <path
-                d="M3.5 2.5a9 9 0 0 1 9 9M3.5 6.5a5 5 0 0 1 5 5"
-                stroke="currentColor"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-            />
-            <circle cx="4" cy="11" r="1" fill="currentColor" />
-        </svg>
-    );
-}
-
 /** Weight and an underline rather than a background, which would vanish
  *  into the selected row's own. */
 function Highlight({ text, positions }: { text: string; positions: number[] }) {
@@ -506,15 +492,6 @@ export function Palette({
                 : "You've opened every post, so any of them.",
             icon: <ShuffleIcon />,
             run: () => go(pickAtRandom(unread.length ? unread : posts).href),
-        },
-        {
-            id: "rss",
-            group: "Actions",
-            label: "Open RSS feed",
-            keywords: "subscribe feed xml atom reader",
-            detail: "Every post as a feed, at /rss.",
-            icon: <RssIcon />,
-            run: () => leave("/rss"),
         },
         {
             id: "github",

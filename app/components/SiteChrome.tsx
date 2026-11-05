@@ -34,11 +34,11 @@ function Signature({ current }: { current?: Section }) {
 }
 
 /**
- * The same two links on every page; the signature is the way home. The ⌘K
- * button lives in the footer, and the shortcut works anywhere.
+ * Just About, on every page; the signature is the way home. Timeline and the
+ * ⌘K button live in the footer, and the shortcut works anywhere.
  */
 export function SiteHeader({ current }: { current: Section }) {
-    const items = [TIMELINE, ABOUT];
+    const items = [ABOUT];
 
     return (
         <header
@@ -88,12 +88,6 @@ export function SiteFooter({ bordered = false }: { bordered?: boolean }) {
                     <li>
                         <a href={SITE.github.href} className={styles.link}>
                             GitHub
-                        </a>
-                    </li>
-                    <li>
-                        {/* A feed, not a page: no client-side navigation. */}
-                        <a href="/rss" className={styles.link}>
-                            RSS
                         </a>
                     </li>
                     <li className="flex items-center">
