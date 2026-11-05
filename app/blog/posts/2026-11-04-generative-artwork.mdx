@@ -1,0 +1,79 @@
+---
+title: "Drawing the artwork for every post"
+publishedAt: "2026-11-04"
+summary: "Every post here gets its own artwork, drawn in code from two inputs. How it works, and a studio to play with it."
+---
+
+Every post on this site has a piece of artwork next to it. None of them are
+images. Each one is an SVG drawn in code when the page is built, from two
+inputs: the post's slug and its place in the archive.
+
+## Two inputs
+
+The first input is the post's **index**: its rank in chronological order, oldest
+first. The index picks the composition, one of twelve (aurora, halo, dunes, orbs,
+beams, bloom, ribbon, rays, mosaic, lens, spiral and stripes), and it picks the
+two hues. Both advance together, so neighbouring posts differ in shape and in
+color.
+
+The second input is the **slug**, hashed with FNV-1a to seed a small random number
+generator. That decides everything inside a composition: where the shapes sit,
+how big they are, how they lean. So two posts that draw the same composition
+still look unalike.
+
+Indexing chronologically rather than by position on the page matters: a new post
+appends to the end of that order, so publishing never reshuffles the artwork of
+a post that's already out.
+
+## Why not just hash the slug
+
+It's the obvious move, and it doesn't work. A hash gives no spacing
+guarantee, so the compositions clustered (one shape drew 4 of 13 posts) and the
+hues piled up in one corner of the wheel, with 7 of 13 landing somewhere in
+blue-purple. Golden-angle stepping, the usual fix for spreading hues, only
+spreads consecutive integers; applied to hash values it does nothing.
+
+Consecutive integers are exactly what the index is. Each step turns the first
+hue a twelfth of the wheel, with a little jitter from the slug so the sequence
+doesn't read as a color wheel, and the second hue sits at one of eight offsets
+from the first, from nearly analogous to nearly complementary.
+
+## Color
+
+Each piece is a duotone. The two hues go on the `<svg>` as CSS variables, and
+the stylesheet expands them into a fixed ramp: two background tints and six
+inks, three on each hue.
+
+```css title="app/global.css"
+.art {
+    --art-bg: oklch(0.88 0.138 var(--art-h));
+    --art-bg2: oklch(0.84 0.152 var(--art-h2));
+    --art-0: oklch(0.47 0.205 var(--art-h));
+    --art-1: oklch(0.59 0.225 var(--art-h));
+    --art-2: oklch(0.71 0.192 var(--art-h));
+    --art-3: oklch(0.54 0.225 var(--art-h2));
+    --art-4: oklch(0.67 0.2 var(--art-h2));
+    --art-5: oklch(0.8 0.15 var(--art-h2));
+}
+```
+
+It's `oklch`, not `hsl`, because lightness and chroma stay perceptually even as
+the hue turns. The same numbers in `hsl` make the yellows glare and the blues go
+muddy. Dark mode restates the whole ramp with its own numbers rather than
+inverting it.
+
+The ramp has to live on `.art`, not on `:root`. A custom property that contains
+`var()` is resolved at the element that declares it, and only the result
+inherits, so a ramp on `:root` resolves against an `--art-h` that doesn't exist
+there. Every tile renders solid black.
+
+Most of what keeps these from looking like charts is the overlap: soft
+gradients, blur and translucent shapes laid over each other, so the two hues mix
+into colors neither one contains.
+
+## Try it
+
+Type any seed, step through the index, and download what you like as a
+wallpaper. A post's slug at its own index draws that post's artwork.
+
+<ArtStudio />

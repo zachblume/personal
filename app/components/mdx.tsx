@@ -4,6 +4,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { highlight } from "sugar-high";
 import React from "react";
 import { slugify } from "app/lib/slugify";
+import { ArtStudio } from "app/components/art-studio/ArtStudio";
 import { CopyButton } from "app/components/CopyButton";
 import { HeadingAnchor } from "app/components/HeadingAnchor";
 
@@ -155,6 +156,7 @@ const components = {
     code: Code,
     pre: Pre,
     Table,
+    ArtStudio,
 };
 
 /**
