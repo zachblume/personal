@@ -104,9 +104,8 @@ generated per-post artwork.
 - **Article pages** have a centered `max-w-xl` reading column. From `lg` long
   parentheticals (4+ words) are set as sidenotes in the right margin, automatically, by
   a transform of the MDX source (inline expanders on narrow screens). At `xl` the
-  outline sits sticky in that same margin, lined up with the notes' column; as a note
-  scrolls past, only the outline rows it would cover fade out. A fixed bar with the title and
-  a hairline progress rule appears once the title scrolls away, and a resume prompt
+  outline sits sticky in that same margin, lined up with the notes' column; its rows dim as a note scrolls toward them
+  (opacity follows the scroll position) and are gone only while the note is beside them. A fixed bar with the title appears once the title scrolls away, and a resume prompt
   offers your place on return. Links to other posts show a preview card on hover. After
   the article: previous / next tiles, then the archive list. The blog index keeps the narrow reading column from the root layout.
 - Body font is **Geist Sans**, code is **Geist Mono** (the `geist` package, which ships

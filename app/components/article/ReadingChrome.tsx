@@ -69,8 +69,7 @@ function focusQuietly(el: HTMLElement | null | undefined) {
 
 /**
  * Wraps a post's title and article. Once the title scrolls off, a bar pins
- * the title, with a hairline progress rule along its bottom edge. Remembers
- * where you were and offers to take you back next time.
+ * the title. Remembers where you were and offers to take you back next time.
  *
  * The bar is fixed, so it must never end up inside a transformed ancestor.
  */
@@ -92,7 +91,6 @@ export function ReadingChrome({
     children: React.ReactNode;
 }) {
     const rootRef = useRef<HTMLDivElement>(null);
-    const ruleRef = useRef<HTMLDivElement>(null);
     const geometry = useRef<Geometry | null>(null);
     const current = useCurrentSection();
     // For the save timer, which outlives the render it was scheduled in.
@@ -108,12 +106,11 @@ export function ReadingChrome({
         currentRef.current = current;
     }, [current]);
 
-    // Position: progress rule, bar visibility, and the bookmark.
+    // Position: bar visibility, and the bookmark.
     useEffect(() => {
         const root = rootRef.current;
         const article = root?.querySelector("article");
         const titleEl = root?.querySelector("h1");
-        const rule = ruleRef.current;
         if (!article || !titleEl) return;
 
         let frame = 0;
@@ -137,7 +134,6 @@ export function ReadingChrome({
             if (!g) return;
             const y = window.scrollY;
             setVisible(y > g.titleBottom && y + BAR < g.articleBottom);
-            if (rule) rule.style.transform = `scaleX(${progressAt(g, y)})`;
         };
 
         const schedule = () => {
@@ -271,11 +267,6 @@ export function ReadingChrome({
                         {title}
                     </p>
                 </div>
-                <div
-                    ref={ruleRef}
-                    aria-hidden
-                    className="absolute inset-x-0 -bottom-px h-px origin-left bg-neutral-900 dark:bg-white"
-                />
             </aside>
 
             <div
