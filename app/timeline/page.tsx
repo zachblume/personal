@@ -30,13 +30,12 @@ export default function TimelinePage() {
                     <div>
                         <h1
                             id="timeline-title"
-                            className="font-[family-name:var(--font-editorial)] text-[34px] leading-[1.08] tracking-[-0.025em] text-neutral-900 md:text-[44px] dark:text-white"
+                            className="font-[family-name:var(--font-geist-sans)]! text-[12px] uppercase tracking-wider! text-neutral-400 dark:text-neutral-500"
                         >
-                            Timeline
+                            {t.total.posts} posts since {t.firstMonth}
                         </h1>
-                        <p className="mt-3 max-w-md text-[15px] leading-relaxed text-neutral-500 dark:text-neutral-400">
-                            {t.total.posts} posts since {t.firstMonth}, laid out
-                            by date. Bigger circles are longer posts.
+                        <p className="mt-2 max-w-md text-[14px] leading-relaxed text-neutral-500 dark:text-neutral-400">
+                            Laid out by date. Bigger circles are longer posts.
                         </p>
                     </div>
                     <SizeKey />

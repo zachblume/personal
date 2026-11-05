@@ -124,16 +124,9 @@ export default async function Blog({ params }: BlogProps) {
                         <h1 className="title font-semibold text-2xl tracking-tighter">
                             {post.title}
                         </h1>
-                        <div className="mt-2 mb-8 text-sm">
-                            <p className="flex flex-wrap items-baseline gap-x-3 text-sm text-neutral-600 dark:text-neutral-400">
-                                <time dateTime={post.publishedAt}>
-                                    {post.date}
-                                </time>
-                                <span className="font-[family-name:var(--font-geist-mono)] text-[12px] tabular-nums text-neutral-400 dark:text-neutral-500">
-                                    {post.minutes} min read
-                                </span>
-                            </p>
-                        </div>
+                        <p className="mt-2 mb-8 text-sm text-neutral-600 dark:text-neutral-400">
+                            <time dateTime={post.publishedAt}>{post.date}</time>
+                        </p>
                         <article className="prose">
                             <CustomMDX
                                 source={source}
