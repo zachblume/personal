@@ -1,0 +1,38 @@
+/* Layout and visibility only; colour and type are Tailwind classes on the
+   elements. These rules are unlayered, so they win over Tailwind's utilities
+   wherever both set the same property.
+
+   Narrow: a note is folded away until its marker is pressed, then drops in
+   beneath the line it belongs to. A full-width float can't fit beside the
+   content already on that line, so it lands under it, and the rest of the
+   line stays where it was. */
+.note {
+    display: none;
+}
+
+.sidenote[data-open] .note {
+    display: block;
+    float: left;
+    clear: both;
+    width: 100%;
+    margin: 0.375rem 0 0.75rem;
+}
+
+/* Wide: every note floats into the right margin, starting on the line its
+   marker sits on. The negative margin is wider than the note, so the note
+   takes no room from the text; `clear: right` makes a note that would run
+   into the one above it wait below it instead, so they never overlap. The
+   small top margin lines the 13px note's first baseline up with the text's.
+
+   The breakpoint is repeated in Sidenote.tsx, and the article page reserves
+   the 17rem of margin from it up. */
+@media (min-width: 64rem) {
+    .note,
+    .sidenote[data-open] .note {
+        display: block;
+        float: right;
+        clear: right;
+        width: 14rem;
+        margin: 0.3rem -17rem 1.25rem 0;
+    }
+}

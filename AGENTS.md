@@ -34,10 +34,13 @@ after cloning; CI installs should use `pnpm install --frozen-lockfile`. Commit
 
 ```
 app/
-  layout.tsx            Root layout: html > body > ThemeProvider > Theme > main
-                        Body is width-constrained: `max-w-xl mx-4 lg:mx-auto`
-  page.tsx              Homepage: full-bleed list of every post (PostRow + generated Art)
-  about/page.tsx        About: bio, "now" list, pet photos, contact links
+  layout.tsx            Root layout: html > body > ThemeProvider > Theme > main, plus the
+                        ⌘K CommandPalette (outside <main>). Body is width-constrained:
+                        `max-w-xl mx-4 lg:mx-auto`
+  page.tsx              Homepage: full-bleed list of every post (PostList)
+  timeline/             /timeline — every post on a time axis, with a by-year tally
+  about/                About: bio, work (posts grouped by job, work.ts), pet photos,
+                        contact links
   global.css            Tailwind import + all `.prose` typography styles and misc utilities
   not-found.tsx
   sitemap.ts            Exports `baseUrl` — imported elsewhere for metadata
@@ -53,15 +56,20 @@ app/
     [slug]/opengraph-image.tsx   Per-post share card, prerendered (see "Share cards")
     posts/*.mdx         The posts themselves, named `YYYY-MM-DD-slug.mdx`
   components/
+    SiteChrome.tsx      SiteHeader (About) and SiteFooter (Timeline, About, GitHub and the ⌘K button)
     Link.tsx            Wrapper over next/link; also records visits in localStorage
+    PostList.tsx / PostRow.tsx   The archive list (homepage and article "Past Writing")
+    ReadingHistory.tsx  "You've read n of m" strip under the archive
+    article/            Article page: reading bar, margin outline, sidenotes, link previews
+    PostNeighbours.tsx  Previous / next post tiles under an article
+    art-studio/         <ArtStudio />, the interactive artwork studio any post can embed in its MDX
+    command-palette/    ⌘K palette; the dialog itself loads on first open
     BlogLink.tsx        A post row (date + title), shows a "previously read" icon for visited posts
     posts.tsx           BlogPosts — sorted list of BlogLink
-    nav.tsx             Navbar — currently EMPTY (`navItems = {}`) and commented out of layout.tsx
-    footer.tsx          Currently just a spacer div; real footer is commented out
     mdx.tsx             CustomMDX component map for next-mdx-remote
-    outline.tsx / OutlineNavLink.tsx   In-post table of contents
     EmailLink.tsx       Obfuscated mailto link
     LocalStorageLinkSyncer.tsx
+  lib/posts.ts          getPosts(): every post with plain text, words, minutes, headings, art index
   lib/slugify.ts
   lib/site.ts           SITE: name, role, city, email, links, pet photos — shared bio constants
 public/                 zach.jpg (avatar), waldo/millie/luna.jpeg (pets)
@@ -83,14 +91,24 @@ title, publishedAt (YYYY-MM-DD), summary, image?, draft?
 Full-bleed, with a black-and-white interface. The only color on the page is the
 generated per-post artwork.
 
+- **Header** (every full-bleed page): signature (the way home), then About — the same
+  on every page. The **footer** has Timeline, About, GitHub and the ⌘K search button;
+  the ⌘K shortcut itself works anywhere. Nothing links to `/rss`, though the feed is
+  still served there.
 - **Homepage** is the whole archive as an edge-to-edge listview: ordinal, artwork
   thumbnail, title, summary, date, hairline chevron. No hero, no CTA — the header
   rule sits directly on the first row. Rows highlight on hover.
-- **About** (`/about`) holds the bio, a "now" definition list, the avatar, the three
-  pet photos (grayscale, colorizing on hover), and contact links.
-- Article pages use the shared full-width header and archive list, with a centered
-  `max-w-xl` reading column and an outline confined to the article. The blog index
-  keeps the narrow reading column from the root layout.
+- **About** (`/about`) is one quiet column: the bio and avatar; a "Posts about <company>"
+  section per job, listing the posts that came out of it (with their artwork) rather
+  than restating the job, picked by hand in `app/about/work.ts`; the three pet photos
+  (grayscale, colorizing on hover); and contact links.
+- **Article pages** have a centered `max-w-xl` reading column. From `lg` long
+  parentheticals (4+ words) are set as sidenotes in the right margin, automatically, by
+  a transform of the MDX source (inline expanders on narrow screens). At `xl` the
+  outline sits sticky in that same margin, lined up with the notes' column; its rows dim as a note scrolls toward them
+  (opacity follows the scroll position) and are gone only while the note is beside them. A fixed bar with the title appears once the title scrolls away, and a resume prompt
+  offers your place on return. Links to other posts show a preview card on hover. After
+  the article: previous / next tiles, then the archive list. The blog index keeps the narrow reading column from the root layout.
 - Body font is **Geist Sans**, code is **Geist Mono** (the `geist` package, which ships
   them locally via `next/font/local`). Tight negative tracking on headings, hairline
   `neutral-200` / `neutral-800` rules.
@@ -106,8 +124,8 @@ contains, which is most of what stops these reading as charts.
 
 It takes two inputs:
 
-- **`index`** — the post's rank in _chronological_ order (oldest = 0), computed in
-  `app/components/PostList.tsx`. It picks the composition and the hue pair, so both advance
+- **`index`** — the post's rank in _chronological_ order (oldest = 0), computed once in
+  `app/lib/posts.ts` as `artIndex`. It picks the composition and the hue pair, so both advance
   together and neighbouring rows differ in shape and color.
 - **`slug`** — hashed (FNV-1a) to seed a mulberry32 PRNG for the parameters inside
   a composition, so two posts drawing the same shape still look unalike.
@@ -135,6 +153,14 @@ Two things to know before touching it:
   renders solid black).
 - **`oklch`, not `hsl`.** Lightness and chroma stay perceptually even across hues;
   the same numbers in hsl make the yellows glare and the blues go muddy.
+
+`Art.tsx` exports `COMPOSITIONS`, `HUE_STEP`, `HUE_OFFSETS`, `hash` and
+`artParams(slug, index)` (a post's composition and two hues, without drawing it), so
+code that describes the art — the `<ArtStudio />` embed — never copies its math. When the same post's art appears twice on one page, give one copy an
+`idPrefix`: `url(#…)` resolves to the first matching id, and one inside a
+`display: none` subtree doesn't paint. Don't render `<Art>` during SSR inside a client
+component — its float coordinates differ in the last digit between Node and browsers,
+so hydration mismatches. Render it on the server and pass it in.
 
 To hand-author art for a post instead, add `image:` to its frontmatter and branch at
 the call site — every layout on the site uses a 16:9 slot. (`image:` also replaces the
@@ -212,6 +238,10 @@ creates a transformed ancestor that breaks `position: fixed` for anything inside
   `--default-font-family` / `--code-font-family` on `.radix-themes.radix-themes`; the class is
   doubled on purpose, because Next emits `@radix-ui/themes/styles.css` _after_ `global.css`,
   so a single-class rule ties on specificity and loses on source order.
+- Inside `.full-bleed`, `global.css` resets link hover to `color: inherit` (rows own
+  their hover treatment), which silently cancels a Tailwind `hover:text-*` on the
+  `<a>` itself. Put hover colors in a CSS module or on an inner span — see
+  `SiteChrome.module.css`.
 - `app/layout.tsx` injects a third-party `reb2b` visitor-tracking script.
 
 <!-- BEGIN:nextjs-agent-rules -->

@@ -1,51 +1,67 @@
+import { PaletteTrigger } from "app/components/command-palette/PaletteTrigger";
 import { Link } from "app/components/Link";
+import styles from "app/components/SiteChrome.module.css";
 import { SITE } from "app/lib/site";
 
 /** Horizontal padding shared by every full-bleed section. */
 export const PAD = "px-6 md:px-10 lg:px-16";
 
-function SiteNavigation({ current }: { current: "home" | "about" }) {
+/** Which page the chrome is on, so navigation can mark or skip it. */
+export type Section = "home" | "about" | "timeline" | "article";
+
+type NavItem = { href: string; label: string; section: Section };
+
+const TIMELINE: NavItem = {
+    href: "/timeline",
+    label: "Timeline",
+    section: "timeline",
+};
+const ABOUT: NavItem = { href: "/about", label: "About", section: "about" };
+
+/** Every page, in the order the footer lists them. */
+const SITEMAP: NavItem[] = [TIMELINE, ABOUT];
+
+function Signature({ current }: { current?: Section }) {
     return (
-        <>
-            <Link
-                href="/"
-                className="site-name text-[13px] font-medium tracking-tight text-neutral-900 dark:text-white"
-            >
-                {SITE.name}
-            </Link>
-            <nav className="flex gap-7 text-[13px] text-neutral-500 dark:text-neutral-400">
-                {current === "about" ? (
-                    <Link
-                        href="/"
-                        className="hover:text-neutral-900 dark:hover:text-white"
-                    >
-                        Writing
-                    </Link>
-                ) : (
-                    <Link
-                        href="/about"
-                        className="hover:text-neutral-900 dark:hover:text-white"
-                    >
-                        About
-                    </Link>
-                )}
-                <a
-                    href={SITE.github.href}
-                    className="hover:text-neutral-900 dark:hover:text-white"
-                >
-                    GitHub
-                </a>
-            </nav>
-        </>
+        <Link
+            href="/"
+            aria-current={current === "home" ? "page" : undefined}
+            className="site-name shrink-0 text-neutral-900 dark:text-white"
+        >
+            {SITE.name}
+        </Link>
     );
 }
 
-export function SiteHeader({ current }: { current: "home" | "about" }) {
+/**
+ * Just About, on every page; the signature is the way home. Timeline and the
+ * ⌘K button live in the footer, and the shortcut works anywhere.
+ */
+export function SiteHeader({ current }: { current: Section }) {
+    const items = [ABOUT];
+
     return (
         <header
-            className={`${PAD} flex h-14 items-center justify-between border-b border-neutral-200 dark:border-neutral-800`}
+            className={`${PAD} ${styles.chrome} flex h-14 items-center gap-4 border-b border-neutral-200 md:gap-6 dark:border-neutral-800`}
         >
-            <SiteNavigation current={current} />
+            <Signature current={current} />
+            <nav
+                aria-label="Primary"
+                className="ml-auto flex items-center gap-5 text-[13px] md:gap-6 lg:gap-7"
+            >
+                {items.map((item) => (
+                    <Link
+                        key={item.href}
+                        href={item.href}
+                        aria-current={
+                            item.section === current ? "page" : undefined
+                        }
+                        className={styles.link}
+                    >
+                        {item.label}
+                    </Link>
+                ))}
+            </nav>
         </header>
     );
 }
@@ -53,13 +69,32 @@ export function SiteHeader({ current }: { current: "home" | "about" }) {
 export function SiteFooter({ bordered = false }: { bordered?: boolean }) {
     return (
         <footer
-            className={`${PAD} flex h-14 items-center justify-between ${
+            className={`${PAD} ${styles.chrome} flex flex-col gap-3 py-6 lg:min-h-14 lg:flex-row lg:items-center lg:justify-between lg:gap-10 lg:py-3 ${
                 bordered
                     ? "border-t border-neutral-200 dark:border-neutral-800"
                     : ""
             }`}
         >
-            <SiteNavigation current="home" />
+            <Signature />
+            <nav aria-label="Sitemap">
+                <ul className="flex flex-wrap gap-x-5 text-[13px] leading-7 lg:justify-end">
+                    {SITEMAP.map((item) => (
+                        <li key={item.href}>
+                            <Link href={item.href} className={styles.link}>
+                                {item.label}
+                            </Link>
+                        </li>
+                    ))}
+                    <li>
+                        <a href={SITE.github.href} className={styles.link}>
+                            GitHub
+                        </a>
+                    </li>
+                    <li className="flex items-center">
+                        <PaletteTrigger />
+                    </li>
+                </ul>
+            </nav>
         </footer>
     );
 }

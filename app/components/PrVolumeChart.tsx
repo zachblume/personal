@@ -1,6 +1,6 @@
 import { getArtIndex } from "app/blog/utils";
 import { Fragment } from "react";
-import { artHues } from "app/components/Art";
+import { artParams } from "app/components/Art";
 
 /**
  * Pull requests of mine merged per month on my side project, from GitHub
@@ -129,7 +129,7 @@ function bar(x: number, y: number, w: number, h: number) {
 export function PrVolumeChart({ slug }: { slug: string }) {
     // Colored with the post's own artwork hues, through the same .art ramp, so
     // it matches the thumbnail and gets the dark ramp for free.
-    const { h, h2 } = artHues(slug, getArtIndex(slug));
+    const { h, h2 } = artParams(slug, getArtIndex(slug));
     const plotW = W - M.left - M.right;
     const plotH = H - M.top - M.bottom;
     const step = plotW / MONTHS.length;
