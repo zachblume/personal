@@ -12,54 +12,52 @@ export const metadata = {
     description: `${SITE.name}: senior software engineer at ${SITE.employer.label} in ${SITE.city} and founder of ${SITE.company.label}.`,
 };
 
+/** "Posts about Stripe", and so on: the writing that came out of each job. */
 function Work({ posts }: { posts: Post[] }) {
-    return (
-        <section className={styles.section} aria-labelledby="work-title">
-            <h2 id="work-title" className={styles.label}>
-                Work
-            </h2>
-            {WORK.map((group) => {
-                const writing = group.posts
-                    .map((slug) => posts.find((post) => post.slug === slug))
-                    .filter((post): post is Post => post !== undefined);
-                const id = `work-${group.company.toLowerCase().replace(/\W+/g, "-")}`;
-                return (
-                    <div key={group.company} className={styles.workGroup}>
-                        <h3 id={id} className={styles.company}>
-                            {group.company}
-                        </h3>
-                        <ul className={styles.posts} aria-labelledby={id}>
-                            {writing.map((post) => (
-                                <li key={post.slug}>
-                                    {/* `group` runs the shared art drift on hover. */}
-                                    <Link
-                                        href={post.href}
-                                        className={`${styles.post} group`}
-                                    >
-                                        <span className={styles.postArt}>
-                                            <Art
-                                                slug={post.slug}
-                                                index={post.artIndex}
-                                            />
-                                        </span>
-                                        <span className={styles.postTitle}>
-                                            {post.title}
-                                        </span>
-                                        <time
-                                            dateTime={post.publishedAt}
-                                            className={styles.postDate}
-                                        >
-                                            {post.date}
-                                        </time>
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                );
-            })}
-        </section>
-    );
+    return WORK.map((group) => {
+        const writing = group.posts
+            .map((slug) => posts.find((post) => post.slug === slug))
+            .filter((post): post is Post => post !== undefined);
+        const id = `posts-about-${group.company.toLowerCase().replace(/\W+/g, "-")}`;
+        return (
+            <section
+                key={group.company}
+                className={styles.section}
+                aria-labelledby={id}
+            >
+                <h2 id={id} className={styles.label}>
+                    Posts about {group.company}
+                </h2>
+                <ul className={styles.posts}>
+                    {writing.map((post) => (
+                        <li key={post.slug}>
+                            {/* `group` runs the shared art drift on hover. */}
+                            <Link
+                                href={post.href}
+                                className={`${styles.post} group`}
+                            >
+                                <span className={styles.postArt}>
+                                    <Art
+                                        slug={post.slug}
+                                        index={post.artIndex}
+                                    />
+                                </span>
+                                <span className={styles.postTitle}>
+                                    {post.title}
+                                </span>
+                                <time
+                                    dateTime={post.publishedAt}
+                                    className={styles.postDate}
+                                >
+                                    {post.date}
+                                </time>
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            </section>
+        );
+    });
 }
 
 export default function About() {

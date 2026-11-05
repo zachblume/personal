@@ -147,19 +147,8 @@
     border-color: #262626;
 }
 
-/* Work: the posts that came out of each job, under the company's name. */
-.workGroup + .workGroup {
-    margin-top: 22px;
-}
-
-.company {
-    font-size: 13px;
-    font-weight: 500;
-    color: #171717;
-}
-
+/* "Posts about …": the posts that came out of each job. */
 .posts {
-    margin-top: 8px;
     border-top: 1px solid #e5e5e5;
 }
 
@@ -204,10 +193,6 @@
     color: #a3a3a3;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
-}
-
-:global(.dark) .company {
-    color: #f5f5f5;
 }
 
 :global(.dark) .posts,
