@@ -44,7 +44,7 @@ export function PostRow({
         <li className="border-b border-neutral-200 dark:border-neutral-800">
             <Link
                 href={href}
-                className={`${PAD} group flex items-center gap-6 py-6 transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900/60`}
+                className={`${PAD} group flex items-center gap-6 py-6 transition-colors hover:bg-neutral-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-neutral-900 dark:hover:bg-neutral-900/60 dark:focus-visible:outline-white`}
             >
                 <span className="hidden w-8 shrink-0 text-[12px] tabular-nums text-neutral-300 sm:block dark:text-neutral-700">
                     {String(ordinal).padStart(2, "0")}

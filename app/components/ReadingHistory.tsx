@@ -51,7 +51,7 @@ export function ReadingHistory({ posts }: { posts: Post[] }) {
                             Up next:{" "}
                             <Link
                                 href={`/blog/${next.slug}`}
-                                className="text-neutral-900 underline decoration-neutral-300 underline-offset-2 dark:text-white dark:decoration-neutral-700"
+                                className="rounded-sm text-neutral-900 underline decoration-neutral-300 underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:text-white dark:decoration-neutral-700 dark:focus-visible:outline-white"
                             >
                                 {next.title}
                             </Link>
@@ -67,7 +67,7 @@ export function ReadingHistory({ posts }: { posts: Post[] }) {
                         key={post.slug}
                         href={`/blog/${post.slug}`}
                         title={post.title}
-                        className={`h-2 flex-1 rounded-full transition-colors ${
+                        className={`h-2 flex-1 rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:focus-visible:outline-white ${
                             read.includes(post.slug)
                                 ? "bg-neutral-900 dark:bg-white"
                                 : "bg-neutral-200 hover:bg-neutral-400 dark:bg-neutral-800 dark:hover:bg-neutral-600"

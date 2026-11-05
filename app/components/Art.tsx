@@ -25,7 +25,7 @@ const W = 160;
 const H = 100;
 
 /** FNV-1a — stable across builds, unlike anything hashing object identity. */
-function hash(input: string) {
+export function hash(input: string) {
     let h = 2166136261;
     for (let i = 0; i < input.length; i++) {
         h ^= input.charCodeAt(i);
@@ -570,20 +570,51 @@ const stripes: Draw = ({ r, id, C }) => {
     );
 };
 
-const DRAWINGS: Draw[] = [
-    aurora,
-    halo,
-    dunes,
-    orbs,
-    beams,
-    bloom,
-    ribbon,
-    rays,
-    mosaic,
-    lens,
-    spiral,
-    stripes,
+const DRAWINGS: { name: string; note: string; draw: Draw }[] = [
+    { name: "aurora", note: "Pools of color around a ring.", draw: aurora },
+    { name: "halo", note: "A low sun behind concentric rings.", draw: halo },
+    { name: "dunes", note: "Stacked smooth ridges.", draw: dunes },
+    {
+        name: "orbs",
+        note: "Overlapping translucent discs; the intersections make the palette.",
+        draw: orbs,
+    },
+    {
+        name: "beams",
+        note: "Wide diagonal light falling across the frame.",
+        draw: beams,
+    },
+    { name: "bloom", note: "Dot field blooming out of a point.", draw: bloom },
+    {
+        name: "ribbon",
+        note: "Thick flowing strokes with round caps.",
+        draw: ribbon,
+    },
+    { name: "rays", note: "Wedges fanning out of one corner.", draw: rays },
+    {
+        name: "mosaic",
+        note: "Soft rounded tiles, fading across a diagonal.",
+        draw: mosaic,
+    },
+    {
+        name: "lens",
+        note: "Big offset circle outlines, like overlapping lenses.",
+        draw: lens,
+    },
+    {
+        name: "spiral",
+        note: "Arc segments sweeping around a point.",
+        draw: spiral,
+    },
+    {
+        name: "stripes",
+        note: "Thick diagonal bars with rounded ends.",
+        draw: stripes,
+    },
 ];
+
+/** The twelve compositions in the order `index` cycles through them. */
+const COMPOSITIONS = DRAWINGS.map(({ name, note }) => ({ name, note }));
 
 /**
  * A full turn of the wheel spread across the composition set, so a post's
@@ -594,6 +625,24 @@ const HUE_STEP = 360 / DRAWINGS.length;
 /** Offsets cycle so pairings range from analogous to near-complementary. */
 const HUE_OFFSETS = [42, 165, 70, -52, 198, -78, 120, 32];
 
+/** `firstDraw` is the slug's PRNG's first value, which only sets the jitter. */
+function hues(index: number, firstDraw: number) {
+    // A half-step of jitter keeps the sequence from looking like a color wheel
+    // without letting any two neighbours collide.
+    const jitter = (firstDraw - 0.5) * HUE_STEP * 0.5;
+    const h = (index * HUE_STEP + jitter + 360) % 360;
+    const h2 = (h + HUE_OFFSETS[index % HUE_OFFSETS.length] + 360) % 360;
+    return { h, h2 };
+}
+
+/** What <Art slug index> draws — its composition and two hues — without drawing it. */
+export function artParams(slug: string, index: number) {
+    return {
+        composition: COMPOSITIONS[index % COMPOSITIONS.length],
+        ...hues(index, rng(hash(slug))()),
+    };
+}
+
 export function Art({
     slug,
     index = 0,
@@ -601,6 +650,7 @@ export function Art({
     literal = false,
     width,
     height,
+    idPrefix = "",
 }: {
     slug: string;
     /** Chronological rank of the post, oldest = 0. */
@@ -614,18 +664,17 @@ export function Art({
      *  side if the box is portrait. */
     width?: number;
     height?: number;
+    /** Namespaces the SVG ids. Needed when the same post's art is drawn twice
+     *  on one page: `url(#…)` resolves to the first copy, and a copy inside a
+     *  `display: none` subtree doesn't paint, so the other renders flat. */
+    idPrefix?: string;
 }) {
     const seed = hash(slug);
     const r = rng(seed);
-    const draw = DRAWINGS[index % DRAWINGS.length];
+    const { draw } = DRAWINGS[index % DRAWINGS.length];
+    const { h, h2 } = hues(index, r());
 
-    // A half-step of jitter keeps the sequence from looking like a color wheel
-    // without letting any two neighbours collide.
-    const jitter = (r() - 0.5) * HUE_STEP * 0.5;
-    const h = (index * HUE_STEP + jitter + 360) % 360;
-    const h2 = (h + HUE_OFFSETS[index % HUE_OFFSETS.length] + 360) % 360;
-
-    const uid = `${seed.toString(36)}${index}`;
+    const uid = `${idPrefix}${seed.toString(36)}${index}`;
     const id = (name: string) => `art-${uid}-${name}`;
     const angle = Math.floor(r() * 360);
     const palette = literal ? literalPalette(h, h2) : VARS;

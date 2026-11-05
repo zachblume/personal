@@ -254,8 +254,8 @@ body:has(.full-bleed) main.wrapper {
     padding: 0;
 }
 
-/* Footer renders a bare spacer div after the page content; these pages
-   bring their own footer. */
+/* The root layout renders a bare spacer div after the page content; these
+   pages bring their own footer. */
 .full-bleed ~ div {
     display: none;
 }

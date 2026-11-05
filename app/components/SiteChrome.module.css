@@ -1,0 +1,34 @@
+/* Links in the header and footer.
+
+   Two classes deep to outrank global.css's
+   `.full-bleed a:not(:where(.prose a)):hover`, which sets a hovered link's
+   color back to its parent's. Being unlayered, that also beats any Tailwind
+   `hover:` color on the link, so the hover has to be stated here. */
+.chrome .link {
+    color: #737373;
+    white-space: nowrap;
+}
+
+:global(.dark) .chrome .link {
+    color: #a3a3a3;
+}
+
+.chrome .link:hover,
+.chrome .link[aria-current="page"] {
+    color: #171717;
+}
+
+:global(.dark) .chrome .link:hover,
+:global(.dark) .chrome .link[aria-current="page"] {
+    color: #fff;
+}
+
+.chrome a:focus-visible {
+    outline: 2px solid #171717;
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
+:global(.dark) .chrome a:focus-visible {
+    outline-color: #fff;
+}

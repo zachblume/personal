@@ -7,9 +7,8 @@ import { createPortal } from "react-dom";
  * The `#` beside a post heading. Following it still jumps to the heading;
  * it also copies the full link and says so.
  *
- * The toast is portalled to <body> rather than rendered in the heading:
- * OutlineNavLink matches headings by their textContent, and a toast inside
- * one would stop it matching while it shows.
+ * The toast is portalled to <body> rather than rendered in the heading, so
+ * it never becomes part of the heading's text.
  */
 export function HeadingAnchor({ slug }: { slug: string }) {
     const [copied, setCopied] = useState(false);

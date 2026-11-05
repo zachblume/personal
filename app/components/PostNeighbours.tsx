@@ -29,9 +29,11 @@ export function PostNeighbours({ slug }: { slug: string }) {
                         }`}
                     >
                         <span className="block w-full max-w-sm overflow-hidden rounded-md border border-neutral-200/80 dark:border-neutral-800">
+                            {/* The archive list below draws the same art. */}
                             <Art
                                 slug={post.slug}
                                 index={index}
+                                idPrefix="neighbour-"
                                 className="aspect-[16/9] w-full transition-transform duration-500 ease-out group-hover:scale-[1.06]"
                             />
                         </span>
