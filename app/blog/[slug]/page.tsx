@@ -135,9 +135,8 @@ export default async function Blog({ params }: BlogProps) {
                         </article>
                         {/* The last notes can hang past the final paragraph. */}
                         <div className="clear-both" />
-                        {/* Lined up with the sidenotes' column: they hang 3rem
-                            past the text and are 14rem wide. */}
-                        <aside className="absolute inset-y-16 left-full ml-12 hidden w-56 xl:block">
+                        {/* Starts where the sidenotes do, 3rem past the text. */}
+                        <aside className="absolute inset-y-16 left-full ml-12 hidden w-48 xl:block">
                             <div className="sticky top-20">
                                 <Outline headings={headings} />
                             </div>

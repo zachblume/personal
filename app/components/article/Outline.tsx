@@ -75,56 +75,46 @@ export function Outline({ headings }: { headings: Heading[] }) {
     const rows = new Set(hidden.split(","));
     const isHidden = (row: string) => rows.has(row);
 
+    // The outline's original look: a small "Outline" heading, plain links
+    // cut at 20 characters, the current one a shade darker.
     return (
         <nav ref={navRef} aria-labelledby={labelId}>
-            <p
+            <h3
                 id={labelId}
                 data-row="label"
-                className={`mb-3 text-[12px] uppercase tracking-wider text-neutral-400 dark:text-neutral-500 ${fade(isHidden("label"))}`}
+                className={`mb-1 text-xs text-neutral-400 ${fade(isHidden("label"))}`}
             >
                 Outline
-            </p>
-            <ol>
+            </h3>
+            <ul className="list-none">
                 {headings.map((heading, i) => {
                     const active = heading.id === current;
                     const gone = isHidden(String(i));
                     return (
-                        // The rail is drawn per row, so a row's segment
-                        // fades with it.
                         <li
                             key={heading.id}
                             data-row={i}
-                            className={`border-l border-neutral-200 dark:border-neutral-800 ${fade(gone)}`}
+                            className={`${heading.level > 2 ? "ml-2" : "ml-1"} ${fade(gone)}`}
                         >
-                            {/* Colour on the inner span: global.css resets
-                                a hovered full-bleed link to `color: inherit`,
-                                which beats a hover utility on the link. */}
                             <a
                                 href={`#${heading.id}`}
+                                title={heading.text}
                                 aria-current={active ? "location" : undefined}
                                 tabIndex={gone ? -1 : undefined}
-                                className={`group -ml-px block border-l py-1 text-[13px] leading-snug focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:focus-visible:outline-white ${
-                                    heading.level > 2 ? "pl-6" : "pl-3"
-                                } ${
+                                className={`text-sm ${
                                     active
-                                        ? "border-neutral-900 dark:border-white"
-                                        : "border-transparent"
+                                        ? "text-neutral-800 dark:text-neutral-200"
+                                        : "text-neutral-400"
                                 }`}
                             >
-                                <span
-                                    className={`motion-safe:transition-colors ${
-                                        active
-                                            ? "text-neutral-900 dark:text-white"
-                                            : "text-neutral-400 group-hover:text-neutral-900 dark:text-neutral-500 dark:group-hover:text-white"
-                                    }`}
-                                >
-                                    {heading.text}
-                                </span>
+                                {heading.text.length > 20
+                                    ? `${heading.text.slice(0, 20)}...`
+                                    : heading.text}
                             </a>
                         </li>
                     );
                 })}
-            </ol>
+            </ul>
         </nav>
     );
 }
