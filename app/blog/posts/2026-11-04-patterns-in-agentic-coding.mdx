@@ -351,7 +351,42 @@ I think the math is different now. We keep learning this, that owning the code
 is good. As long as it's good code, which, you know, I'm not totally sure about
 yet in every case.
 
-## 11. Notice when you followed Claude too far
+## 11. Project chats
+
+For anything bigger than one PR, I've started keeping one long-running agent
+chat per project, and I kind of treat it like the eng lead on the project. It
+holds the plan, splits the work into PRs, starts other agents on them, keeps
+track of which ones merged and which ones are stuck, and deals with rebases and
+review comments as they come in.
+
+And then I mostly just chat with it, the same way I'd talk to a tech lead.
+Where are we at? What's blocking the email stuff? Let's cut the mobile part
+for now and come back to it. It goes and does that across however many PRs it
+needs to, and I don't have to be the one keeping the state of 30 open PRs in my
+head. That part used to be most of the work of running a project, honestly,
+more than writing any of the code.
+
+## 12. Goals that run for weeks
+
+The next step past that is a project chat that you just let go. I give it a
+constrained domain (this one part of the app, these folders, nothing else),
+verification rules for what counts as done (tests pass, a walkthrough video,
+the metric actually moved), and a `/goal`. Then it runs for days or weeks,
+shipping PRs on its own, and when it actually needs a decision it asks me in
+Slack (!).
+
+It's a really weird feeling the first time. You get a Slack message that's
+basically "hey, the old export and the new one disagree on refunded gifts, which
+one is right?", you answer it from your phone, and an hour later there's a PR
+for it. It feels a lot more like having a teammate than using a tool.
+
+I think the constraints are what make it safe to leave running. The domain
+keeps the blast radius small, the verification rules mean it can't just
+declare victory, and the goal tells it when to stop. Without those three, a
+chat that runs for a week is mostly a way to generate a lot of slop very
+efficiently.
+
+## 13. Notice when you followed Claude too far
 
 The last one is more of a warning. Every so often I'll be a few days into an
 agent-driven refactor and realize I don't really understand where it's going
