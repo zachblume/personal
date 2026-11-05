@@ -34,44 +34,34 @@ function Signature({ current }: { current?: Section }) {
 }
 
 /**
- * The same links on every page; the signature is the way home. At 360px
- * Timeline gives way first — the footer and ⌘K still reach it.
+ * The same two links on every page; the signature is the way home. The ⌘K
+ * button lives in the footer, and the shortcut works anywhere.
  */
 export function SiteHeader({ current }: { current: Section }) {
-    const items = [
-        { ...TIMELINE, narrow: false },
-        { ...ABOUT, narrow: true },
-    ];
+    const items = [TIMELINE, ABOUT];
 
     return (
         <header
             className={`${PAD} ${styles.chrome} flex h-14 items-center gap-4 border-b border-neutral-200 md:gap-6 dark:border-neutral-800`}
         >
             <Signature current={current} />
-            <div className="ml-auto flex items-center gap-4 md:gap-6">
-                <nav
-                    aria-label="Primary"
-                    className="flex items-center gap-5 text-[13px] md:gap-6 lg:gap-7"
-                >
-                    {items.map((item) => (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            aria-current={
-                                item.section === current ? "page" : undefined
-                            }
-                            className={
-                                item.narrow
-                                    ? styles.link
-                                    : `${styles.link} hidden sm:block`
-                            }
-                        >
-                            {item.label}
-                        </Link>
-                    ))}
-                </nav>
-                <PaletteTrigger />
-            </div>
+            <nav
+                aria-label="Primary"
+                className="ml-auto flex items-center gap-5 text-[13px] md:gap-6 lg:gap-7"
+            >
+                {items.map((item) => (
+                    <Link
+                        key={item.href}
+                        href={item.href}
+                        aria-current={
+                            item.section === current ? "page" : undefined
+                        }
+                        className={styles.link}
+                    >
+                        {item.label}
+                    </Link>
+                ))}
+            </nav>
         </header>
     );
 }
@@ -105,6 +95,9 @@ export function SiteFooter({ bordered = false }: { bordered?: boolean }) {
                         <a href="/rss" className={styles.link}>
                             RSS
                         </a>
+                    </li>
+                    <li className="flex items-center">
+                        <PaletteTrigger />
                     </li>
                 </ul>
             </nav>
