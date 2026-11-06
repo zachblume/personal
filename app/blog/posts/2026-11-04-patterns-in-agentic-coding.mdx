@@ -48,18 +48,15 @@ that.
 
 ## The Gang of Four and the command pattern
 
-I decided I wanted to write this article when I was reading Martin Fowler's
-_Refactoring_ and he referenced another book about software patterns, the Gang
-of Four's _Design Patterns_ from 1994. I'd never actually read it, and I was
-really surprised to see that the command pattern was in there. Let's talk about
-that for a sec.
+I started thinking about this article while reading Martin Fowler's
+_Refactoring_. He referenced the Gang of Four's _Design Patterns_ from 1994,
+which I'd never read. I was surprised to find the command pattern in it,
+because I use it all the time at Stripe without knowing where it came from.
 
-The command pattern is where you make a class instead of a function, so you can
-decompose the function into its constituent parts, group them under that class,
-and expose an `execute` method on it. So you have a complex function that's
-essentially nicely abstracted or packaged up a little cleaner than a module
-file with a bunch of dumped functions in it, and you call it the same way you'd
-call any function. Something like this, in Ruby:
+With the command pattern, you package an operation and its inputs into an
+object with an `execute` method. In the version I use, the class keeps the
+steps together and exposes one method to the caller. Something like this,
+in Ruby:
 
 ```ruby
 class ApproveLoanApplication
@@ -86,46 +83,23 @@ Whoever calls it just sees the one method, and when you open the file the
 `execute` method reads kind of like a table of contents for everything below
 it.
 
-It does a lot of nice things: it defines privacy clearly, lets you use object
-parameters, makes self-referencing methods easier, and lets you use inheritance
-to give every command the same configurable pieces, like logging.
+The class gives the operation private helper methods and a place to hold its
+inputs. A base class can also give every command the same logging or other
+shared behavior.
 
-We use this all the time at Stripe, and I had no idea that this was a general
-software pattern that went far beyond Stripe, let alone one with its own
-chapter in a book from the nineties.
+I'd been using the pattern for years without knowing its history. It made me
+wonder what else I'd been doing without knowing its name.
 
-It reminded me how many software patterns there are out there that I don't know
-of, or that I do know of but never knew had a name, and that form the core of
-my understanding of how to be a software developer anyways. It's a nice feeling
-really to be like oh, yeah, you can continue learning in the space essentially
-indefinitely. There are a lot of extremely interesting patterns out there at
-different layers of abstraction than you might've even been thinking of.
-
-As practitioners it's easy to at times mistakenly come to think of computer
-science or computer engineering as a _somewhat_ settled science, or a somewhat
-known or settled engineering field, where the "new" and trendy patterns are
-just rehashing of old things (ah, a new generation of "model-view-controller").
-But of course there's another side of things where you say to yourself, the
-ground underneath me keeps moving so consistently and fairly fast: a new
-framework, a new library, and so on. That's what many of us found so
-interesting about our job, that it's not just rote memorization. I don't know,
-it seems like bridge engineering might be comparably settled.
-
-Coding agents feel different from a new framework, though. They change how the
-code gets written in the first place, so a lot of the field is sort of back
-open. Plenty of the old patterns are still useful for sure, and some are even
-more useful now than they were (the command pattern turns out to be one of
-them, more on that in #9). But there are also hundreds or thousands of new ones
-that nobody has consolidated into best practices yet. Here's a first batch,
-from things I do at Stripe and on my side project.
+Some of these older patterns have become more useful to me with agents,
+including this one (more on that in #9). Others have become cheap enough to
+use where I wouldn't have bothered before.
 
 ## 1. PR walkthrough videos
 
-This one is basically a prompt in `AGENTS.md` that tells the agent to always do
-a full end-to-end manual test of whatever it built and record a video of it,
-and then to add voice narration where the agent explains the walkthrough. So
-now if I just go into Conductor and say "make this simple change and put up a
-PR," it comes back with a guided product tour of the change.
+I have a prompt in `AGENTS.md` that tells the agent to test the flow it built,
+record a video, and add voice narration explaining the walkthrough. Now if I
+go into Conductor and say "make this simple change and put up a PR," it comes
+back with a narrated demo.
 
 Here's a real one, from a pretty small PR on my side project that hides the
 lists a contact is already on when you go to add them to a list. Everything in
@@ -142,21 +116,19 @@ it is fake seed data. Turn your sound on:
     <source src="/videos/pr-walkthrough-add-to-list.mp4" type="video/mp4" />
 </video>
 
-This sounds totally crazy, but it has become one of the most turnkey things
-that help me evaluate agentic PRs quickly. You can often tell that they're
-wrong almost instantly without reading any code, and then you give the agent
-behavioral changes based on the video. There's just something about demos, and
-video and voice together, that helps you reason extremely quickly.
+The videos have become one of the quickest ways for me to review a PR. I can
+often spot the wrong behavior without reading any code, then tell the agent
+what to change. Watching the flow and hearing the explanation makes it easier
+to catch things I wouldn't think to ask about in a code review.
 
-This has really begun redefining how I write software outside of Stripe. About
-70% of my PRs on my side project have a video now. In a way it almost feels
-like scrolling TikTok. You're sending ideas at a bunch of parallel coding
+About 70% of the PRs on my side project have a video now. In a way it almost
+feels like scrolling TikTok. You're sending ideas at a bunch of parallel coding
 agents and getting back full demo videos every few minutes, over and over.
 
 ## 2. Project chats
 
 For anything bigger than one PR, I've started keeping one long-running agent
-chat per project, and I kind of treat it like the eng lead on the project. It
+chat per project, and I treat it like the eng lead. It
 holds the plan, splits the work into PRs, starts other agents on them, keeps
 track of which ones merged and which ones are stuck, and deals with rebases and
 review comments as they come in.
@@ -176,21 +148,20 @@ the metric actually moved), and a `/goal`. Then it runs for days or weeks,
 shipping PRs on its own, and when it actually needs a decision it slows down to
 ask.
 
-The constraints you give it are what make it safe to leave running. By telling
-it "you're free to ship within this area, and nothing else, the narrow domain
-keeps the blast radius small, and that verification goal or rules stop it from
-declaring victory early.
+The narrow domain limits what it can change, and the verification rules give
+it concrete conditions to meet before calling the work done. I tell it where
+it's free to ship and where it needs to stop and ask.
 
 ## 4. Build guardrails and metrics first, then let the agent rip against them
 
-On my side project we had a bunch of integrations that each worked a little
+My side project had a bunch of integrations that each worked a little
 differently, which made it a great job for a big fan-out of agents. But before
 I pointed agents at it I spent a while on something pretty boring, which was an
 accuracy page I could actually trust. That meant fixing the ground-truth
 samples (some of the hand-gathered ones were just wrong) and adding about a
 thousand new reference samples.
 
-Once that page was the north star, I opened one agent per integration
+Once I trusted that page, I opened one agent per integration
 (something like 44 PRs in about twenty minutes), and they all reported their
 results against the same numbers. A lot of them fixed their integration. Some
 came back with a PR that only documented why the issue couldn't be fixed yet,
@@ -240,8 +211,8 @@ a pretty casual message.
 
 ## 7. Expansive custom linters to enforce architectural purity
 
-One of the biggest changes I've seen is an explosion in custom linters that
-enforce coding standards and the shape of whatever framework you've built. I
+I now use custom linters for coding standards and architectural rules that I
+used to leave to code review. I
 want the guidance agents get to be deterministic. A failing check tells them
 they did something wrong, so I don't have to tell them in review.
 
@@ -283,8 +254,7 @@ writing and maintaining the rule felt like more work than it was worth. And for
 people it kind of was. You could just tell the new person how things were
 supposed to work.
 
-Agents really benefit from this stuff, though, and I think they can go 10x
-faster when the guardrails are strict and clear. If the questions are already
+Agents move much faster when these rules are strict and clear. If the questions are already
 settled and there's one correct pattern, the agent doesn't have to guess which
 of the five ways is the real one by reading the codebase (and it'll often pick
 the wrong one, because the wrong one is usually the most common). When
@@ -328,38 +298,35 @@ time in half, which is a funny problem to have.
 
 I've changed my mind about a lot of architecture stuff in the last year. I used
 to like frameworks that let you write less code, and I'd mostly push back on
-heavy structure like domain-driven design. There were a bunch of reasons to
-avoid heavy patterns: when you had many layers, it was both a lot of
-boilerplate for a person to literally type, and also led to decay in logic
-across layers. This got really extreme with some architectural patterns
-encouraging 7 or 9 layers of objects from the database to the frontend that
-were all basically the same object, but we'd have different layers, and so then
-you'd get entropy and decay with the same thing named differently at every one of
-those 9 layers. But codegen is basically free now, and once nobody's typing the
-boilerplate by hand, what I care about is that everything has one way to
-implement it, and I also care more that boundaries between code make them safe
-from each other, because as the velocity increases so does risk.
+heavy structure like domain-driven design. There were good reasons for that.
+The same object could pass through seven or nine layers, with slightly
+different names and representations in each. You had to type all that
+boilerplate, then keep it in sync.
 
-It's more important for agents than it was for people. Maybe not "way more,"
-but I think definitely more. If there's a model layer, a command layer (the
-pattern from earlier in this post), a single place for data access, and a
-folder structure that says which domain owns what, in practice I've seen agents
-find the right spot and copy the shape of the code already there more effectively.
+Now that agents write the boilerplate, I care more about having one clear way
+to implement something. I also care more about boundaries that keep a change
+in one part of the code from breaking another. As I ship faster, I need those
+boundaries more.
+
+That structure has been especially useful with agents. If there's a model
+layer, a command layer, a single place for data access, and folders that say
+which domain owns what, I've found agents are better at finding the right
+place and following the existing pattern.
+
 Naming helps too. I now prefer `db.peer_fundraisers` over `db.peerFundraisers`
 because it matches the table name, so an agent can grep for one string and find
 everything.
 
 The migration itself got cheap, too. A big restructuring like this used to be
-the kind of suggestion that got shot down right away. Now we write a spec for
+the kind of suggestion that got shot down right away. Now I write a spec for
 the pattern and the folder structure, and an agent can do most of the migration
-in one go, without nearly as much emotional effort as it used to take.
+in one go. It's much less of an ordeal.
 
 ## 10. Spiking slowly/by hand, then expanding rapidly by agent
 
 Once the PRD and the eng design are agreed on, it's really tempting to hand the
 whole design doc to an agent and get the entire project back in one PR. I do
-this a lot now, and it works surprisingly well. It consistently makes sense to
-just go super fast and get an entire project to 80% in a single day, sometimes
+this a lot now. I can often get a project to 80% in a single day, sometimes
 10,000+ lines in one PR, merged behind a feature flag and then fixed up in
 follow-ups.
 
@@ -367,8 +334,7 @@ But I think it mostly works when there's already a really good example in the
 codebase of the thing you're asking for. The first feature of a new kind should
 get built slowly and painstakingly and reviewed line by line, because that's
 the one the agent is going to copy. After that the next few similar features
-can go fast, because there's actually a very good model for the AI to work off
-of, in our style.
+can go fast, because the agent has a working example to follow.
 
 I do still draw a line on dangerous stuff. If a change touches something like
 the filter compiler or anything with money, I want it in smaller pieces, even
@@ -392,15 +358,15 @@ backtest has to catch it.
 
 I'm not totally sure 30% is right. I think line count is probably a bad signal
 by itself, but I actually think the AI is decent at combining signals, so the
-threshold is kind of a bet on that. My guess is that about 30% of our PRs are
+threshold is kind of a bet on that. My guess is that about 30% of my PRs are
 safe to skip human review today, which is why I tuned it to approve about that
 many in the backtest.
 
 ## 12. Build instead of buy (maintenance became cheaper)
 
 This one is really a business decision. Because code is so cheap now, I keep
-ending up replacing vendors with code we own: a CSV import tool, a data grid
-library, a hosted job queue, an email editor, even our monitoring setup. A few
+ending up replacing vendors with code I own: a CSV import tool, a data grid
+library, a hosted job queue, an email editor, even my monitoring setup. A few
 years ago a lot of these would've been obviously wrong calls, the kind of thing
 where you'd spend a year maintaining something a company does better.
 
@@ -411,12 +377,11 @@ vendor's version and yours side by side, write tests against the behavior you
 actually depend on, and keep going until they match. It's the same loop as the
 refactor pattern above, just pointed at somebody else's software.
 
-Other people are clearly noticing too. Meta, Stanford and Harvard put out
+Meta, Stanford and Harvard put out
 [ProgramBench](https://arxiv.org/abs/2605.03546) this year, which asks agents
 to rebuild real programs like SQLite and FFmpeg from only the binary and its
 docs, and Epoch AI and METR's [MirrorCode](https://arxiv.org/abs/2606.30182)
-tests something similar. Both show clear progress, and I think the reality is
-already way ahead of the benchmarks. The headline scores still look low, with
+tests something similar. The headline scores still look low, with
 the best model passing 95% of the tests on only 3% of ProgramBench's tasks, but
 the setup is deliberately brutal: no internet, no source code, no decompiler,
 and the whole program rebuilt from scratch. Real life is a lot friendlier. You
@@ -434,13 +399,11 @@ model stopped making sense.
 In practice, I think a lot of the SaaS vendors that sell to developers can now
 be ripped out and replaced in a few days of work. That's going to change the
 math for any service whose only real moat is that the code was hard to write.
-The ones with a structural moat, like proprietary data, network effects,
-compliance work, or running something actually hard in production, will be
-fine. The ones that are mostly a nice wrapper around some code are in a tough
-spot.
+Proprietary data, network effects, compliance work, and operating a difficult
+service still give me reasons to pay a vendor. If I mostly need the code, I'm
+more likely to consider building it now.
 
-So far owning the code keeps working out for us, as long as it's good code,
-which I'm not totally sure about yet in every case.
+I'm still finding out which of these replacements were worth taking on.
 
 ## 13. Readability is more important; notice you followed Claude too far down the hole
 
@@ -449,13 +412,7 @@ agent-driven refactor and realize I don't really understand where it's going
 anymore. Each step made sense, the agent kept proposing reasonable next steps,
 and I kept saying yes, and now the code is in a state nobody actually chose.
 
-When that happens I think the right move is to stop and just say it out loud,
-that I followed Claude too far. Then go back to talking it through as humans,
-about where we're actually at and what end state we want, before anything else
-gets written. Sometimes you just have to call it slop and recalibrate.
-
-## Conclusion
-
-These are the patterns that have stuck for me so far. Some of them will
-probably turn out to be wrong, and the good ones will likely seem obvious in a
-few years. If you've found ones that work for you, I'd love to hear about them.
+When that happens I need to stop and admit that I followed Claude too far.
+Then I step back and decide what I actually want the code to look like before
+asking it to write anything else. Sometimes you just have to call it slop and
+recalibrate.
