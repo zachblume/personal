@@ -48,7 +48,7 @@ const PATTERNS: { heading: string; label: string; icon: string }[] = [
     },
     {
         heading: "8. Automated PR approval with backtested judges",
-        label: "Backtested PR approval",
+        label: "Automated PR approval",
         icon: '<path d="M6 50l10-10 8 6 10-14 10 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M42 6l16 6v12c0 10-7 16-16 20-9-4-16-10-16-20V12z" fill="#e3ebc2" class="acc" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M35 24l5 5 9-10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     },
     {
