@@ -93,10 +93,8 @@ export default async function Blog({ params }: BlogProps) {
             <CurrentSectionProvider ids={headings.map((heading) => heading.id)}>
                 <PreviewProvider>
                     <ReadingChrome
-                        slug={post.slug}
+                        key={post.slug}
                         title={post.title}
-                        headings={headings}
-                        hasIntro={!post.content.trimStart().startsWith("#")}
                         className={COLUMN}
                     >
                         <script
