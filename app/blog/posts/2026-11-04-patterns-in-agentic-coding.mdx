@@ -342,14 +342,39 @@ permission into a pretty casual message.
 
 ## 10. Build instead of buy (maintenance became cheaper)
 
-This one is really a business decision. Because code
-is so cheap now, I keep ending up replacing vendors with code we own: a CSV
-import tool, a data grid library, a hosted job queue, an email editor, even our
-monitoring setup. A few years ago a lot of these would've been obviously wrong
-calls, the kind of thing where you'd spend a year maintaining something a
-company does better.
+This one is really a business decision. Because code is so cheap now, I keep
+ending up replacing vendors with code we own: a CSV import tool, a data grid
+library, a hosted job queue, an email editor, even our monitoring setup. A few
+years ago a lot of these would've been obviously wrong calls, the kind of thing
+where you'd spend a year maintaining something a company does better.
 
-I think the math is different now. So far owning the code keeps working out, as long as it's good code, which I'm not totally sure about yet in every case.
+Agents are really good at this specific job right now, and I think it's because
+rebuilding something that already exists is one of the easiest kinds of work to
+verify. There's a reference implementation sitting right there. You can run the
+vendor's version and yours side by side, write tests against the behavior you
+actually depend on, and keep going until they match. It's the same loop as the
+refactor pattern at the top of this list, just pointed at somebody else's
+software.
+
+Other people are clearly noticing too. Meta, Stanford and Harvard put out
+[ProgramBench](https://arxiv.org/abs/2605.03546) this year, which asks agents to
+rebuild real programs like SQLite and FFmpeg from only the binary and its docs,
+and Epoch AI and METR's [MirrorCode](https://arxiv.org/abs/2606.30182) tests
+something similar. The ProgramBench results are humbling, actually. The best
+model passed 95% of the tests on only 3% of tasks, so rebuilding all of SQLite
+from scratch is still out of reach. What I'm doing is a lot easier than that. I
+don't need all of a data grid library, just the parts we use, and I get to read
+the docs, look at the source when it's open, and write my own tests.
+
+The video game world has the more dramatic version. Fans used to spend years
+reverse engineering a game's original code, matching it function by function,
+and this year AI sped that up so much that
+[decomp.dev](https://www.404media.co/video-game-reverse-engineering-community-shuts-down-because-ai-has-made-it-too-easy/),
+one of the community's hubs, stopped tracking projects because the human-driven
+model stopped making sense.
+
+I think the math is different now. So far owning the code keeps working out,
+as long as it's good code, which I'm not totally sure about yet in every case.
 
 ## 11. Project chats
 
