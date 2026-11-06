@@ -7,8 +7,7 @@ summary: "Novel approaches to pay attention to emerging from agentic coding prac
 We're inside a clear liftoff scenario for coding velocity. In the last thirty
 days I shipped 535 pull requests and 490,000 lines of code to production on my
 side project, outside my full-time job at Stripe. With new speed has come a
-Cambrian explosion of new engineering patterns. Coding agents have
-fundamentally reopened the whole field, and the patterns are showing up faster
+Cambrian explosion of new engineering patterns. Coding agents have potentially reopened a lot of settled ideas, and the patterns are showing up faster
 than anyone is writing them down, so I thought I'd take the time to start
 writing down the ones that have worked for me in daily use and aren't gimmicks.
 
@@ -32,23 +31,25 @@ It took about a year and a half to get to 40,000 lines, and then it barely
 moved for about six months (that's when I thought it would never make real
 money and was losing interest, to be honest). Today it's about 1.4 million.
 
-I know how that sounds, so I want to be clear: it isn't total slop. Honestly,
-most of the time I think it's higher quality code than I used to write by hand,
-with way more tests and way stricter rules about how things are supposed to be
-built than I ever had the patience for (keep reading about my approach to
-managing coding agents with lots of custom linters to understand why). Also
-important to mention, it isn't useless feature slop either. It's a bunch of
-features that users are actually using in prod and the company is making money
-from. The amount of code I write by hand has durably gone to about zero since
-last November, and my hours spent on my side project are now closer to being a manager of a
-bunch of agents, and the patterns below are what's let me do that.
+Lines of code and PR counts are famously bad metrics, and anywhere they get
+tracked, Goodhart's law kicks in fast. On my side project there's nobody to
+impress and nothing to game, so I'm only using them to show the shape of the
+curve. The better measure is the business: users are using these features, and
+error rates and incidents haven't gone up along with the volume.
+
+And it isn't slop. It's higher quality code than I used to write by hand, with
+way more tests and way stricter rules about how things are supposed to be built
+than I ever had the patience for (the sections on linters and testing below
+get into how). The amount of code I write by hand has durably gone to about
+zero since last November, and my hours spent on my side project are now closer
+to being a manager of a bunch of agents. The patterns below are what's let me
+do that.
 
 ## The Gang of Four and the command pattern
 
 I decided I wanted to write this article when I was reading Martin Fowler's
 _Refactoring_ and he referenced another book about software patterns, the Gang
-of Four's _Design Patterns_ from 1994. I had never heard of it, and I was
-really surprised to see that the command pattern was in there. Let's talk about
+of Four's _Design Patterns_ from 1994. I'd never actually read it, and I was really surprised to see that the command pattern was in there. Let's talk about
 that for a sec.
 
 The command pattern is where you make a class instead of a function, so you can
@@ -88,10 +89,7 @@ parameters, making self-referencing methods easier, and allowing you to
 leverage inherited OOP to add or expose consistent things like logging libs and
 other little libraries as configurable things of all functions.
 
-We use this all the time at Stripe. In fact, we use it so much, I'm actually a
-little unsure if a bare function in a file would even compile with our internal
-restrictions. I'll have to try it. Anyway, I
-had no idea that this was a general software pattern that went far beyond
+We use this all the time at Stripe, and I had no idea that this was a general software pattern that went far beyond
 Stripe, let alone one with its own chapter in a book from the nineties.
 
 It reminded me how many software patterns there are out there that I don't know
