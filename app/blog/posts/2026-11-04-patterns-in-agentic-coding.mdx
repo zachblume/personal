@@ -255,9 +255,7 @@ longer scenario tests that walk through a whole flow each, mostly to cut the run
 I've changed my mind about a lot of architecture stuff in the last year. I used
 to like frameworks that let you write less code, and I'd mostly push back on
 heavy structure like domain-driven design, because all those layers and folders
-are a lot of boilerplate for a person to type. But codegen is basically free
-now. My running joke at this point is "zach believes DDD is important as
-codegen becomes free," and I kind of mean it. Once nobody's typing the boilerplate by hand, the thing I care about is that everything has one obvious place to live.
+are a lot of boilerplate for a person to type. But codegen is basically free now, and once nobody's typing the boilerplate by hand, what I care about is that everything has one obvious place to live.
 
 That's way more important for agents than it was for people. If there's
 a model layer, a command layer (the pattern from the start of this post), a
@@ -267,10 +265,7 @@ already there. Naming helps too. I now prefer
 `db.peer_fundraisers` over `db.peerFundraisers` because it matches the table
 name, so an agent (or me) can grep for one string and find everything.
 
-The migration itself got cheap, too. A big
-restructuring like this used to be the kind of suggestion where people would
-say "zach, that is an insane suggestion, please stop." Now it's more like, we
-write a spec for the pattern and the folder structure, and an agent can do most
+The migration itself got cheap, too. A big restructuring like this used to be the kind of suggestion that got shot down right away. Now we write a spec for the pattern and the folder structure, and an agent can do most
 of the migration in one go, without nearly as much emotional effort as it used
 to take.
 
@@ -281,7 +276,7 @@ whole design doc to an agent and get the entire project back in one PR. I do
 this a lot now, and it works surprisingly well. It consistently makes sense to
 just go super fast and get an entire project to 80% in a single day, sometimes
 10,000+ lines in one PR, merged behind a feature flag and then fixed up in
-follow-ups. We have entered the yolo phase of software history, I think.
+follow-ups.
 
 But I think it mostly works when there's already a really good example in the
 codebase of the thing you're asking for. The first feature of a new kind should
@@ -319,8 +314,7 @@ reviewer that rates every PR from 1 to 10 and is allowed to approve the safe
 ones on its own. To keep it honest, the final rating is the lowest of a few things: the model's rubric score, a set of
 hard caps from plain rules (migrations, auth, anything with money, big diffs), a
 cap whenever a serious finding is still open, and a second judge that only sees
-the title, description and diff. In my notes for it I wrote that "a model
-rating is easy to talk up," which is the whole reason for the caps.
+the title, description and diff. The caps are there because a model's rating is easy to talk up.
 
 I tuned it by backtesting it against the last 1,000 PRs,
 including a list of known-bad PRs that had caused real problems. The setting I
@@ -358,9 +352,7 @@ monitoring setup. A few years ago a lot of these would've been obviously wrong
 calls, the kind of thing where you'd spend a year maintaining something a
 company does better.
 
-I think the math is different now. We keep learning this, that owning the code
-is good. As long as it's good code, which, you know, I'm not totally sure about
-yet in every case.
+I think the math is different now. So far owning the code keeps working out, as long as it's good code, which I'm not totally sure about yet in every case.
 
 ## 11. Project chats
 
@@ -382,8 +374,7 @@ The next step past that is a project chat that you just let go. I give it a
 constrained domain (this one part of the app, these folders, nothing else),
 verification rules for what counts as done (tests pass, a walkthrough video,
 the metric actually moved), and a `/goal`. Then it runs for days or weeks,
-shipping PRs on its own, and when it actually needs a decision it asks me in
-Slack (!).
+shipping PRs on its own, and when it actually needs a decision it asks me in Slack.
 
 So every so often a Slack message shows up asking which of two behaviors is the right one, you answer it from your phone, and later there's a PR for it. That's a really weird feeling the first time.
 
@@ -398,7 +389,7 @@ and I kept saying yes, and now the code is in a state nobody actually chose.
 
 When that happens I think the right move is to stop and just say it out loud, that I followed Claude too far. Then go back to talking it through as humans, about
 where we're actually at and what end state we want, before anything else gets
-written. Sometimes you just gotta go "slop!" and recalibrate.
+written. Sometimes you just have to call it slop and recalibrate.
 
 ## Conclusion
 
