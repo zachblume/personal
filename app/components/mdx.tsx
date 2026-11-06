@@ -7,6 +7,7 @@ import { slugify } from "app/lib/slugify";
 import { ArtStudio } from "app/components/art-studio/ArtStudio";
 import { CopyButton } from "app/components/CopyButton";
 import { HeadingAnchor } from "app/components/HeadingAnchor";
+import { LocChart } from "app/components/LocChart";
 import { PrVolumeChart } from "app/components/PrVolumeChart";
 
 function Table({ data }) {
@@ -153,6 +154,7 @@ const components = {
     h5: createHeading(5),
     h6: createHeading(6),
     Image: RoundedImage,
+    LocChart,
     PrVolumeChart,
     a: CustomLink,
     code: Code,

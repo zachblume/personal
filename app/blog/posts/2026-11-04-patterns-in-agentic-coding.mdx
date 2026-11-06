@@ -15,10 +15,23 @@ so I want to start writing down the ones that have worked for me.
 <PrVolumeChart slug="2026-11-04-patterns-in-agentic-coding" />
 
 For two years I was merging about 14 PRs a month, and then at the end of 2025
-it kind of went vertical. I'm obviously not writing most of that code myself
-anymore. A lot of my day now is closer to managing a bunch of agents, and the
-patterns below are what's let me do that without the whole codebase turning
-into slop (mostly).
+it kind of went vertical. The codebase went the same way:
+
+<LocChart slug="2026-11-04-patterns-in-agentic-coding" />
+
+It took about a year and a half to get to 40,000 lines, and then it barely
+moved for about six months. Today it's about 1.4 million, and about 900,000 of
+that arrived in the last four months.
+
+I know how that sounds, so I want to be clear: I don't think this is slop.
+Honestly, I think it's higher quality code than I used to write by hand, with
+way more tests and way stricter rules about how things are supposed to be
+built than I ever had the patience for. And it isn't useless feature slop
+either. It's a bunch of features that our users are actually using in prod.
+
+I'm obviously not writing most of that code myself anymore, though. A lot of
+my day now is closer to managing a bunch of agents, and the patterns below are
+what's let me do that.
 
 I decided I wanted to write this article when I was reading Martin Fowler's
 _Refactoring_ and he referenced another book about software patterns (the Gang
