@@ -52,8 +52,8 @@ const PATTERNS: { heading: string; label: string; icon: string }[] = [
         icon: '<path d="M6 12h52L32 56z" fill="#bde9dc" class="acc" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M14 25h36M22 38h20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M32 2v4M48 4l-2 4M16 4l2 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     },
     {
-        heading: "9. Repositories and DDD are cheaper to maintain now",
-        label: "Repositories and DDD",
+        heading: "9. The repository pattern and DDD are cheaper to maintain now",
+        label: "The repository pattern and DDD",
         icon: '<path d="M32 8l24 10-24 10L8 18z" fill="#eec6dd" class="acc" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M8 30l24 10 24-10M8 42l24 10 24-10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     },
     {

@@ -292,7 +292,7 @@ still slow, though, and at some point the suite gets slow enough to be the
 bottleneck. Recently I had an agent combine overlapping tests into longer
 scenarios that walk through a whole flow, to bring the runtime back down.
 
-## 9. Repositories and DDD are cheaper to maintain now
+## 9. The repository pattern and DDD are cheaper to maintain now
 
 I've changed my mind about a lot of architecture stuff in the last year. I
 used to like frameworks that let you write less code, and I'd mostly push
@@ -306,10 +306,10 @@ way to implement something. I also care more about boundaries that keep a
 change in one part of the code from breaking another. As I ship faster, I
 need those boundaries more.
 
-If there's a model
-layer, a command layer, a single place for data access, and folders that say
-which domain owns what, I've found agents are better at finding the right
-place and following the existing pattern.
+If there's a model layer, a command layer, a data access layer using the
+repository pattern, and folders that say which domain owns what, I've found
+agents are better at finding the right place and following the existing
+pattern.
 
 Naming helps too. I now prefer `db.peer_fundraisers` over
 `db.peerFundraisers` because it matches the table name, so an agent can grep
