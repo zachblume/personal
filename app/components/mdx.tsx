@@ -8,6 +8,7 @@ import { ArtStudio } from "app/components/art-studio/ArtStudio";
 import { CopyButton } from "app/components/CopyButton";
 import { HeadingAnchor } from "app/components/HeadingAnchor";
 import { LocChart } from "app/components/LocChart";
+import { PatternGrid } from "app/components/PatternGrid";
 import { PrVolumeChart } from "app/components/PrVolumeChart";
 
 function Table({ data }) {
@@ -155,6 +156,7 @@ const components = {
     h6: createHeading(6),
     Image: RoundedImage,
     LocChart,
+    PatternGrid,
     PrVolumeChart,
     a: CustomLink,
     code: Code,
