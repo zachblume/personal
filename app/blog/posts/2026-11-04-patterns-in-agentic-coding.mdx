@@ -4,18 +4,18 @@ publishedAt: "2026-11-04"
 summary: "Novel approaches to pay attention to emerging from agentic coding practices"
 ---
 
-To ground this, in the last thirty days, I shipped 553 pull requests on my side
-project on nights and weekends, outside my full-time job at Stripe -- almost
-900 thousand lines of code. And yes, that code is in production, not causing
-massive problems, and making mnoey -- and things are only accelerating. That
-would've been a completly ridiculous set of sentences a few years ago (?!). The
-thing is a lot of what we know as software engineers comes down not to pure
-computer science but impure computer engineering patterns that got codified as
-best practices through _decades_ of discovery, based on the tooling we had at
-the time. Coding agents have now fundamentally reopened the frontier of the
-whole field, and new patterns are showing up faster than anyone is writing them
-down. So I thought I'd take the time to start writing down the ones that have
-worked for me from daily use and aren't gimmicks.
+In October I shipped 553 pull requests on my side project, on nights and
+weekends, outside my full-time job at Stripe, and over the last four months the
+codebase grew by about 900,000 lines. And yes, that code is in production, not
+causing massive problems, and making money, and things are only accelerating.
+That would've been a completely ridiculous set of sentences a few years ago
+(?!). The thing is, a lot of what we know as software engineers comes down not
+to pure computer science but to impure computer engineering patterns that got
+codified as best practices through _decades_ of discovery, based on the tooling
+we had at the time. Coding agents have now fundamentally reopened the frontier
+of the whole field, and new patterns are showing up faster than anyone is
+writing them down. So I thought I'd take the time to start writing down the
+ones that have worked for me in daily use and aren't gimmicks.
 
 <PrVolumeChart slug="2026-11-04-patterns-in-agentic-coding" />
 
@@ -26,8 +26,7 @@ it went kind of vertical. The codebase went the same way:
 
 It took about a year and a half to get to 40,000 lines, and then it barely
 moved for about six months (that's when I thought it would never make real
-money and was losing interest, to be honest). Today it's about 1.4 million, and
-about 900k of that in the last four months.
+money and was losing interest, to be honest). Today it's about 1.4 million.
 
 I know how that sounds, so I want to be clear: it isn't total slop. Honestly,
 most of the time I think it's higher quality code than I used to write by hand,
@@ -36,8 +35,8 @@ built than I ever had the patience for (keep reading about my approach to
 managing coding agents with lots of custom linters to understand why). Also
 important to mention, it isn't useless feature slop either. It's a bunch of
 features that users are actually using in prod and the company is making money
-from. The amount of code I'm writing has durably gone to zero since last ~November. A
-lot of my hours on the side project now are closer to being a manager of a
+from. The amount of code I write by hand has durably gone to about zero since
+last November, and a lot of my hours on the side project now are closer to being a manager of a
 bunch of agents, and the patterns below are what's let me do that.
 
 I decided I wanted to write this article when I was reading Martin Fowler's
@@ -96,7 +95,7 @@ really to be like oh, yeah, you can continue learning in the space essentially
 indefinitely. There are a lot of extremely interesting patterns out there at
 different layers of abstraction than you might've even been thinking of.
 
-As practitioners its easy to at times mistakenly come to think of computer
+As practitioners it's easy to at times mistakenly come to think of computer
 science or computer engineering as a _somewhat_ settled science, or a somewhat
 known or settled engineering field, where the "new" and trendy patterns are
 just rehashing of old things (ah, a new generation of "model-view-controller").
@@ -106,10 +105,11 @@ framework! A new library! Etc. Of course, that's what many of us found so
 interesting about our job, that it's not just rote memorization. I don't know,
 it seems like bridge engineering might be comparably settled.
 
-Now that AI has totally recreated the way we write software through coding
-agents, the entire field is sort of back open. A lot of the old patterns are
-still useful for sure, and some of them are even more useful now than they
-were. But there are also hundreds or thousands of new ones that nobody has
+Coding agents feel different from a new framework, though. They change how the
+code gets written in the first place, so a lot of the field is sort of back
+open. Plenty of the old patterns are still useful for sure, and some are even
+more useful now than they were (the command pattern turns out to be one of
+them, more on that in #5). But there are also hundreds or thousands of new ones that nobody has
 consolidated into best practices yet. Here's a first batch, from things I do at
 Stripe and on my side project.
 
