@@ -112,7 +112,7 @@ them, more on that in #5). But there are also hundreds or thousands of new ones 
 consolidated into best practices yet. Here's a first batch, from things I do at
 Stripe and on my side project.
 
-## 1. Do the giant refactor, then backfill coverage against main
+## 1. Giant refactors with backfilled coverage against main shipped first
 
 You do a giant refactor and then you stop. You take the existing main branch
 and your refactor branch, give them both to a coding agent, and say something
@@ -171,7 +171,7 @@ This has really begun redefining how I write software outside of Stripe. About
 like scrolling TikTok. You're sending ideas at a bunch of parallel coding
 agents and getting back full demo videos every few minutes, over and over.
 
-## 3. Lint for purity
+## 3. Custom linters to enforce architectural purity
 
 One of the biggest changes I've seen is an explosion in custom linters that
 enforce coding standards and the shape of whatever framework you've built. The
@@ -231,7 +231,7 @@ afternoon of work for something that saved you a few review comments a year.
 Now an agent writes the rule in a few minutes, and then it gets enforced on
 hundreds of agent PRs.
 
-## 4. Way more integration and end-to-end tests
+## 4. A useful explosion of integration and end-to-end tests
 
 The same thing is happening with integration and end-to-end tests, and I think
 this one goes against something a lot of us were taught.
@@ -261,7 +261,7 @@ longer scenario tests that walk through a whole flow each, mostly to cut the
 runner time in half. Having way too many end-to-end tests is a pretty funny
 problem to have, given where most of us started.
 
-## 5. Architecture for agents
+## 5. A return to verbose and expensive architectural patterns like data access layer Repositories and DDD (now much cheaper!)
 
 I've changed my mind about a lot of architecture stuff in the last year. I used
 to like frameworks that let you write less code, and I'd mostly push back on
@@ -287,7 +287,7 @@ write a spec for the pattern and the folder structure, and an agent can do most
 of the migration in one go, without nearly as much emotional effort as it used
 to take.
 
-## 6. Build the first one by hand
+## 6. Spiking slowly/by hand, then expanding rapidly by agent
 
 Once the PRD and the eng design are agreed on, it's really tempting to hand the
 whole design doc to an agent and get the entire project back in one PR. I do
@@ -307,7 +307,7 @@ I do still draw a line on dangerous stuff. If a change touches something like
 the filter compiler or anything with money, I want it in smaller pieces, even
 when the agent could do it all at once.
 
-## 7. Build the metric first
+## 7. Build guardrails and metrics first, then let the agent rip against them
 
 On my side project we pull in campaign contribution data from every state, and
 every state does it a little differently, which makes it a great job for a big
@@ -327,7 +327,7 @@ I think the general version of this is to build the scoreboard before you fan
 out. If you can't trust the metric, you just get a pile of confident PRs, and
 you have no idea which of them made things worse.
 
-## 8. Let a backtested reviewer approve PRs
+## 8. Automated PR approval with backtested judges
 
 At 20-ish PRs a day, I can't review everything carefully, so I built an AI
 reviewer that rates every PR from 1 to 10 and is allowed to approve the safe
@@ -365,7 +365,7 @@ They also say "Do not infer authorization from a request to start coding,"
 since an agent that's allowed to start other agents will happily read a lot of
 permission into a pretty casual message.
 
-## 10. Own the code instead of buying it
+## 10. Build instead of buy (maintenance became cheaper)
 
 This one is less of a coding pattern and more of a business one. Because code
 is so cheap now, I keep ending up replacing vendors with code we own: a CSV
@@ -393,7 +393,7 @@ needs to, and I don't have to be the one keeping the state of 30 open PRs in my
 head. That part used to be most of the work of running a project, honestly,
 more than writing any of the code.
 
-## 12. Goals that run for weeks
+## 12. Project chats left to run on their own /goal for weeks with guardrails
 
 The next step past that is a project chat that you just let go. I give it a
 constrained domain (this one part of the app, these folders, nothing else),
@@ -413,7 +413,7 @@ declare victory, and the goal tells it when to stop. Without those three, a
 chat that runs for a week is mostly a way to generate a lot of slop very
 efficiently.
 
-## 13. Notice when you followed Claude too far
+## 13. Readability is more important; notice you followed Claude too far down the hole
 
 The last one is more of a warning. Every so often I'll be a few days into an
 agent-driven refactor and realize I don't really understand where it's going
