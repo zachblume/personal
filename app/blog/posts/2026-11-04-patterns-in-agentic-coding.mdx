@@ -86,11 +86,11 @@ it.
 It does a lot of nice things, defining privacy clearly, letting you use object
 parameters, making self-referencing methods easier, and allowing you to
 leverage inherited OOP to add or expose consistent things like logging libs and
-other little libraries as configurable things of all functions. Nice!
+other little libraries as configurable things of all functions.
 
 We use this all the time at Stripe. In fact, we use it so much, I'm actually a
 little unsure if a bare function in a file would even compile with our internal
-restrictions. I'll try that next week and let you know I guess :) Anyways, I
+restrictions. I'll have to try it. Anyway, I
 had no idea that this was a general software pattern that went far beyond
 Stripe, let alone one with its own chapter in a book from the nineties.
 
@@ -106,8 +106,7 @@ science or computer engineering as a _somewhat_ settled science, or a somewhat
 known or settled engineering field, where the "new" and trendy patterns are
 just rehashing of old things (ah, a new generation of "model-view-controller").
 But of course there's another side of things where you say to yourself, the
-ground underneath me keeps moving so consistently and fairly fast! A new
-framework! A new library! Etc. Of course, that's what many of us found so
+ground underneath me keeps moving so consistently and fairly fast: a new framework, a new library, and so on. Of course, that's what many of us found so
 interesting about our job, that it's not just rote memorization. I don't know,
 it seems like bridge engineering might be comparably settled.
 
@@ -213,7 +212,7 @@ and left ourselves in a more mixed state. Somebody would query the database
 from a controller once because there was a deadline, and then there were two
 ways to do it, and eventually five, and everyone sort of lived with it because
 writing and maintaining the rule felt like more work than it was worth. And for
-people it kind of was! You could just tell the new person how things were
+people it kind of was. You could just tell the new person how things were
 supposed to work.
 
 Agents really benefit from this stuff, though, and I think they can go 10x
@@ -263,7 +262,7 @@ single place for data access, and a folder structure that says which domain
 owns what, then an agent can find the right spot and copy the shape of the code
 already there. Naming helps too. I now prefer
 `db.peer_fundraisers` over `db.peerFundraisers` because it matches the table
-name, so an agent (or me) can grep for one string and find everything.
+name, so an agent can grep for one string and find everything.
 
 The migration itself got cheap, too. A big restructuring like this used to be the kind of suggestion that got shot down right away. Now we write a spec for the pattern and the folder structure, and an agent can do most
 of the migration in one go, without nearly as much emotional effort as it used
