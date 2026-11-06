@@ -42,8 +42,8 @@ const PATTERNS: { heading: string; label: string; icon: string }[] = [
         icon: '<circle cx="32" cy="12" r="8" fill="#cfd3f3" class="acc" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M32 20v8M32 28L12 40M32 28l20 12M32 28v12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <circle cx="12" cy="48" r="6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32" cy="48" r="6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="52" cy="48" r="6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     },
     {
-        heading: "7. Expansive custom linters to enforce architectural purity",
-        label: "Linters for architectural purity",
+        heading: "7. Custom linters for architectural rules",
+        label: "Linters for architectural rules",
         icon: '<path d="M8 56V10l46 46z" fill="#efc4bc" class="acc" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M16 44V30l14 14z" class="fill-neutral-50 dark:fill-neutral-900" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M8 20h5M8 30h3M8 40h5M8 50h3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M38 14l5 5 11-12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     },
     {
@@ -52,9 +52,8 @@ const PATTERNS: { heading: string; label: string; icon: string }[] = [
         icon: '<path d="M6 12h52L32 56z" fill="#bde9dc" class="acc" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M14 25h36M22 38h20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M32 2v4M48 4l-2 4M16 4l2 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     },
     {
-        heading:
-            "9. A return to verbose and expensive architectural patterns like data access layer Repositories and DDD (now much cheaper!)",
-        label: "Verbose architecture, now cheap",
+        heading: "9. Repositories and DDD are cheaper to maintain now",
+        label: "Repositories and DDD",
         icon: '<path d="M32 8l24 10-24 10L8 18z" fill="#eec6dd" class="acc" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M8 30l24 10 24-10M8 42l24 10 24-10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     },
     {
@@ -73,8 +72,7 @@ const PATTERNS: { heading: string; label: string; icon: string }[] = [
         icon: '<path d="M4 32l20-16 20 16v24H4z" fill="#ecd6c0" class="acc" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M18 56V42h12v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <rect x="44" y="6" width="18" height="9" rx="2.5" class="fill-neutral-50 dark:fill-neutral-900" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M53 15v36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     },
     {
-        heading:
-            "13. Readability is more important; notice you followed Claude too far down the hole",
+        heading: "13. Notice when you've followed Claude too far",
         label: "Followed Claude too far",
         icon: '<ellipse cx="38" cy="52" rx="18" ry="6.5" fill="#c7ebd3" class="acc" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M6 8c18 0 2 14 18 18s2 14 14 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 5"/> <circle cx="50" cy="16" r="9" class="fill-neutral-50 dark:fill-neutral-900" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M45 16h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     },

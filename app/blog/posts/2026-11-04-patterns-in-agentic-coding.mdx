@@ -55,8 +55,8 @@ because I use it all the time at Stripe without knowing where it came from.
 
 With the command pattern, you package an operation and its inputs into an
 object with an `execute` method. In the version I use, the class keeps the
-steps together and exposes one method to the caller. Something like this,
-in Ruby:
+steps together and exposes one method to the caller. Something like this, in
+Ruby:
 
 ```ruby
 class ApproveLoanApplication
@@ -96,14 +96,14 @@ use where I wouldn't have bothered before.
 
 ## 1. PR walkthrough videos
 
-I have a prompt in `AGENTS.md` that tells the agent to test the flow it built,
-record a video, and add voice narration explaining the walkthrough. Now if I
-go into Conductor and say "make this simple change and put up a PR," it comes
-back with a narrated demo.
+I have a prompt in `AGENTS.md` that tells the agent to test the flow it
+built, record a video, and add voice narration explaining the walkthrough.
+Now if I go into Conductor and say "make this simple change and put up a
+PR," it comes back with a narrated demo.
 
 Here's a real one, from a pretty small PR on my side project that hides the
-lists a contact is already on when you go to add them to a list. Everything in
-it is fake seed data. Turn your sound on:
+lists a contact is already on when you go to add them to a list. Everything
+in it is fake seed data. Turn your sound on:
 
 <video
     controls
@@ -118,26 +118,28 @@ it is fake seed data. Turn your sound on:
 
 The videos have become one of the quickest ways for me to review a PR. I can
 often spot the wrong behavior without reading any code, then tell the agent
-what to change. Watching the flow and hearing the explanation makes it easier
-to catch things I wouldn't think to ask about in a code review.
+what to change. Watching the flow and hearing the explanation makes it
+easier to catch things I wouldn't think to ask about in a code review.
 
-About 70% of the PRs on my side project have a video now. In a way it almost
-feels like scrolling TikTok. You're sending ideas at a bunch of parallel coding
-agents and getting back full demo videos every few minutes, over and over.
+Most of the PRs on my side project have a video now. In a way it almost
+feels like scrolling TikTok. You're sending ideas at a bunch of parallel
+coding agents and getting back full demo videos every few minutes, over and
+over.
 
 ## 2. Project chats
 
 For anything bigger than one PR, I've started keeping one long-running agent
-chat per project, and I treat it like the eng lead. It
-holds the plan, splits the work into PRs, starts other agents on them, keeps
-track of which ones merged and which ones are stuck, and deals with rebases and
-review comments as they come in.
+chat per project, and I treat it like the eng lead. It holds the plan,
+splits the work into PRs, starts other agents on them, keeps track of which
+ones merged and which ones are stuck, and deals with rebases and review
+comments as they come in.
 
 And then I mostly just chat with it, the same way I'd talk to a tech lead.
-Where are we at? What's blocking the email stuff? Let's cut the mobile part for
-now and come back to it. It goes and does that across however many PRs it needs
-to, and I don't have to be the one keeping the state of 30 open PRs in my head.
-Honestly, that used to be most of the work of running a project.
+Where are we at? What's blocking the email stuff? Let's cut the mobile part
+for now and come back to it. It goes and does that across however many PRs
+it needs to, and I don't have to be the one keeping the state of all the
+open PRs in my head. Honestly, that used to be most of the work of running a
+project.
 
 ## 3. Project chats left to run on their own /goal for weeks with guardrails
 
@@ -145,8 +147,8 @@ The next step past that is a project chat that you just let go. I give it a
 constrained domain (this one part of the app, these folders, nothing else),
 verification rules for what counts as done (tests pass, a walkthrough video,
 the metric actually moved), and a `/goal`. Then it runs for days or weeks,
-shipping PRs on its own, and when it actually needs a decision it slows down to
-ask.
+shipping PRs on its own, and when it actually needs a decision it slows down
+to ask.
 
 The narrow domain limits what it can change, and the verification rules give
 it concrete conditions to meet before calling the work done. I tell it where
@@ -155,66 +157,64 @@ it's free to ship and where it needs to stop and ask.
 ## 4. Build guardrails and metrics first, then let the agent rip against them
 
 My side project had a bunch of integrations that each worked a little
-differently, which made it a great job for a big fan-out of agents. But before
-I pointed agents at it I spent a while on something pretty boring, which was an
-accuracy page I could actually trust. That meant fixing the ground-truth
-samples (some of the hand-gathered ones were just wrong) and adding about a
-thousand new reference samples.
+differently, which made it a great job for a big fan-out of agents. But
+before I pointed agents at it I spent a while on something pretty boring,
+which was an accuracy page I could actually trust. That meant fixing the
+ground-truth samples (some of the hand-gathered ones were just wrong) and
+adding more reference samples.
 
-Once I trusted that page, I opened one agent per integration
-(something like 44 PRs in about twenty minutes), and they all reported their
-results against the same numbers. A lot of them fixed their integration. Some
-came back with a PR that only documented why the issue couldn't be fixed yet,
-which honestly was the result I wanted in those cases, way more than a fake fix
-that looked good.
+Once I trusted that page, I opened one agent per integration, and they all
+reported their results against the same numbers. A lot of them fixed their
+integration. Some came back with a PR that only documented why the issue
+couldn't be fixed yet, which honestly was the result I wanted in those
+cases, way more than a fake fix that looked good.
 
-If I'd skipped the accuracy page, I'd have gotten 44 confident PRs and no way
-to tell which of them made things worse.
+If I'd skipped the accuracy page, I'd have gotten a pile of confident PRs
+and no way to tell which of them made things worse.
 
 ## 5. Giant refactors with backfilled coverage against main shipped first
 
 You do a giant refactor and then you stop. You take the existing main branch
-and your refactor branch, give them both to a coding agent, and say something
-like:
+and your refactor branch, give them both to a coding agent, and say
+something like:
 
-> I want you to build 100% behavioral coverage of everything that I've
-> refactored, but I want you to build that 100% line coverage against main.
-> Think about every possible way that this refactor could fail and make sure we
-> have total coverage.
+> Write regression tests for the behavior I've refactored, but write them
+> against main first. Think through how the refactor could break that behavior
+> and cover those cases.
 
-Then you check that those tests pass on main, and see whether or not they fail
-on your new branch. If something passes on main and fails on your branch, you
-changed behavior somewhere, and now you know where.
+Then you check that those tests pass on main, and see whether or not they
+fail on your new branch. If something passes on main and fails on your
+branch, you changed behavior somewhere, and now you know where.
 
 You might think this is kind of useless, because the agent has access to
-everything. It can read the refactor it's supposed to be catching, so there's
-no test holdout. But in practice I've found it extremely helpful. I think it
-works because the tests have to pass on main first, so they end up pinned to
-what the old code actually did. This is one of the core things that has let me
-do gigantic refactors, like 50,000-line refactors, that I don't think I'd have
-had the nerve to merge otherwise.
+everything. It can read the refactor it's supposed to be catching, so
+there's no test holdout. But in practice I've found it extremely helpful. I
+think it works because the tests have to pass on main first, so they end up
+pinned to what the old code actually did. This has let me merge refactors
+that I wouldn't have had the nerve to merge otherwise.
 
 ## 6. Agents launching agents
 
 A lot of my agent sessions aren't started by me anymore. When a ticket gets
 created in Linear, it automatically turns into a Conductor workspace with an
 agent working it end to end. There's also a Slack bot that can read the
-codebase and the support tickets, and if a conversation turns into "can we fix
-this," it can start a coding session, check in on it, and send it follow-ups.
+codebase and the support tickets, and if a conversation turns into "can we
+fix this," it can start a coding session, check in on it, and send it
+follow-ups.
 
 Most of the work went into the handoff. The bot's instructions say "Write a
 self-contained brief. The coding agent cannot read this thread," because the
 new agent starts with none of the conversation that led to it. They also say
 "Do not infer authorization from a request to start coding," since an agent
-that's allowed to start other agents will happily read a lot of permission into
-a pretty casual message.
+that's allowed to start other agents will happily read a lot of permission
+into a pretty casual message.
 
-## 7. Expansive custom linters to enforce architectural purity
+## 7. Custom linters for architectural rules
 
 I now use custom linters for coding standards and architectural rules that I
-used to leave to code review. I
-want the guidance agents get to be deterministic. A failing check tells them
-they did something wrong, so I don't have to tell them in review.
+used to leave to code review. I want the guidance agents get to be
+deterministic. A failing check tells them they did something wrong, so I
+don't have to tell them in review.
 
 For example, you can ban data access outside of a data access layer. In
 JavaScript that's a single ESLint rule:
@@ -242,177 +242,173 @@ export default [
 ];
 ```
 
-My side project has about 50 custom rules now, with names like
+My side project has custom rules with names like
 `no-supabase-or-postgres-mocking`, `no-vague-variable-names`, and
 `require-useeffect-explanation`.
 
 Before agents, we humans often skipped writing these kinds of "purity" rules
 and left ourselves in a more mixed state. Somebody would query the database
 from a controller once because there was a deadline, and then there were two
-ways to do it, and eventually five, and everyone sort of lived with it because
-writing and maintaining the rule felt like more work than it was worth. And for
-people it kind of was. You could just tell the new person how things were
-supposed to work.
+ways to do it, and eventually five, and everyone sort of lived with it
+because writing and maintaining the rule felt like more work than it was
+worth. And for people it kind of was. You could just tell the new person how
+things were supposed to work.
 
-Agents move much faster when these rules are strict and clear. If the questions are already
-settled and there's one correct pattern, the agent doesn't have to guess which
-of the five ways is the real one by reading the codebase (and it'll often pick
-the wrong one, because the wrong one is usually the most common). When
-correctness is automated through really expansive linting, the agent just keeps
-going until everything passes, and I'm only reviewing the stuff that a check
-can't catch.
+Agents move much faster when these rules are strict and clear. If the
+questions are already settled and there's one correct pattern, the agent
+doesn't have to guess which of the five ways is the real one by reading the
+codebase (and it'll often pick the wrong one, because the wrong one is
+usually the most common). When correctness is automated through really
+expansive linting, the agent just keeps going until everything passes, and
+I'm only reviewing the stuff that a check can't catch.
 
-Writing the rules got cheap too. A custom lint rule used to take me most of an
-afternoon, which was hard to justify for something that saved a few review
-comments a year. An agent writes one in a few minutes.
+Writing the rules got cheap too. A custom lint rule used to take me most of
+an afternoon, which was hard to justify for something that saved a few
+review comments a year. An agent writes one in a few minutes.
 
 ## 8. A useful explosion of integration and end-to-end tests
 
-The same thing is happening with integration and end-to-end tests, and I think
-this one goes against something a lot of us were taught.
+The same thing is happening with integration and end-to-end tests, and I
+think this one goes against something a lot of us were taught.
 
-The testing pyramid (another old pattern) says to write lots of unit tests, a
-smaller number of integration tests, and only a handful of end-to-end tests at
-the top, because end-to-end tests are slow and flaky and a pain to keep
-working. That made sense when a person had to write and maintain every one of
-them. Most teams I've been on had a pretty thin layer of end-to-end tests
-because of it, and we leaned on people clicking around before a release to
-cover the rest.
+The testing pyramid (another old pattern) says to write lots of unit tests,
+a smaller number of integration tests, and only a handful of end-to-end
+tests at the top, because end-to-end tests are slow and flaky and a pain to
+keep working. That made sense when a person had to write and maintain every
+one of them. Most teams I've been on had a pretty thin layer of end-to-end
+tests because of it, and we leaned on people clicking around before a
+release to cover the rest.
 
 Agents change that math. Writing and fixing an end-to-end test is cheap now,
-and the tests are worth more, because an agent can't look at the app the way I
-can unless something makes it look. A unit test that an agent wrote for code it
-just wrote tends to check that the code does what the agent thinks it does,
-which isn't very much information. An end-to-end test that logs in, clicks
-through the flow, and checks what's on the screen is going to fail when the
-feature is actually broken, no matter who wrote it.
+and the tests are worth more, because an agent can't look at the app the way
+I can unless something makes it look. A unit test that an agent wrote for
+code it just wrote tends to check that the code does what the agent thinks
+it does, which isn't very much information. An end-to-end test that logs in,
+clicks through the flow, and checks what's on the screen is going to fail
+when the feature is actually broken, no matter who wrote it.
 
 So I've ended up with a lot more tests at the top of the pyramid than I ever
-would have written by hand, and agents run them on every change. They're still
-slow, though, and at some point the suite gets slow enough to be the
-bottleneck. Recently I had an agent fold 1,459 end-to-end tests into 368 longer
-scenario tests that walk through a whole flow each, mostly to cut the runner
-time in half, which is a funny problem to have.
+would have written by hand, and agents run them on every change. They're
+still slow, though, and at some point the suite gets slow enough to be the
+bottleneck. Recently I had an agent combine overlapping tests into longer
+scenarios that walk through a whole flow, to bring the runtime back down.
 
-## 9. A return to verbose and expensive architectural patterns like data access layer Repositories and DDD (now much cheaper!)
+## 9. Repositories and DDD are cheaper to maintain now
 
-I've changed my mind about a lot of architecture stuff in the last year. I used
-to like frameworks that let you write less code, and I'd mostly push back on
-heavy structure like domain-driven design. There were good reasons for that.
-The same object could pass through seven or nine layers, with slightly
+I've changed my mind about a lot of architecture stuff in the last year. I
+used to like frameworks that let you write less code, and I'd mostly push
+back on heavy structure like domain-driven design. There were good reasons
+for that. The same object could pass through several layers, with slightly
 different names and representations in each. You had to type all that
 boilerplate, then keep it in sync.
 
-Now that agents write the boilerplate, I care more about having one clear way
-to implement something. I also care more about boundaries that keep a change
-in one part of the code from breaking another. As I ship faster, I need those
-boundaries more.
+Now that agents write the boilerplate, I care more about having one clear
+way to implement something. I also care more about boundaries that keep a
+change in one part of the code from breaking another. As I ship faster, I
+need those boundaries more.
 
 That structure has been especially useful with agents. If there's a model
 layer, a command layer, a single place for data access, and folders that say
 which domain owns what, I've found agents are better at finding the right
 place and following the existing pattern.
 
-Naming helps too. I now prefer `db.peer_fundraisers` over `db.peerFundraisers`
-because it matches the table name, so an agent can grep for one string and find
-everything.
+Naming helps too. I now prefer `db.peer_fundraisers` over
+`db.peerFundraisers` because it matches the table name, so an agent can grep
+for one string and find everything.
 
-The migration itself got cheap, too. A big restructuring like this used to be
-the kind of suggestion that got shot down right away. Now I write a spec for
-the pattern and the folder structure, and an agent can do most of the migration
-in one go. It's much less of an ordeal.
+The migration itself got cheap, too. A big restructuring like this used to
+be the kind of suggestion that got shot down right away. Now I write a spec
+for the pattern and the folder structure, and an agent can do most of the
+migration in one go. It's much less of an ordeal.
 
 ## 10. Spiking slowly/by hand, then expanding rapidly by agent
 
-Once the PRD and the eng design are agreed on, it's really tempting to hand the
-whole design doc to an agent and get the entire project back in one PR. I do
-this a lot now. I can often get a project to 80% in a single day, sometimes
-10,000+ lines in one PR, merged behind a feature flag and then fixed up in
+Once the PRD and the eng design are agreed on, it's really tempting to hand
+the whole design doc to an agent and get the entire project back in one PR.
+I do this a lot now. I can often get most of a project built in a day, merge
+it behind a feature flag, and work through the remaining pieces in
 follow-ups.
 
-But I think it mostly works when there's already a really good example in the
-codebase of the thing you're asking for. The first feature of a new kind should
-get built slowly and painstakingly and reviewed line by line, because that's
-the one the agent is going to copy. After that the next few similar features
-can go fast, because the agent has a working example to follow.
+But I think it mostly works when there's already a really good example in
+the codebase of the thing you're asking for. The first feature of a new kind
+should get built slowly and painstakingly and reviewed line by line, because
+that's the one the agent is going to copy. After that the next few similar
+features can go fast, because the agent has a working example to follow.
 
-I do still draw a line on dangerous stuff. If a change touches something like
-the filter compiler or anything with money, I want it in smaller pieces, even
-when the agent could do it all at once.
+I do still draw a line on dangerous stuff. If a change touches something
+like the filter compiler or anything with money, I want it in smaller
+pieces, even when the agent could do it all at once.
 
 ## 11. Automated PR approval with backtested judges
 
-At 20-ish PRs a day, I can't review everything carefully, so I built an AI
-reviewer that rates every PR from 1 to 10 and is allowed to approve the safe
-ones on its own. To keep it honest, the final rating is the lowest of a few
-things: the model's rubric score, a set of hard caps from plain rules
-(migrations, auth, anything with money, big diffs), a cap whenever a serious
-finding is still open, and a second judge that only sees the title, description
-and diff. The caps are there because a model's rating is easy to talk up.
+I can't review every PR carefully at this pace, so I built an AI reviewer
+that scores each one and is allowed to approve the safe ones on its own. To
+keep it honest, the final rating is the lowest of a few things: the model's
+rubric score, a set of hard caps from plain rules (migrations, auth,
+anything with money, big diffs), a cap whenever a serious finding is still
+open, and a second judge that only sees the title, description and diff. The
+caps are there because a model's rating is easy to talk up.
 
-I tuned it by backtesting it against the last 1,000 PRs, including a list of
-known-bad PRs that had caused real problems. The setting I landed on approves
-about 30% of PRs and would have let through 1 of the 7 known-bad ones. When an
-approved PR does cause a problem, it goes on the known-bad list and the next
+I tuned it by backtesting it against past PRs, including ones that had
+caused real problems. It now approves a minority of PRs. The backtest still
+missed a known-bad change, so I don't treat the score as a guarantee. When
+an approved PR causes a problem, it goes on the known-bad list and the next
 backtest has to catch it.
 
-I'm not totally sure 30% is right. I think line count is probably a bad signal
-by itself, but I actually think the AI is decent at combining signals, so the
-threshold is kind of a bet on that. My guess is that about 30% of my PRs are
-safe to skip human review today, which is why I tuned it to approve about that
-many in the backtest.
+I'm still adjusting the threshold. Line count alone isn't a useful way to
+decide what needs review, but I've found the model useful at weighing the
+diff alongside the other signals.
 
 ## 12. Build instead of buy (maintenance became cheaper)
 
-This one is really a business decision. Because code is so cheap now, I keep
-ending up replacing vendors with code I own: a CSV import tool, a data grid
-library, a hosted job queue, an email editor, even my monitoring setup. A few
-years ago a lot of these would've been obviously wrong calls, the kind of thing
-where you'd spend a year maintaining something a company does better.
+I keep replacing vendors with code I own: a CSV import tool, a data grid
+library, a hosted job queue, an email editor, even my monitoring setup. A
+few years ago a lot of these would've been obviously wrong calls, the kind
+of thing where you'd spend a year maintaining something a company does
+better.
 
-Agents are really good at this specific job right now, and I think it's because
-rebuilding something that already exists is one of the easiest kinds of work to
-verify. There's a reference implementation sitting right there. You can run the
-vendor's version and yours side by side, write tests against the behavior you
-actually depend on, and keep going until they match. It's the same loop as the
-refactor pattern above, just pointed at somebody else's software.
+Agents are really good at this specific job right now, and I think it's
+because rebuilding something that already exists is one of the easiest kinds
+of work to verify. There's a reference implementation sitting right there.
+You can run the vendor's version and yours side by side, write tests against
+the behavior you actually depend on, and keep going until they match. It's
+the same loop as the refactor pattern above, just pointed at somebody else's
+software.
 
 Meta, Stanford and Harvard put out
-[ProgramBench](https://arxiv.org/abs/2605.03546) this year, which asks agents
-to rebuild real programs like SQLite and FFmpeg from only the binary and its
-docs, and Epoch AI and METR's [MirrorCode](https://arxiv.org/abs/2606.30182)
-tests something similar. The headline scores still look low, with
-the best model passing 95% of the tests on only 3% of ProgramBench's tasks, but
-the setup is deliberately brutal: no internet, no source code, no decompiler,
-and the whole program rebuilt from scratch. Real life is a lot friendlier. You
-don't need all of a vendor's product, just the parts you use, and you get to
-read the docs, look at the source when it's open, and write your own tests as
-you go.
+[ProgramBench](https://arxiv.org/abs/2605.03546) this year, which asks
+agents to rebuild real programs like SQLite and FFmpeg from only the binary
+and its docs, and Epoch AI and METR's
+[MirrorCode](https://arxiv.org/abs/2606.30182) tests something similar.
+ProgramBench shows how hard full reimplementation still is. Its setup is
+much more restrictive than mine: no internet, no source code, no decompiler,
+and the whole program rebuilt from scratch. Real life is a lot friendlier.
+You don't need all of a vendor's product, just the parts you use, and you
+get to read the docs, look at the source when it's open, and write your own
+tests as you go.
 
-The video game world has the more dramatic version. Fans used to spend years
-reverse engineering a game's original code, matching it function by function,
-and this year AI sped that up so much that
+Something similar is happening in game decompilation. Fans used to spend
+years reverse engineering a game's original code, matching it function by
+function, and this year AI sped that up so much that
 [decomp.dev](https://www.404media.co/video-game-reverse-engineering-community-shuts-down-because-ai-has-made-it-too-easy/),
-one of the community's hubs, stopped tracking projects because the human-driven
-model stopped making sense.
+one of the community's hubs, stopped tracking projects because the
+human-driven model stopped making sense.
 
-In practice, I think a lot of the SaaS vendors that sell to developers can now
-be ripped out and replaced in a few days of work. That's going to change the
-math for any service whose only real moat is that the code was hard to write.
-Proprietary data, network effects, compliance work, and operating a difficult
-service still give me reasons to pay a vendor. If I mostly need the code, I'm
-more likely to consider building it now.
+In practice, I think a lot of the SaaS vendors that sell to developers can
+now be ripped out and replaced in a few days of work. Proprietary data,
+network effects, compliance work, and operating a difficult service still
+give me reasons to pay a vendor. If I mostly need the code, I'm more likely
+to consider building it now.
 
 I'm still finding out which of these replacements were worth taking on.
 
-## 13. Readability is more important; notice you followed Claude too far down the hole
+## 13. Notice when you've followed Claude too far
 
-The last one is more of a warning. Every so often I'll be a few days into an
-agent-driven refactor and realize I don't really understand where it's going
-anymore. Each step made sense, the agent kept proposing reasonable next steps,
-and I kept saying yes, and now the code is in a state nobody actually chose.
+Every so often I'll be a few days into an agent-driven refactor and realize
+I don't really understand where it's going anymore. Each step made sense,
+the agent kept proposing reasonable next steps, and I kept saying yes, and
+now the code is in a state nobody actually chose.
 
 When that happens I need to stop and admit that I followed Claude too far.
-Then I step back and decide what I actually want the code to look like before
-asking it to write anything else. Sometimes you just have to call it slop and
-recalibrate.
+Then I step back and decide what I actually want the code to look like
+before asking it to write anything else.
