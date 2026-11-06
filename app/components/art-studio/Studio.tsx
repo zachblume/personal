@@ -3,7 +3,7 @@
 import { useId, useState, useSyncExternalStore } from "react";
 import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
-import { CYCLE, degrees, JITTER } from "app/components/art-studio/cycle";
+import { CYCLE, degrees } from "app/components/art-studio/cycle";
 import styles from "app/components/art-studio/studio.module.css";
 import {
     gridArt,
@@ -12,13 +12,7 @@ import {
     previewArt,
     type Preset,
 } from "app/components/art-studio/tiles";
-import {
-    Art,
-    artParams,
-    COMPOSITIONS,
-    HUE_OFFSETS,
-    HUE_STEP,
-} from "app/components/Art";
+import { Art, artParams, COMPOSITIONS } from "app/components/Art";
 import { Link } from "app/components/Link";
 import { slugify } from "app/lib/slugify";
 
@@ -304,22 +298,19 @@ export function Studio({
                                 </>
                             ) : (
                                 <>
-                                    A post’s slug; its own artwork is at index{" "}
+                                    This post’s artwork uses index{" "}
                                     {match.artIndex}.{" "}
                                     <button
                                         type="button"
                                         onClick={() => setIndex(match.artIndex)}
                                         className={INLINE_LINK}
                                     >
-                                        Go there
+                                        Use it
                                     </button>
                                 </>
                             )
                         ) : (
-                            <>
-                                Any string works. A post’s slug at its own index
-                                reproduces that post’s artwork.
-                            </>
+                            <>Type anything to change the artwork.</>
                         )}
                     </div>
                 </div>
@@ -371,13 +362,13 @@ export function Studio({
                     </div>
                     <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-6 gap-y-1 text-[13px]">
                         <dt className="text-neutral-500 dark:text-neutral-400">
-                            Composition
+                            Shape
                         </dt>
                         <dd className="text-neutral-900 dark:text-neutral-100">
                             {composition.name}
                         </dd>
                         <dt className="text-neutral-500 dark:text-neutral-400">
-                            Hues
+                            Colors
                         </dt>
                         <dd
                             className={`${MONO} tabular-nums text-neutral-900 dark:text-neutral-100`}
@@ -407,8 +398,7 @@ export function Studio({
                         ))}
                     </div>
                     <div className={`mt-2 ${NOTE}`}>
-                        For the artwork in this studio. Site follows the page’s
-                        theme.
+                        “Site” uses your current theme.
                     </div>
                 </fieldset>
 
@@ -419,8 +409,8 @@ export function Studio({
                         </span>
                         <div className={`mt-1 ${NOTE}`}>
                             {reducedMotion
-                                ? "Off: your system asks for reduced motion."
-                                : "Runs the drift the archive plays on hover."}
+                                ? "Disabled by your reduced motion setting."
+                                : "Same animation as hovering over a post."}
                         </div>
                     </div>
                     <button
@@ -437,11 +427,7 @@ export function Studio({
                 </div>
             </div>
 
-            <Part
-                id={`${ids}-compositions`}
-                title="Twelve compositions"
-                note={`Indices ${block}–${block + COMPOSITIONS.length - 1} for this seed`}
-            >
+            <Part id={`${ids}-compositions`} title="Shapes">
                 <ul className="grid grid-cols-4 gap-x-3 gap-y-4 sm:grid-cols-6">
                     {COMPOSITIONS.map(({ name }, k) => {
                         const i = block + k;
@@ -478,8 +464,8 @@ export function Studio({
 
             <Part
                 id={`${ids}-walk`}
-                title="The hue walk"
-                note={`Every post, oldest first · ${HUE_STEP}° a step, ±${JITTER}°`}
+                title="Artwork from the posts"
+                note="Oldest to newest"
             >
                 <ol className="grid auto-cols-[3.25rem] grid-flow-col gap-2 overflow-x-auto pb-1 sm:auto-cols-fr sm:overflow-visible">
                     {posts.map((post) => {
@@ -518,7 +504,7 @@ export function Studio({
             <Part
                 id={`${ids}-download`}
                 title="Download"
-                note="Cropped to each size; files use the light palette"
+                note="Downloads use the light palette"
             >
                 <ul className="grid grid-cols-3 gap-4">
                     {PRESETS.map((preset, n) => (
@@ -602,7 +588,7 @@ function Part({
 }: {
     id: string;
     title: string;
-    note: string;
+    note?: string;
     children: React.ReactNode;
 }) {
     return (
@@ -615,9 +601,11 @@ function Part({
                 <span id={id} className={LABEL}>
                     {title}
                 </span>
-                <span className="text-[12px] text-neutral-500 dark:text-neutral-400">
-                    {note}
-                </span>
+                {note && (
+                    <span className="text-[12px] text-neutral-500 dark:text-neutral-400">
+                        {note}
+                    </span>
+                )}
             </div>
             {children}
         </div>
