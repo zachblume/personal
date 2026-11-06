@@ -132,14 +132,14 @@ lists a contact is already on when you go to add them to a list. Everything in
 it is fake seed data. Turn your sound on:
 
 <video
-    controls
-    playsInline
-    preload="metadata"
-    poster="/videos/pr-walkthrough-add-to-list.jpg"
-    className="my-6 w-full
+  controls
+  playsInline
+  preload="metadata"
+  poster="/videos/pr-walkthrough-add-to-list.jpg"
+  className="my-6 w-full
     rounded-lg border border-neutral-200 dark:border-neutral-800"
 >
-    <source src="/videos/pr-walkthrough-add-to-list.mp4" type="video/mp4" />
+  <source src="/videos/pr-walkthrough-add-to-list.mp4" type="video/mp4" />
 </video>
 
 This sounds totally crazy, but it has become one of the most turnkey things
@@ -173,16 +173,13 @@ The next step past that is a project chat that you just let go. I give it a
 constrained domain (this one part of the app, these folders, nothing else),
 verification rules for what counts as done (tests pass, a walkthrough video,
 the metric actually moved), and a `/goal`. Then it runs for days or weeks,
-shipping PRs on its own, and when it actually needs a decision it asks me in
-Slack.
+shipping PRs on its own, and when it actually needs a decision it slows down to
+ask.
 
-So every so often I get a Slack message asking which of two behaviors is the
-right one, I answer it from my phone, and later there's a PR for it. That's a
-really weird feeling the first time.
-
-I think the constraints are what make it safe to leave running. The narrow
-domain keeps the blast radius small, and the verification rules stop it from
-declaring victory early. Without them you'd mostly get a week of slop.
+The constraints you give it are what make it safe to leave running. By telling
+it "you're free to ship within this area, and nothing else, the narrow domain
+keeps the blast radius small, and that verification goal or rules stop it from
+declaring victory early.
 
 ## 4. Build guardrails and metrics first, then let the agent rip against them
 
@@ -255,23 +252,23 @@ JavaScript that's a single ESLint rule:
 ```js
 // eslint.config.mjs
 export default [
-    {
-        files: ["**/*.ts"],
-        ignores: ["src/data/**"],
-        rules: {
-            "no-restricted-imports": [
-                "error",
-                {
-                    paths: [
-                        {
-                            name: "src/db",
-                            message: "Go through src/data instead.",
-                        },
-                    ],
-                },
-            ],
+  {
+    files: ["**/*.ts"],
+    ignores: ["src/data/**"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "src/db",
+              message: "Go through src/data instead.",
+            },
+          ],
         },
+      ],
     },
+  },
 ];
 ```
 
@@ -332,15 +329,23 @@ time in half, which is a funny problem to have.
 
 I've changed my mind about a lot of architecture stuff in the last year. I used
 to like frameworks that let you write less code, and I'd mostly push back on
-heavy structure like domain-driven design, because all those layers and folders
-are a lot of boilerplate for a person to type, and wh. But codegen is basically free
-now, and once nobody's typing the boilerplate by hand, what I care about is
-that everything has one obvious place to live.
+heavy structure like domain-driven design. There were a bunch of reasons to
+avoid heavy patterns: when you had many many layers, it was both a lot of
+boilerplate for a person to literally type, and also led to decay in logic
+across layers. This got really extreme with some architectural patterns
+encouraging 7 or 9 layers of objects from the database to the frontend that
+were all basically the same object, but we'd have different layers, and so then
+you'd get entropy and decya with the same thing named different at every one of
+those 9 layers. But codegen is basically free now, and once nobody's typing the
+boilerplate by hand, what I care about is that everything has one way to
+implement it, and I also care more that boundaries between code make them safe
+from each other, because as the velocity increases so does risk.
 
-That's way more important for agents than it was for people. If there's a model
-layer, a command layer (the pattern from earlier in this post), a single place
-for data access, and a folder structure that says which domain owns what, then
-an agent can find the right spot and copy the shape of the code already there.
+It's more important for agents than it was for people. Maybe not "way more",
+but I think definitely more. If there's a model layer, a command layer (the
+pattern from earlier in this post), a single place for data access, and a
+folder structure that says which domain owns what, in practice I've seen agents
+find right spot and copy the shape of the code already there more effectively.
 Naming helps too. I now prefer `db.peer_fundraisers` over `db.peerFundraisers`
 because it matches the table name, so an agent can grep for one string and find
 everything.
