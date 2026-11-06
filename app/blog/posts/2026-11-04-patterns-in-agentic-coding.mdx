@@ -258,9 +258,9 @@ Agents move much faster when these rules are strict and clear. If the
 questions are already settled and there's one correct pattern, the agent
 doesn't have to guess which of the five ways is the real one by reading the
 codebase (and it'll often pick the wrong one, because the wrong one is
-usually the most common). When correctness is automated through really
-expansive linting, the agent just keeps going until everything passes, and
-I'm only reviewing the stuff that a check can't catch.
+usually the most common). With those rules enforced by linting,
+the agent keeps going until everything passes, and I spend less time
+pointing out the same mistakes in review.
 
 Writing the rules got cheap too. A custom lint rule used to take me most of
 an afternoon, which was hard to justify for something that saved a few
@@ -268,8 +268,7 @@ review comments a year. An agent writes one in a few minutes.
 
 ## 8. A useful explosion of integration and end-to-end tests
 
-The same thing is happening with integration and end-to-end tests, and I
-think this one goes against something a lot of us were taught.
+I've also started writing a lot more integration and end-to-end tests.
 
 The testing pyramid (another old pattern) says to write lots of unit tests,
 a smaller number of integration tests, and only a handful of end-to-end
@@ -279,7 +278,7 @@ one of them. Most teams I've been on had a pretty thin layer of end-to-end
 tests because of it, and we leaned on people clicking around before a
 release to cover the rest.
 
-Agents change that math. Writing and fixing an end-to-end test is cheap now,
+Writing and fixing an end-to-end test is cheap now,
 and the tests are worth more, because an agent can't look at the app the way
 I can unless something makes it look. A unit test that an agent wrote for
 code it just wrote tends to check that the code does what the agent thinks
@@ -307,7 +306,7 @@ way to implement something. I also care more about boundaries that keep a
 change in one part of the code from breaking another. As I ship faster, I
 need those boundaries more.
 
-That structure has been especially useful with agents. If there's a model
+If there's a model
 layer, a command layer, a single place for data access, and folders that say
 which domain owns what, I've found agents are better at finding the right
 place and following the existing pattern.
@@ -342,8 +341,8 @@ pieces, even when the agent could do it all at once.
 ## 11. Automated PR approval with backtested judges
 
 I can't review every PR carefully at this pace, so I built an AI reviewer
-that scores each one and is allowed to approve the safe ones on its own. To
-keep it honest, the final rating is the lowest of a few things: the model's
+that scores each one and is allowed to approve the safe ones on its own.
+The final rating is the lowest of a few things: the model's
 rubric score, a set of hard caps from plain rules (migrations, auth,
 anything with money, big diffs), a cap whenever a serious finding is still
 open, and a second judge that only sees the title, description and diff. The
@@ -367,9 +366,8 @@ few years ago a lot of these would've been obviously wrong calls, the kind
 of thing where you'd spend a year maintaining something a company does
 better.
 
-Agents are really good at this specific job right now, and I think it's
-because rebuilding something that already exists is one of the easiest kinds
-of work to verify. There's a reference implementation sitting right there.
+I've found agents particularly useful for replacing software I already use.
+I can check their work against the existing product.
 You can run the vendor's version and yours side by side, write tests against
 the behavior you actually depend on, and keep going until they match. It's
 the same loop as the refactor pattern above, just pointed at somebody else's
