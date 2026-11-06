@@ -97,7 +97,7 @@ export function PatternGrid() {
                         <svg
                             viewBox="0 0 64 64"
                             aria-hidden
-                            className="absolute inset-[24%] dark:[&_.acc]:[fill-opacity:0.3]"
+                            className="absolute top-[24%] left-[24%] h-[52%] w-[52%] dark:[&_.acc]:[fill-opacity:0.3]"
                             dangerouslySetInnerHTML={{ __html: icon }}
                         />
                     </span>
