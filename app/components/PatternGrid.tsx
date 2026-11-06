@@ -20,7 +20,7 @@ const PATTERNS: { heading: string; label: string; icon: string }[] = [
         icon: '<rect x="6" y="12" width="44" height="32" rx="6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M23 21l12 7-12 7z" fill="#c6dcf2" class="acc" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M20 52h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M55 20c4 4 4 12 0 16M60 15c7 7 7 19 0 26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     },
     {
-        heading: "3. Custom linters to enforce architectural purity",
+        heading: "3. Expansive custom linters to enforce architectural purity",
         label: "Linters for architectural purity",
         icon: '<path d="M8 56V10l46 46z" fill="#efc4bc" class="acc" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M16 44V30l14 14z" class="fill-neutral-50 dark:fill-neutral-900" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M8 20h5M8 30h3M8 40h5M8 50h3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> <path d="M38 14l5 5 11-12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     },
