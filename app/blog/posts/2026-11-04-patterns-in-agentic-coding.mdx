@@ -84,10 +84,7 @@ Whoever calls it just sees the one method, and when you open the file the
 `execute` method reads kind of like a table of contents for everything below
 it.
 
-It does a lot of nice things, defining privacy clearly, letting you use object
-parameters, making self-referencing methods easier, and allowing you to
-leverage inherited OOP to add or expose consistent things like logging libs and
-other little libraries as configurable things of all functions.
+It does a lot of nice things: it defines privacy clearly, lets you use object parameters, makes self-referencing methods easier, and lets you use inheritance to give every command the same configurable pieces, like logging.
 
 We use this all the time at Stripe, and I had no idea that this was a general software pattern that went far beyond
 Stripe, let alone one with its own chapter in a book from the nineties.
@@ -104,8 +101,7 @@ science or computer engineering as a _somewhat_ settled science, or a somewhat
 known or settled engineering field, where the "new" and trendy patterns are
 just rehashing of old things (ah, a new generation of "model-view-controller").
 But of course there's another side of things where you say to yourself, the
-ground underneath me keeps moving so consistently and fairly fast: a new framework, a new library, and so on. Of course, that's what many of us found so
-interesting about our job, that it's not just rote memorization. I don't know,
+ground underneath me keeps moving so consistently and fairly fast: a new framework, a new library, and so on. That's what many of us found so interesting about our job, that it's not just rote memorization. I don't know,
 it seems like bridge engineering might be comparably settled.
 
 Coding agents feel different from a new framework, though. They change how the
@@ -171,7 +167,7 @@ verification rules for what counts as done (tests pass, a walkthrough video,
 the metric actually moved), and a `/goal`. Then it runs for days or weeks,
 shipping PRs on its own, and when it actually needs a decision it asks me in Slack.
 
-So every so often a Slack message shows up asking which of two behaviors is the right one, you answer it from your phone, and later there's a PR for it. That's a really weird feeling the first time.
+So every so often I get a Slack message asking which of two behaviors is the right one, I answer it from my phone, and later there's a PR for it. That's a really weird feeling the first time.
 
 I think the constraints are what make it safe to leave running. The narrow domain keeps the blast radius small, and the verification rules stop it from declaring victory early. Without them you'd mostly get a week of slop.
 
@@ -315,7 +311,7 @@ heavy structure like domain-driven design, because all those layers and folders
 are a lot of boilerplate for a person to type. But codegen is basically free now, and once nobody's typing the boilerplate by hand, what I care about is that everything has one obvious place to live.
 
 That's way more important for agents than it was for people. If there's
-a model layer, a command layer (the pattern from the start of this post), a
+a model layer, a command layer (the pattern from earlier in this post), a
 single place for data access, and a folder structure that says which domain
 owns what, then an agent can find the right spot and copy the shape of the code
 already there. Naming helps too. I now prefer
@@ -363,8 +359,7 @@ known-bad list and the next backtest has to catch it.
 
 I'm not totally sure 30% is right. I think line count is probably a bad signal
 by itself, but I actually think the AI is decent at combining signals, so the
-threshold is kind of a bet on that. We're not at 100%, but I think we're
-probably at 30%, which is why I tuned it to 30% in the backtest.
+threshold is kind of a bet on that. My guess is that about 30% of our PRs are safe to skip human review today, which is why I tuned it to approve about that many in the backtest.
 
 ## 12. Build instead of buy (maintenance became cheaper)
 
