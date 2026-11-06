@@ -137,9 +137,7 @@ changed behavior somewhere, and now you know where.
 You might think this is kind of useless, because the agent has access to
 everything. It can read the refactor it's supposed to be catching, so there's
 no test holdout. But in practice I've found it extremely helpful. I think it
-works because the tests have to pass on main first, so they end up describing
-how the old code behaved and not how the agent thinks the new code should
-behave. This is one of the core things that has let me do gigantic refactors,
+works because the tests have to pass on main first, so they end up pinned to what the old code actually did. This is one of the core things that has let me do gigantic refactors,
 like 50,000-line refactors, that I don't think I'd have had the nerve to merge
 otherwise.
 
@@ -169,9 +167,7 @@ This sounds totally crazy, but it has become one of the most turnkey things
 that help me evaluate agentic PRs quickly. You can often tell that they're
 wrong almost instantly without reading any code, and then you give the agent
 behavioral changes based on the video. There's just something about demos, and
-video and voice together, that helps you reason extremely quickly. (It's
-probably the same reason a live demo in a meeting usually goes better than
-everyone reading the doc.)
+video and voice together, that helps you reason extremely quickly.
 
 This has really begun redefining how I write software outside of Stripe. About
 70% of my PRs on my side project have a video now. In a way it almost feels
@@ -181,13 +177,9 @@ agents and getting back full demo videos every few minutes, over and over.
 ## 3. Custom linters to enforce architectural purity
 
 One of the biggest changes I've seen is an explosion in custom linters that
-enforce coding standards and the shape of whatever framework you've built. The
-idea is to give agents guidance that's deterministic, so they find out they
-did something wrong from a failing check, and I don't have to be the one who
-tells them in review.
+enforce coding standards and the shape of whatever framework you've built. I want the guidance agents get to be deterministic. A failing check tells them they did something wrong, so I don't have to tell them in review.
 
-A good example is banning data access outside of a data access layer. In
-JavaScript that can be as simple as an ESLint rule:
+For example, you can ban data access outside of a data access layer. In JavaScript that's a single ESLint rule:
 
 ```js
 // eslint.config.mjs
@@ -233,10 +225,7 @@ is automated through really expansive linting, the agent just keeps going
 until everything passes, and I'm only reviewing the stuff that a check
 can't catch.
 
-The cost of writing them changed too. A custom lint rule used to be a whole
-afternoon of work for something that saved you a few review comments a year.
-Now an agent writes the rule in a few minutes, and then it gets enforced on
-hundreds of agent PRs.
+Writing the rules got cheap too. A custom lint rule used to take me most of an afternoon, which was hard to justify for something that saved a few review comments a year. An agent writes one in a few minutes.
 
 ## 4. A useful explosion of integration and end-to-end tests
 
@@ -245,15 +234,12 @@ this one goes against something a lot of us were taught.
 
 The testing pyramid (another old pattern) says to write lots of unit tests, a
 smaller number of integration tests, and only a handful of end-to-end tests at
-the top, because end-to-end tests are slow, flaky, and a pain to write and keep
-working. That made sense when a person had to write and maintain every one of
+the top, because end-to-end tests are slow and flaky and a pain to keep working. That made sense when a person had to write and maintain every one of
 them. Most teams I've been on had a pretty thin layer of end-to-end tests
 because of it, and we leaned on people clicking around before a release to
 cover the rest.
 
-Agents change both sides of that. Writing and fixing an end-to-end test is
-cheap now, so the cost side mostly goes away. And the value side goes up,
-because an agent can't look at the app the way I can unless something makes it
+Agents change that math. Writing and fixing an end-to-end test is cheap now, and the tests are worth more, because an agent can't look at the app the way I can unless something makes it
 look. A unit test that an agent wrote for code it just wrote tends to check
 that the code does what the agent thinks it does, which isn't very much
 information. An end-to-end test that logs in, clicks through the flow, and
@@ -261,12 +247,8 @@ checks what's on the screen is going to fail when the feature is actually
 broken, no matter who wrote it.
 
 So I've ended up with a lot more tests at the top of the pyramid than I ever
-would have written by hand, and agents run them on every change. The catch is
-they're still slow, and at some point the suite gets slow enough that it's the
-bottleneck. Recently I had an agent fold 1,459 end-to-end tests into 368
-longer scenario tests that walk through a whole flow each, mostly to cut the
-runner time in half. Having way too many end-to-end tests is a pretty funny
-problem to have, given where most of us started.
+would have written by hand, and agents run them on every change. They're still slow, though, and at some point the suite gets slow enough to be the bottleneck. Recently I had an agent fold 1,459 end-to-end tests into 368
+longer scenario tests that walk through a whole flow each, mostly to cut the runner time in half, which is a funny problem to have.
 
 ## 5. A return to verbose and expensive architectural patterns like data access layer Repositories and DDD (now much cheaper!)
 
@@ -275,19 +257,17 @@ to like frameworks that let you write less code, and I'd mostly push back on
 heavy structure like domain-driven design, because all those layers and folders
 are a lot of boilerplate for a person to type. But codegen is basically free
 now. My running joke at this point is "zach believes DDD is important as
-codegen becomes free," and I kind of mean it: the boilerplate argument mostly
-goes away, and what's left is the part where everything has one obvious place
-to live.
+codegen becomes free," and I kind of mean it. Once nobody's typing the boilerplate by hand, the thing I care about is that everything has one obvious place to live.
 
-That turns out to matter way more for agents than it did for people. If there's
+That's way more important for agents than it was for people. If there's
 a model layer, a command layer (the pattern from the start of this post), a
 single place for data access, and a folder structure that says which domain
 owns what, then an agent can find the right spot and copy the shape of the code
-already there. Even little stuff like naming matters more. I now prefer
+already there. Naming helps too. I now prefer
 `db.peer_fundraisers` over `db.peerFundraisers` because it matches the table
 name, so an agent (or me) can grep for one string and find everything.
 
-The other funny thing is that the migration itself got cheap. A big
+The migration itself got cheap, too. A big
 restructuring like this used to be the kind of suggestion where people would
 say "zach, that is an insane suggestion, please stop." Now it's more like, we
 write a spec for the pattern and the folder structure, and an agent can do most
@@ -330,22 +310,19 @@ a PR that only documented why the data couldn't be fixed yet, which honestly
 was the result I wanted from those states, way more than a fake fix that looked
 good.
 
-I think the general version of this is to build the scoreboard before you fan
-out. If you can't trust the metric, you just get a pile of confident PRs, and
-you have no idea which of them made things worse.
+If I'd skipped the accuracy page, I'd have gotten 44 confident PRs and no way to tell which of them made things worse.
 
 ## 8. Automated PR approval with backtested judges
 
 At 20-ish PRs a day, I can't review everything carefully, so I built an AI
 reviewer that rates every PR from 1 to 10 and is allowed to approve the safe
-ones on its own. The interesting part to me is how it's kept honest. The
-final rating is the lowest of a few things: the model's rubric score, a set of
+ones on its own. To keep it honest, the final rating is the lowest of a few things: the model's rubric score, a set of
 hard caps from plain rules (migrations, auth, anything with money, big diffs), a
 cap whenever a serious finding is still open, and a second judge that only sees
 the title, description and diff. In my notes for it I wrote that "a model
 rating is easy to talk up," which is the whole reason for the caps.
 
-Then I tuned it like a model. I backtested it against the last 1,000 PRs,
+I tuned it by backtesting it against the last 1,000 PRs,
 including a list of known-bad PRs that had caused real problems. The setting I
 landed on approves about 30% of PRs and would have let through 1 of the 7
 known-bad ones. When an approved PR does cause a problem, it goes on the
@@ -365,7 +342,7 @@ also a Slack bot that can read the codebase and our support tickets, and if a
 conversation turns into "can we fix this," it can start a coding session,
 check in on it, and send it follow-ups.
 
-The tricky part has been the handoff between them. The bot's instructions say
+Most of the work went into the handoff. The bot's instructions say
 "Write a self-contained brief. The coding agent cannot read this thread,"
 because the new agent starts with none of the conversation that led to it.
 They also say "Do not infer authorization from a request to start coding,"
@@ -374,7 +351,7 @@ permission into a pretty casual message.
 
 ## 10. Build instead of buy (maintenance became cheaper)
 
-This one is less of a coding pattern and more of a business one. Because code
+This one is really a business decision. Because code
 is so cheap now, I keep ending up replacing vendors with code we own: a CSV
 import tool, a data grid library, a hosted job queue, an email editor, even our
 monitoring setup. A few years ago a lot of these would've been obviously wrong
@@ -397,8 +374,7 @@ And then I mostly just chat with it, the same way I'd talk to a tech lead.
 Where are we at? What's blocking the email stuff? Let's cut the mobile part
 for now and come back to it. It goes and does that across however many PRs it
 needs to, and I don't have to be the one keeping the state of 30 open PRs in my
-head. That part used to be most of the work of running a project, honestly,
-more than writing any of the code.
+head. Honestly, that used to be most of the work of running a project.
 
 ## 12. Project chats left to run on their own /goal for weeks with guardrails
 
@@ -409,16 +385,9 @@ the metric actually moved), and a `/goal`. Then it runs for days or weeks,
 shipping PRs on its own, and when it actually needs a decision it asks me in
 Slack (!).
 
-It's a really weird feeling the first time. You get a Slack message that's
-basically "hey, the old export and the new one disagree on refunded gifts, which
-one is right?", you answer it from your phone, and an hour later there's a PR
-for it. It feels a lot more like having a teammate than using a tool.
+So every so often a Slack message shows up asking which of two behaviors is the right one, you answer it from your phone, and later there's a PR for it. That's a really weird feeling the first time.
 
-I think the constraints are what make it safe to leave running. The domain
-keeps the blast radius small, the verification rules mean it can't just
-declare victory, and the goal tells it when to stop. Without those three, a
-chat that runs for a week is mostly a way to generate a lot of slop very
-efficiently.
+I think the constraints are what make it safe to leave running. The narrow domain keeps the blast radius small, and the verification rules stop it from declaring victory early. Without them you'd mostly get a week of slop.
 
 ## 13. Readability is more important; notice you followed Claude too far down the hole
 
@@ -427,8 +396,7 @@ agent-driven refactor and realize I don't really understand where it's going
 anymore. Each step made sense, the agent kept proposing reasonable next steps,
 and I kept saying yes, and now the code is in a state nobody actually chose.
 
-When that happens I think the right move is to stop and just say it out loud: I
-followed Claude too far. Then go back to talking it through as humans, about
+When that happens I think the right move is to stop and just say it out loud, that I followed Claude too far. Then go back to talking it through as humans, about
 where we're actually at and what end state we want, before anything else gets
 written. Sometimes you just gotta go "slop!" and recalibrate.
 
