@@ -173,18 +173,18 @@ I think the constraints are what make it safe to leave running. The narrow domai
 
 ## 4. Build guardrails and metrics first, then let the agent rip against them
 
-On my side project we pull in campaign contribution data from every state, and
-every state does it a little differently, which makes it a great job for a big
+On my side project we had a bunch of integrations that each worked a little
+differently, which made it a great job for a big
 fan-out of agents. But before I pointed agents at it I spent a while on
 something pretty boring, which was an accuracy page I could actually trust. That meant fixing the
 ground-truth samples (some of the hand-gathered ones were just wrong) and adding
-about a thousand new samples from official disclosures.
+about a thousand new reference samples.
 
-Once that page was the north star, I opened one agent per state (something
+Once that page was the north star, I opened one agent per integration (something
 like 44 PRs in about twenty minutes), and they all reported their results
-against the same numbers. A lot of them fixed their state. Some came back with
-a PR that only documented why the data couldn't be fixed yet, which honestly
-was the result I wanted from those states, way more than a fake fix that looked
+against the same numbers. A lot of them fixed their integration. Some came back with
+a PR that only documented why the issue couldn't be fixed yet, which honestly
+was the result I wanted in those cases, way more than a fake fix that looked
 good.
 
 If I'd skipped the accuracy page, I'd have gotten 44 confident PRs and no way to tell which of them made things worse.
