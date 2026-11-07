@@ -45,21 +45,17 @@ export function ReadingHistory({ posts }: { posts: Post[] }) {
                 <p className="font-[family-name:var(--font-editorial)] text-[22px] leading-tight tracking-[-0.025em] text-neutral-900 dark:text-white">
                     You&rsquo;ve read {read.length} of {posts.length}.
                 </p>
-                <p className="text-[13px] text-neutral-500 dark:text-neutral-400">
-                    {next ? (
-                        <>
-                            Up next:{" "}
-                            <Link
-                                href={`/blog/${next.slug}`}
-                                className="rounded-sm text-neutral-900 underline decoration-neutral-300 underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:text-white dark:decoration-neutral-700 dark:focus-visible:outline-white"
-                            >
-                                {next.title}
-                            </Link>
-                        </>
-                    ) : (
-                        "That's all of it. Thanks for reading."
-                    )}
-                </p>
+                {next && (
+                    <p className="text-[13px] text-neutral-500 dark:text-neutral-400">
+                        Up next:{" "}
+                        <Link
+                            href={`/blog/${next.slug}`}
+                            className="rounded-sm text-neutral-900 underline decoration-neutral-300 underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 dark:text-white dark:decoration-neutral-700 dark:focus-visible:outline-white"
+                        >
+                            {next.title}
+                        </Link>
+                    </p>
+                )}
             </div>
             <div className="mt-4 flex gap-1">
                 {oldestFirst.map((post) => (
